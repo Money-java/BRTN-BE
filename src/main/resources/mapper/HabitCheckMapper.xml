@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.HabitCheck.mapper.HabitCheckMapper">
+
+    <insert id="insertHabitCheck" parameterType="com.example.backend.HabitCheck.vo.HabitCheckVO">
+        INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
+        VALUES (#{checkDate}, #{myHabitId}, #{userId}, #{habitId})
+    </insert>
+
+    <select id="selectHabitCheckById" parameterType="long" resultType="com.example.backend.HabitCheck.vo.HabitCheckVO">
+        SELECT * FROM HabitCheck WHERE my_habit_id = #{myHabitId}
+    </select>
+
+    <select id="selectAllHabitChecks" resultType="com.example.backend.HabitCheck.vo.HabitCheckVO">
+        SELECT * FROM HabitCheck
+    </select>
+
+    <update id="updateHabitCheck" parameterType="com.example.backend.HabitCheck.vo.HabitCheckVO">
+        UPDATE HabitCheck
+        SET check_date = #{checkDate}, user_id = #{userId}, habit_id = #{habitId}
+        WHERE my_habit_id = #{myHabitId}
+    </update>
+
+    <delete id="deleteHabitCheck" parameterType="long">
+        DELETE FROM HabitCheck WHERE my_habit_id = #{myHabitId}
+    </delete>
+
+</mapper>

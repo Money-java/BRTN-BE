@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.Account.mapper.AccountMapper">
+
+    <insert id="insertAccount" parameterType="com.example.backend.Account.vo.AccountVO">
+        INSERT INTO Account (user_id, account_num, account_name)
+        VALUES (#{userId}, #{accountNum}, #{accountName})
+    </insert>
+
+    <select id="selectAccountById" parameterType="long" resultType="com.example.backend.Account.vo.AccountVO">
+        SELECT * FROM Account WHERE account_id = #{accountId}
+    </select>
+
+    <select id="selectAllAccounts" resultType="com.example.backend.Account.vo.AccountVO">
+        SELECT * FROM Account
+    </select>
+
+    <update id="updateAccount" parameterType="com.example.backend.Account.vo.AccountVO">
+        UPDATE Account
+        SET user_id = #{userId}, account_num = #{accountNum}, account_name = #{accountName}
+        WHERE account_id = #{accountId}
+    </update>
+
+    <delete id="deleteAccount" parameterType="long">
+        DELETE FROM Account WHERE account_id = #{accountId}
+    </delete>
+
+</mapper>

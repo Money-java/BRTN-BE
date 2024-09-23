@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
@@ -61,16 +63,24 @@ public class AppConfig {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-//        sessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+        sessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
         org.apache.ibatis.session.Configuration configuration =
                 getConfiguration();
         sessionFactory.setConfiguration(configuration);
 
 //        mapper용 xml에서 <insert>, <select>태그를 사용하려면 설정하세요
-//        Resource[] mapperLocations = new Resource[] {
-//                new ClassPathResource("mapper/BoardMapper.xml")
-//        };
-//        sessionFactory.setMapperLocations(mapperLocations);
+        Resource[] mapperLocations = new Resource[] {
+                new ClassPathResource("mapper/AccountMapper.xml"),
+                new ClassPathResource("mapper/HabitMapper.xml"),
+                new ClassPathResource("mapper/HabitCheckMapper.xml"),
+                new ClassPathResource("mapper/HabitCommunityMapper.xml"),
+                new ClassPathResource("mapper/MyHabitMapper.xml"),
+                new ClassPathResource("mapper/PostCommentMapper.xml"),
+                new ClassPathResource("mapper/PostCommunityMapper.xml"),
+                new ClassPathResource("mapper/TransactionMapper.xml"),
+                new ClassPathResource("mapper/UserMapper.xml")
+        };
+        sessionFactory.setMapperLocations(mapperLocations);
 
         return sessionFactory.getObject();
     }

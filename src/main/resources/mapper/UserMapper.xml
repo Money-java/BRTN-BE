@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.backend.Users.mapper.UserMapper">
+    <insert id="insertUser" parameterType="com.example.backend.Users.vo.UserVO">
+        INSERT INTO Users (email, name, nickname, provider, role)
+        VALUES (#{email}, #{name}, #{nickname}, #{provider}, #{role})
+    </insert>
+
+    <select id="selectUserById" parameterType="long" resultType="com.example.backend.Users.vo.UserVO">
+        SELECT * FROM Users WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectAllUsers" resultType="com.example.backend.Users.vo.UserVO">
+        SELECT * FROM Users
+    </select>
+
+    <update id="updateUser" parameterType="com.example.backend.Users.vo.UserVO">
+        UPDATE Users
+        SET email = #{email}, name = #{name}, nickname = #{nickname}, provider = #{provider}, role = #{role}
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUser" parameterType="long">
+        DELETE FROM Users WHERE user_id = #{userId}
+    </delete>
+</mapper>

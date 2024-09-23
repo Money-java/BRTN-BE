@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.PostCommunity.mapper.PostCommunityMapper">
+
+    <insert id="insertPost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        INSERT INTO PostCommunity (user_id, habit_id, post_likes, image_url, content, hashtag, created_at)
+        VALUES (#{userId}, #{habitId}, #{postLikes}, #{imageURL}, #{content}, #{hashtag}, #{createdAt})
+    </insert>
+
+    <select id="selectPostById" parameterType="long" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT * FROM PostCommunity WHERE post_id = #{postId}
+    </select>
+
+    <select id="selectAllPosts" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT * FROM PostCommunity
+    </select>
+
+    <update id="updatePost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        UPDATE PostCommunity
+        SET user_id = #{userId}, habit_id = #{habitId}, post_likes = #{postLikes},
+            image_url = #{imageURL}, content = #{content}, hashtag = #{hashtag}, created_at = #{createdAt}
+        WHERE post_id = #{postId}
+    </update>
+
+    <delete id="deletePost" parameterType="long">
+        DELETE FROM PostCommunity WHERE post_id = #{postId}
+    </delete>
+
+</mapper>
