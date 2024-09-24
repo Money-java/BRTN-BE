@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.Habit.mapper.HabitMapper">
+
+    <insert id="insertHabit" parameterType="com.example.backend.Habit.vo.HabitVO">
+        INSERT INTO Habit (user_id, habit_title, category_title)
+        VALUES (#{userId}, #{habitTitle}, #{categoryTitle})
+    </insert>
+
+    <select id="selectHabitById" parameterType="long" resultType="com.example.backend.Habit.vo.HabitVO">
+        SELECT * FROM Habit WHERE habit_id = #{habitId}
+    </select>
+
+    <select id="selectAllHabits" resultType="com.example.backend.Habit.vo.HabitVO">
+        SELECT * FROM Habit
+    </select>
+
+    <update id="updateHabit" parameterType="com.example.backend.Habit.vo.HabitVO">
+        UPDATE Habit
+        SET user_id = #{userId}, habit_title = #{habitTitle}, category_title = #{categoryTitle}
+        WHERE habit_id = #{habitId}
+    </update>
+
+    <delete id="deleteHabit" parameterType="long">
+        DELETE FROM Habit WHERE habit_id = #{habitId}
+    </delete>
+
+</mapper>

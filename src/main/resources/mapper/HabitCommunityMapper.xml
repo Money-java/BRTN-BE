@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.HabitCommunity.mapper.HabitCommunityMapper">
+
+    <insert id="insertHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        INSERT INTO HabitCommunity (habit_id, habit_likes, participants, complete, upload_date)
+        VALUES (#{habitId}, #{habitLikes}, #{participants}, #{complete}, #{uploadDate})
+    </insert>
+
+    <select id="selectHabitCommunityById" parameterType="long" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT * FROM HabitCommunity WHERE community_id = #{communityId}
+    </select>
+
+    <select id="selectAllHabitCommunities" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT * FROM HabitCommunity
+    </select>
+
+    <update id="updateHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        UPDATE HabitCommunity
+        SET habit_id = #{habitId}, habit_likes = #{habitLikes}, participants = #{participants},
+            complete = #{complete}, upload_date = #{uploadDate}
+        WHERE community_id = #{communityId}
+    </update>
+
+    <delete id="deleteHabitCommunity" parameterType="long">
+        DELETE FROM HabitCommunity WHERE community_id = #{communityId}
+    </delete>
+
+</mapper>
