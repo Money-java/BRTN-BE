@@ -32,7 +32,7 @@
         WHERE user_id = #{userId}
     </update>
 
-    <!-- 회원 탈퇴 -->
+    <!-- 회원 탈퇴  -->
     <delete id="deleteUser" parameterType="String">
         DELETE FROM Users WHERE email = #{email}
     </delete>

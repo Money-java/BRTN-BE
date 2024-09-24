@@ -65,7 +65,7 @@
         SELECT * FROM HabitCheck WHERE my_habit_id = #{myHabitId}
     </select>
 
-    <!-- 모든 습관 -->
+    <!-- 모든 습관  -->
     <select id="selectAllHabitChecks" resultType="com.example.backend.HabitCheck.vo.HabitCheckVO">
         SELECT * FROM HabitCheck
     </select>

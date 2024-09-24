@@ -267,7 +267,7 @@
         SELECT * FROM Transaction WHERE transaction_id = #{transactionId}
     </select>
 
-    <!-- 모든 거래 내역 출력 -->
+    <!-- 모든 거래 내역 출력  -->
     <select id="selectAllTransactions" resultType="com.example.backend.Transaction.vo.TransactionVO">
         SELECT * FROM Transaction
     </select>

@@ -34,7 +34,7 @@
         SELECT * FROM MyHabit WHERE my_habit_id = #{myHabitId}
     </select>
 
-    <!-- 습관 모두 출력 -->
+    <!-- 습관 모두 출력  -->
     <select id="selectAllMyHabits" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
         SELECT * FROM MyHabit
     </select>

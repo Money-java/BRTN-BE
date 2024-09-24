@@ -30,7 +30,7 @@
         WHERE account_id = #{accountId}
     </update>
 
-    <!-- 계좌 정보 삭제 -->
+    <!-- 계좌 정보 삭제  -->
     <delete id="deleteAccount" parameterType="long">
         DELETE FROM Account WHERE account_id = #{accountId}
     </delete>
