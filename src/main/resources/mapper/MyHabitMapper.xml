@@ -5,27 +5,37 @@
 
 <mapper namespace="com.example.backend.Myhabit.mapper.MyHabitMapper">
 
+    <!-- 습관 삽입 -->
     <insert id="insertMyHabit" parameterType="com.example.backend.Myhabit.vo.MyHabitVO">
-        INSERT INTO MyHabit (user_id, habit_id2, state)
-        VALUES (#{userId}, #{habitId2}, #{state})
+        INSERT INTO MyHabit (user_id, habit_id, state)
+        VALUES (#{userId}, #{habitId}, #{state})
     </insert>
 
-    <select id="selectMyHabitById" parameterType="long" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT * FROM MyHabit WHERE my_habit_id = #{myHabitId}
+    <!-- 오늘 진행 중인 습관 목록 출력 -->
+    <select id="selectMyHabitToday" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
+        SELECT h.habit_title FROM MyHabit mh JOIN HABIT h ON mh.habit_id = h.habit_id
+        WHERE mh.user_id = #{userId} AND mh.state = '진행';
     </select>
 
-    <select id="selectAllMyHabits" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT * FROM MyHabit
-    </select>
-
+    <!-- 습관 상태 변경 -->
     <update id="updateMyHabit" parameterType="com.example.backend.Myhabit.vo.MyHabitVO">
         UPDATE MyHabit
-        SET user_id = #{userId}, habit_id2 = #{habitId2}, state = #{state}
+        SET state = #{state}
         WHERE my_habit_id = #{myHabitId}
     </update>
 
+    <!-- 습관 삭제 -->
     <delete id="deleteMyHabit" parameterType="long">
         DELETE FROM MyHabit WHERE my_habit_id = #{myHabitId}
     </delete>
 
+    <!-- 습관 하나 출력 -->
+    <select id="selectMyHabitById" parameterType="long" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
+        SELECT * FROM MyHabit WHERE my_habit_id = #{myHabitId}
+    </select>
+
+    <!-- 습관 모두 출력  -->
+    <select id="selectAllMyHabits" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
+        SELECT * FROM MyHabit
+    </select>
 </mapper>
