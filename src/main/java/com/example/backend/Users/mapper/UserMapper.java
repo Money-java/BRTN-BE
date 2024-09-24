@@ -4,7 +4,6 @@ import com.example.backend.Users.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
-@Mapper
 public interface UserMapper {
   void insertUser(UserVO user);
   UserVO selectUserById(Long userId);

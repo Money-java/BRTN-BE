@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
@@ -18,10 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-//@ComponentScan(basePackages = "com.multi")
-//@ComponentScan(basePackages = {"com.multi.spring2.board.dao",
-//        "com.multi.spring2.board.service"
-//})
+@ComponentScan(basePackages = "com.example")
 @EnableTransactionManagement
 @PropertySource({"classpath:/application.properties"})
 public class AppConfig {
@@ -64,16 +62,16 @@ public class AppConfig {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
-        org.apache.ibatis.session.Configuration configuration =
-                getConfiguration();
-        sessionFactory.setConfiguration(configuration);
+//        org.apache.ibatis.session.Configuration configuration =
+//                getConfiguration();
+//        sessionFactory.setConfiguration(configuration);
 
 //        mapper용 xml에서 <insert>, <select>태그를 사용하려면 설정하세요
         Resource[] mapperLocations = new Resource[] {
                 new ClassPathResource("mapper/AccountMapper.xml"),
-                new ClassPathResource("mapper/HabitMapper.xml"),
                 new ClassPathResource("mapper/HabitCheckMapper.xml"),
                 new ClassPathResource("mapper/HabitCommunityMapper.xml"),
+                new ClassPathResource("mapper/HabitMapper.xml"),
                 new ClassPathResource("mapper/MyHabitMapper.xml"),
                 new ClassPathResource("mapper/PostCommentMapper.xml"),
                 new ClassPathResource("mapper/PostCommunityMapper.xml"),

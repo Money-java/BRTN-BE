@@ -17,16 +17,4 @@
         <package name="com.example.backend.PostCommunity.vo"/>
         <package name="com.example.backend.Transaction.vo"/>
     </typeAliases>
-    <mappers>
-        <mapper resource="mapper/UserMapper.xml"/>
-        <mapper resource="mapper/AccountMapper.xml"/>
-        <mapper resource="mapper/HabitMapper.xml"/>
-        <mapper resource="mapper/HabitCheckMapper.xml"/>
-        <mapper resource="mapper/HabitCommunityMapper.xml"/>
-        <mapper resource="mapper/MyhabitMapper.xml"/>
-        <mapper resource="mapper/PostCommentMapper.xml"/>
-        <mapper resource="mapper/PostCommunityMapper.xml"/>
-        <mapper resource="mapper/TransactionMapper.xml"/>
-
-    </mappers>
 </configuration>
