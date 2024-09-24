@@ -4,6 +4,7 @@ import com.example.backend.Habit.vo.HabitVO;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
+@Mapper
 public interface HabitMapper {
   void insertHabit(HabitVO habit);
   HabitVO selectHabitById(Long habitId);
