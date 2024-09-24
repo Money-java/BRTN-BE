@@ -12,6 +12,7 @@ repositories {
 
 ext {
     junitVersion = '5.9.2'
+    springSecurityVersion = '5.7.3'
 }
 
 sourceCompatibility = '17'
@@ -78,8 +79,18 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
 
-    // Jasypt 라이브러리 설정
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    // 추가 부분
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // 보안
+    implementation("org.springframework.security:spring-security-web:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-config:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-core:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-taglibs:${springSecurityVersion}")
 }
 
 test {

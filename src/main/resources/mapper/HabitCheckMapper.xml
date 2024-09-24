@@ -5,27 +5,68 @@
 
 <mapper namespace="com.example.backend.HabitCheck.mapper.HabitCheckMapper">
 
+    <!-- 달성한 습관 삽입 -->
     <insert id="insertHabitCheck" parameterType="com.example.backend.HabitCheck.vo.HabitCheckVO">
         INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
         VALUES (#{checkDate}, #{myHabitId}, #{userId}, #{habitId})
     </insert>
 
+    <!-- 오늘 달성한 습관 목록 -->
+    <select id="selctTodayHabitCheck" parameterType="long">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = CURDATE() AND user_id = #{userId};
+    </select>
+
+    <!-- 과거 달성한 습관 목록 -->
+    <select id="selctPastHabitCheck" parameterType="map">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = CURDATE() AND user_id = #{userId};
+    </select>
+
+    <!-- 과거 달성한 습관 목록 (특정 날짜) -->
+    <select id="selctPastHabitCheckDate" parameterType="map">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = #{checkDate} AND user_id = #{userId};
+    </select>
+
+    <!-- 과거 달성한 습관 목록 (1일 전) -->
+    <select id="selctPastHabitCheckDay" parameterType="map">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 DAY AND user_id = #{userId};
+    </select>
+
+    <!-- 과거 달성한 습관 목록 (1주 전) -->
+    <select id="selctPastHabitCheckWeek" parameterType="map">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 WEEK AND user_id = #{userId};
+    </select>
+
+    <!-- 과거 달성한 습관 목록 (1달 전) -->
+    <select id="selctPastHabitCheckMonth" parameterType="map">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 MONTH AND user_id = #{userId};
+    </select>
+
+    <!-- 과거 달성한 습관 목록 (1년 전) -->
+    <select id="selctPastHabitCheckYear" parameterType="map">
+        SELECT h.habit_title, h.category_title
+        FROM `HabitCheck` hc JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id JOIN `Habit` h ON mh.habit_id = h.habit_id
+        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 YEAR AND user_id = #{userId};
+    </select>
+
+    <!-- 특정 습관 -->
     <select id="selectHabitCheckById" parameterType="long" resultType="com.example.backend.HabitCheck.vo.HabitCheckVO">
         SELECT * FROM HabitCheck WHERE my_habit_id = #{myHabitId}
     </select>
 
+    <!-- 모든 습관 -->
     <select id="selectAllHabitChecks" resultType="com.example.backend.HabitCheck.vo.HabitCheckVO">
         SELECT * FROM HabitCheck
     </select>
-
-    <update id="updateHabitCheck" parameterType="com.example.backend.HabitCheck.vo.HabitCheckVO">
-        UPDATE HabitCheck
-        SET check_date = #{checkDate}, user_id = #{userId}, habit_id = #{habitId}
-        WHERE my_habit_id = #{myHabitId}
-    </update>
-
-    <delete id="deleteHabitCheck" parameterType="long">
-        DELETE FROM HabitCheck WHERE my_habit_id = #{myHabitId}
-    </delete>
-
 </mapper>
