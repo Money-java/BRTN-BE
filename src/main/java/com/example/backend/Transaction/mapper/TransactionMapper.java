@@ -61,15 +61,4 @@ public interface TransactionMapper {
   // 과거의 시간대 별 지출 금액 조회 (특정 날짜)
   List<TransactionVO> selectTimeDate(@Param("createdAt") Date createdAt);
 
-  // 과거의 시간대 별 지출 금액 조회 (1일 전)
-  List<TransactionVO> selectTimeDay();
-
-  // 과거의 시간대 별 지출 금액 조회 (1주 전)
-  List<TransactionVO> selectTimeWeek();
-
-  // 과거의 시간대 별 지출 금액 조회 (1달 전)
-  List<TransactionVO> selectTimeMonth();
-
-  // 과거의 시간대 별 지출 금액 조회 (1년 전)
-  List<TransactionVO> selectTimeYear();
 }

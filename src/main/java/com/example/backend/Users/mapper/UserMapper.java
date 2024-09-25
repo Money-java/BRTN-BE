@@ -22,4 +22,8 @@ public interface UserMapper {
 
   // 회원 탈퇴
   void deleteUser(@Param("email") String email);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0c83580f546cd45cbc98bb3382d501f94534ffed
 }
