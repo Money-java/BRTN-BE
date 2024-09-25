@@ -28,6 +28,41 @@
     <delete id="deleteMyHabit" parameterType="long">
         DELETE FROM MyHabit WHERE my_habit_id = #{myHabitId}
     </delete>
+    <!-- 대기 상태 (OFF)인 습관 목록 조회 -->
+    <select id="selectHabitsByStateOff" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
+        SELECT h.habit_title, h.category_title
+        FROM MyHabit mh
+                 JOIN Habit h ON mh.habit_id = h.habit_id
+        WHERE mh.state = 'OFF';
+    </select>
+
+    <!-- 진행 상태 (ON)인 습관 목록 조회 -->
+    <select id="selectHabitsByStateOn" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
+        SELECT h.habit_title, h.category_title
+        FROM MyHabit mh
+                 JOIN Habit h ON mh.habit_id = h.habit_id
+        WHERE mh.state = 'ON';
+    </select>
+
+    <!-- 습관 상태 'ON'으로 변경 -->
+    <update id="updateHabitStateOn">
+        UPDATE MyHabit
+        SET state = 'ON'
+        WHERE my_habit_id = #{myHabitId};
+    </update>
+
+    <!-- 습관 상태 'OFF'로 변경 -->
+    <update id="updateHabitStateOff">
+        UPDATE MyHabit
+        SET state = 'OFF'
+        WHERE my_habit_id = #{myHabitId};
+    </update>
+    <!-- 진행중인 습관 제목을 가져오는 쿼리 -->
+    <select id="selectHabitTitlesByState" resultType="String">
+        SELECT h.habit_title
+        FROM MyHabit mh
+                 JOIN Habit h ON mh.habit_id = h.habit_id
+        WHERE mh.state = 'on'
 
     <!-- 습관 하나 출력 -->
     <select id="selectMyHabitById" parameterType="long" resultType="com.example.backend.Myhabit.vo.MyHabitVO">

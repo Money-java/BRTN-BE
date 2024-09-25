@@ -23,14 +23,12 @@
         SELECT * FROM Account
     </select>
 
-    <!-- 계좌 정보 수정 -->
     <update id="updateAccount" parameterType="com.example.backend.Account.vo.AccountVO">
         UPDATE Account
         SET user_id = #{userId}, account_num = #{accountNum}, account_name = #{accountName}
         WHERE account_id = #{accountId}
     </update>
 
-    <!-- 계좌 정보 삭제  -->
     <delete id="deleteAccount" parameterType="long">
         DELETE FROM Account WHERE account_id = #{accountId}
     </delete>

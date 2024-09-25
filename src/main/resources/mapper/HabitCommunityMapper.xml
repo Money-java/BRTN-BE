@@ -28,5 +28,34 @@
     <delete id="deleteHabitCommunity" parameterType="long">
         DELETE FROM HabitCommunity WHERE community_id = #{communityId}
     </delete>
+    <!-- 최신순 -->
+    <select id="selectByUploadDate" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT DISTINCT h.category_name, h.habit_title, u.nickname, hc.habit_likes, hc.participants, hc.upload_date
+        FROM HabitCommunity hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+                 JOIN User u ON h.writer_id = u.user_id
+        WHERE h.category_name = #{categoryName}
+        ORDER BY hc.upload_date DESC
+    </select>
+
+    <!-- 좋아요순 -->
+    <select id="selectByLikes" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT DISTINCT h.category_name, h.habit_title, u.nickname, hc.habit_likes, hc.participants
+        FROM HabitCommunity hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+                 JOIN User u ON h.writer_id = u.user_id
+        WHERE h.category_name = #{categoryName}
+        ORDER BY hc.habit_likes DESC
+    </select>
+
+    <!-- 참여자순 -->
+    <select id="selectByParticipants" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT DISTINCT h.category_name, h.habit_title, u.nickname, hc.habit_likes, hc.participants
+        FROM HabitCommunity hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+                 JOIN User u ON h.writer_id = u.user_id
+        WHERE h.category_name = #{categoryName}
+        ORDER BY hc.participants DESC
+    </select>
 
 </mapper>
