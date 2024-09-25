@@ -31,14 +31,4 @@ public class HabitCheckService {
   public List<HabitCheckVO> selectAllHabitChecks() {
     return habitCheckMapper.selectAllHabitChecks();
   }
-
-  // HabitCheck 업데이트
-  public void updateHabitCheck(HabitCheckVO habitCheck) {
-    habitCheckMapper.updateHabitCheck(habitCheck);
-  }
-
-  // HabitCheck 삭제
-  public void deleteHabitCheck(Long myHabitId) {
-    habitCheckMapper.deleteHabitCheck(myHabitId);
-  }
 }

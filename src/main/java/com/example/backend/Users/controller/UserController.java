@@ -3,6 +3,7 @@ package com.example.backend.Users.controller;
 import com.example.backend.Users.service.UserService;
 import com.example.backend.Users.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,28 +19,38 @@ public class UserController {
     this.userService = userService;
   }
 
+  // 신규 사용자 등록
   @PostMapping
-  public void insertUser(@RequestBody UserVO user) {
-    userService.insertUser(user);
+  public ResponseEntity<Void> registerUser(@RequestBody UserVO user) {
+    userService.registerUser(user);
+    return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/{id}")
-  public UserVO selectUserById(@PathVariable Long id) {
-    return userService.selectUserById(id);
+  // 이메일로 사용자 찾기
+  @GetMapping("/{email}")
+  public ResponseEntity<UserVO> findUserByEmail(@PathVariable String email) {
+    UserVO user = userService.findUserByEmail(email);
+    return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
   }
 
+  // 모든 사용자 찾기
   @GetMapping
-  public List<UserVO> selectAllUsers() {
-    return userService.selectAllUsers();
+  public ResponseEntity<List<UserVO>> findAllUsers() {
+    List<UserVO> users = userService.findAllUsers();
+    return ResponseEntity.ok(users);
   }
 
-  @PutMapping
-  public void updateUser(@RequestBody UserVO user) {
-    userService.updateUser(user);
+  // 닉네임 변경
+  @PutMapping("/{userId}/nickname")
+  public ResponseEntity<Void> updateUser(@PathVariable String userId, @RequestParam String newNickname) {
+    userService.updateUser(userId, newNickname);
+    return ResponseEntity.ok().build();
   }
 
-  @DeleteMapping("/{id}")
-  public void deleteUser(@PathVariable Long id) {
-    userService.deleteUser(id);
+  // 사용자 삭제
+  @DeleteMapping("/{email}")
+  public ResponseEntity<Void> deleteUser(@PathVariable String email) {
+    userService.deleteUser(email);
+    return ResponseEntity.ok().build();
   }
 }

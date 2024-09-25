@@ -32,14 +32,4 @@ public class HabitCheckController {
   public List<HabitCheckVO> selectAllHabitChecks() {
     return habitCheckService.selectAllHabitChecks();
   }
-
-  @PutMapping
-  public void updateHabitCheck(@RequestBody HabitCheckVO habitCheck) {
-    habitCheckService.updateHabitCheck(habitCheck);
-  }
-
-  @DeleteMapping("/{id}")
-  public void deleteHabitCheck(@PathVariable Long id) {
-    habitCheckService.deleteHabitCheck(id);
-  }
 }

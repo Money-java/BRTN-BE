@@ -17,28 +17,33 @@ public class UserService {
     this.userMapper = userMapper;
   }
 
-  // 사용자 등록
-  public void insertUser(UserVO user) {
+  // 신규 사용자 등록
+  public void registerUser(UserVO user) {
     userMapper.insertUser(user);
   }
 
-  // 특정 ID로 사용자 조회
-  public UserVO selectUserById(Long userId) {
-    return userMapper.selectUserById(userId);
+  // 이메일로 사용자 찾기
+  public UserVO findUserByEmail(String email) {
+    return userMapper.findUserByEmail(email);
   }
 
-  // 모든 사용자 조회
-  public List<UserVO> selectAllUsers() {
-    return userMapper.selectAllUsers();
+  // 특정 사용자 찾기
+  public UserVO findOneUser(String email) {
+    return userMapper.findOneUser(email);
   }
 
-  // 사용자 정보 업데이트
-  public void updateUser(UserVO user) {
-    userMapper.updateUser(user);
+  // 모든 사용자 찾기
+  public List<UserVO> findAllUsers() {
+    return userMapper.findAllUsers();
+  }
+
+  // 닉네임 변경
+  public void updateUser(String userId, String newNickname) {
+    userMapper.updateUser(newNickname, userId);
   }
 
   // 사용자 삭제
-  public void deleteUser(Long userId) {
-    userMapper.deleteUser(userId);
+  public void deleteUser(String email) {
+    userMapper.deleteUser(email);
   }
 }

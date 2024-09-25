@@ -7,6 +7,7 @@ import java.util.Map;
 
 @Mapper
 public interface HabitCheckMapper {
+
   // 달성한 습관 삽입
   void insertHabitCheck(HabitCheckVO habitCheckVO);
 
