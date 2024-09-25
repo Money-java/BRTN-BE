@@ -58,6 +58,7 @@ public interface TransactionMapper {
   // 오늘 지출 TOP 5 (1년 전) 조회
   List<TransactionVO> selectTop5Year();
 
-  // 과거의 시간대 별 지출 금액 조회
+  // 과거의 시간대 별 지출 금액 조회 (특정 날짜)
   List<TransactionVO> selectTimeDate(@Param("createdAt") Date createdAt);
+
 }
