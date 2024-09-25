@@ -75,6 +75,7 @@ public class AppConfig {
                 new ClassPathResource("mapper/HabitMapper.xml"),
                 new ClassPathResource("mapper/MyHabitMapper.xml"),
                 new ClassPathResource("mapper/PostCommentMapper.xml"),
+                new ClassPathResource("mapper/PostLikesMapper.xml"),
                 new ClassPathResource("mapper/PostCommunityMapper.xml"),
                 new ClassPathResource("mapper/TransactionMapper.xml"),
                 new ClassPathResource("mapper/UserMapper.xml")
