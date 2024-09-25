@@ -57,4 +57,5 @@
         WHERE h.category_name = #{categoryName}
         ORDER BY hc.participants DESC
     </select>
+
 </mapper>

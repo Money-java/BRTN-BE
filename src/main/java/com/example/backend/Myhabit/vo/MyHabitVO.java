@@ -6,6 +6,7 @@ import lombok.Data;
 public class MyHabitVO {
   private Long myHabitId;
   private Long userId;
-  private Long habitId2;
+  private Long habitId;
   private String state;
+  private String categoryTitle;
 }
