@@ -40,13 +40,6 @@ public class UserController {
     return ResponseEntity.ok(users);
   }
 
-  // 닉네임 변경
-  @PutMapping("/{userId}/nickname")
-  public ResponseEntity<Void> updateUser(@PathVariable String userId, @RequestParam String newNickname) {
-    userService.updateUser(userId, newNickname);
-    return ResponseEntity.ok().build();
-  }
-
   // 사용자 삭제
   @DeleteMapping("/{email}")
   public ResponseEntity<Void> deleteUser(@PathVariable String email) {

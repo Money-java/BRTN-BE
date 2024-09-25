@@ -160,7 +160,11 @@
             LIMIT 5;
     </select>
 
+
     <!-- 과거의 시간대 별 지출 금액 (특정 날짜) -->
+=======
+    <!-- 과거의 시간대 별 지출 금액 -->
+>>>>>>> 0c83580f546cd45cbc98bb3382d501f94534ffed
     <select id="selectTimeDate" parameterType="date" resultMap="TransactionResultMap">
         <![CDATA[
         SELECT category_title, CASE
@@ -174,6 +178,93 @@
                                 ELSE '21:00-24:00'
         END AS time_slot,
                               SUM(transaction_amount) AS total_spent
+<<<<<<< HEAD
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = #{createdAt}
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1일 전) -->
+    <select id="selectTimeDay" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE() - INTERVAL 1 DAY
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1주 전) -->
+    <select id="selectTimeWeek" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE() - INTERVAL 1 WEEK
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1달 전) -->
+    <select id="selectTimeMonth" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE() - INTERVAL 1 MONTH
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1년 전) -->
+    <select id="selectTimeYear" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+=======
+>>>>>>> 0c83580f546cd45cbc98bb3382d501f94534ffed
         FROM `Transaction`
         WHERE transaction_type = '지출' AND DATE(created_at) = #{createdAt}
         GROUP BY category_title, time_slot

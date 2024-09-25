@@ -14,6 +14,7 @@
         <package name="com.example.backend.HabitCommunity.vo"/>
         <package name="com.example.backend.MyHabit.vo"/>
         <package name="com.example.backend.PostComment.vo"/>
+        <package name="com.example.backend.PostLikes.vo"/>
         <package name="com.example.backend.PostCommunity.vo"/>
         <package name="com.example.backend.Transaction.vo"/>
     </typeAliases>

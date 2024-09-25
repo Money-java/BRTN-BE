@@ -20,9 +20,7 @@ public interface UserMapper {
   // 모든 사용자 찾기
   List<UserVO> findAllUsers();
 
-  // 닉네임 수정
-  void updateUser(String newNickname, String userId);
-
   // 회원 탈퇴
   void deleteUser(@Param("email") String email);
+
 }

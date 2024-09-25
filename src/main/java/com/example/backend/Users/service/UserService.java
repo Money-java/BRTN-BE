@@ -37,11 +37,6 @@ public class UserService {
     return userMapper.findAllUsers();
   }
 
-  // 닉네임 변경
-  public void updateUser(String userId, String newNickname) {
-    userMapper.updateUser(newNickname, userId);
-  }
-
   // 사용자 삭제
   public void deleteUser(String email) {
     userMapper.deleteUser(email);
