@@ -16,7 +16,7 @@
     </select>
 
     <!-- 특정 사용자 찾기 -->
-    <select id="findOneUsers" parameterType="String" resultType="com.example.backend.Users.vo.UserVO">
+    <select id="findOneUser" parameterType="String" resultType="com.example.backend.Users.vo.UserVO">
         SELECT * FROM Users WHERE email = #{email}
     </select>
 
