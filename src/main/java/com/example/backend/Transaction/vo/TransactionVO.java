@@ -11,4 +11,5 @@ public class TransactionVO {
   private String createdAt;
   private String transactionInfo;
   private String categoryTitle;
+  private Long totalSpent;
 }
