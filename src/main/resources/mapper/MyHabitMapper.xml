@@ -24,7 +24,7 @@
     <!-- 5. 습관 가져오기 -->
     <insert id="insertMyHabitFromOther" parameterType="com.example.backend.Habit.vo.MyHabitVO">
         INSERT INTO MyHabit (user_id, habit_id, state)
-        VALUES (#{userId}, LAST_INSERT_ID(), "대기");
+        VALUES (#{userId}, #{habit_id}, "대기");
     </insert>
 
     <!-- 6. 습관 수정하기 -->
