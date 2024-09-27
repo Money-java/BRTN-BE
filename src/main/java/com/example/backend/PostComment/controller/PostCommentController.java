@@ -52,6 +52,7 @@ public class PostCommentController {
   @GetMapping("/comments")
   public List<PostCommentVO> selectAllComments() {
     return postCommentService.selectAllComments();
+
   }
 
 }

@@ -1,6 +1,6 @@
 package com.example.backend.PostCommunity.controller;
 
-import com.example.backend.PostCommunity.service.PostCommunityService;
+import com.example.backend.PostCommunity.service.PostCommunityServiceImpl;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +12,13 @@ import java.util.Map;
 @RequestMapping("/post-community")
 public class PostCommunityController {
 
-  private final PostCommunityService postCommunityService;
+  private final PostCommunityServiceImpl postCommunityServiceImpl;
 
   @Autowired
-  public PostCommunityController(PostCommunityService postCommunityService) {
-    this.postCommunityService = postCommunityService;
+  public PostCommunityController(PostCommunityServiceImpl postCommunityServiceImpl) {
+    this.postCommunityServiceImpl = postCommunityServiceImpl;
   }
+
 
   // 4. 인증커뮤니티 인증한 습관리스트 조회
   // 인증커뮤니티 페이지의 My Shots탭, Explore탭에서 사용
@@ -42,7 +43,7 @@ public class PostCommunityController {
   // 모든 Post 조회
   @GetMapping("/all")
   public List<PostCommunityVO> selectAllPosts() {
-    return postCommunityService.selectAllPosts();
+    return postCommunityServiceImpl.selectAllPosts();
   }
 
   // Post 업데이트
@@ -57,6 +58,5 @@ public class PostCommunityController {
   public void deletePost(@PathVariable Long postId) {
     postCommunityService.deletePost(postId);
   }
-
 
 }

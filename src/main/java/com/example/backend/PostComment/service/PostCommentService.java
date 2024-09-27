@@ -1,10 +1,10 @@
 package com.example.backend.PostComment.service;
 
 import com.example.backend.PostComment.vo.PostCommentVO;
+
 import java.util.List;
 
 public interface PostCommentService {
-
   // 3. 댓글 삽입 -->
   // 인증 커뮤니티 페이지 explore탭
   void insertComment(PostCommentVO comment);
@@ -22,6 +22,5 @@ public interface PostCommentService {
 
   // 모든 댓글 조회
   List<PostCommentVO> selectAllComments();
-
 
 }

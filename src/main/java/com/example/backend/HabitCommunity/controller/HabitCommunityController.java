@@ -1,6 +1,6 @@
 package com.example.backend.HabitCommunity.controller;
 
-import com.example.backend.HabitCommunity.service.HabitCommunityService;
+import com.example.backend.HabitCommunity.service.HabitCommunityServiceImpl;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/routine-community")
 public class HabitCommunityController {
 
-  private final HabitCommunityService habitCommunityService;
+  private final HabitCommunityServiceImpl habitCommunityServiceImpl;
 
   // 1. 습관리스트 조회1 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
   @GetMapping("/sort/{sortType}")
@@ -28,38 +28,38 @@ public class HabitCommunityController {
   }
 
   @Autowired
-  public HabitCommunityController(HabitCommunityService habitCommunityService) {
-    this.habitCommunityService = habitCommunityService;
+  public HabitCommunityController(HabitCommunityServiceImpl habitCommunityServiceImpl) {
+    this.habitCommunityServiceImpl = habitCommunityServiceImpl;
   }
 
   // HabitCommunity 삽입
   @PostMapping
   public void insertHabitCommunity(@RequestBody HabitCommunityVO habitCommunity) {
-    habitCommunityService.insertHabitCommunity(habitCommunity);
+    habitCommunityServiceImpl.insertHabitCommunity(habitCommunity);
   }
 
   // 특정 ID로 HabitCommunity 조회
   @GetMapping("/{id}")
   public HabitCommunityVO selectHabitCommunityById(@PathVariable Long id) {
-    return habitCommunityService.selectHabitCommunityById(id);
+    return habitCommunityServiceImpl.selectHabitCommunityById(id);
   }
 
   // 모든 HabitCommunity 조회
   @GetMapping
   public List<HabitCommunityVO> selectAllHabitCommunities() {
-    return habitCommunityService.selectAllHabitCommunities();
+    return habitCommunityServiceImpl.selectAllHabitCommunities();
   }
 
   // HabitCommunity 업데이트
   @PutMapping
   public void updateHabitCommunity(@RequestBody HabitCommunityVO habitCommunity) {
-    habitCommunityService.updateHabitCommunity(habitCommunity);
+    habitCommunityServiceImpl.updateHabitCommunity(habitCommunity);
   }
 
   // HabitCommunity 삭제
   @DeleteMapping("/{id}")
   public void deleteHabitCommunity(@PathVariable Long id) {
-    habitCommunityService.deleteHabitCommunity(id);
+    habitCommunityServiceImpl.deleteHabitCommunity(id);
   }
 
 }

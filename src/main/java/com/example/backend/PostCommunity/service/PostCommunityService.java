@@ -1,6 +1,7 @@
 package com.example.backend.PostCommunity.service;
 
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
+
 import java.util.List;
 
 public interface PostCommunityService {
@@ -13,6 +14,5 @@ public interface PostCommunityService {
   List<PostCommunityVO> selectAllPosts();
   void updatePost(PostCommunityVO postCommunityVO);
   void deletePost(Long postId);
-
 
 }

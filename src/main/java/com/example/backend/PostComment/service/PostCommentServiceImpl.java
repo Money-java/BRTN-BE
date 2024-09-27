@@ -17,6 +17,7 @@ public class PostCommentServiceImpl implements PostCommentService {
     this.postCommentMapper = postCommentMapper;
   }
 
+
   // 3. 댓글 삽입 -->
   // 인증 커뮤니티 페이지 explore탭
   @Override

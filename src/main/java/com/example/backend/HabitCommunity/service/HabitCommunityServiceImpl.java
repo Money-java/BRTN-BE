@@ -37,6 +37,7 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
   }
 
   // 특정 ID로 HabitCommunity 조회
+
   @Override
   public HabitCommunityVO selectHabitCommunityById(Long communityId) {
     return habitCommunityMapper.selectHabitCommunityById(communityId);
@@ -49,12 +50,14 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
   }
 
   // HabitCommunity 업데이트
+
   @Override
   public void updateHabitCommunity(HabitCommunityVO habitCommunity) {
     habitCommunityMapper.updateHabitCommunity(habitCommunity);
   }
 
   // HabitCommunity 삭제
+
   @Override
   public void deleteHabitCommunity(Long communityId) {
     habitCommunityMapper.deleteHabitCommunity(communityId);

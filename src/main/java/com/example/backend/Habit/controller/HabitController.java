@@ -40,44 +40,49 @@ public class HabitController {
   }
 
   // 4. 새로운 습관 체크 작성
-  @PostMapping("/insert")
-  public ResponseEntity<Void> addMyHabit(@RequestBody MyHabitVO myHabitVO) {
+  @PostMapping("/add/my")
+  public void addMyHabit(@RequestBody MyHabitVO myHabitVO) {
     habitService.addMyHabit(myHabitVO);
-    return ResponseEntity.ok().build();
   }
 
   // 5. 체크된 습관 가져오기
-  @PostMapping("/insert")
-  public ResponseEntity<Void> addMyHabitFromOther(@RequestBody MyHabitVO myHabitVO) {
+  @PostMapping("/add/other")
+  public void addMyHabitFromOther(@RequestBody MyHabitVO myHabitVO) {
     habitService.addMyHabitFromOther(myHabitVO);
-    return ResponseEntity.ok().build();
   }
 
   // 6. 습관 수정
   @PutMapping("/update")
-  public ResponseEntity<Void> modifyMyHabit(@RequestBody MyHabitVO myHabitVO) {
+  public void modifyMyHabit(@RequestBody MyHabitVO myHabitVO) {
     habitService.modifyMyHabit(myHabitVO);
-    return ResponseEntity.ok().build();
   }
 
   // 7. 습관 삭제
   @DeleteMapping("/delete")
-  public ResponseEntity<Void> deleteMyHabit(@RequestParam("myHabitId") long myHabitId) {
+  public void deleteMyHabit(@RequestParam("myHabitId") long myHabitId) {
     habitService.deleteMyHabit(myHabitId);
-    return ResponseEntity.ok().build();
   }
 
   // 8. 습관 상태를 '진행'으로 변경
-  @PutMapping("/update")
-  public ResponseEntity<Void> modifyMyHabitStateS(@RequestParam("myHabitId") long myHabitId) {
+  @PutMapping("/update/state/start")
+  public void modifyMyHabitStateS(@RequestParam("myHabitId") long myHabitId) {
     habitService.modifyMyHabitStateS(myHabitId);
-    return ResponseEntity.ok().build();
   }
 
   // 9. 습관 상태를 '대기'로 변경
-  @PutMapping("/update")
-  public ResponseEntity<Void> modifyMyHabitStateW(@RequestParam("myHabitId") long myHabitId) {
+  @PutMapping("/update/state/wait")
+  public void modifyMyHabitStateW(@RequestParam("myHabitId") long myHabitId) {
     habitService.modifyMyHabitStateW(myHabitId);
-    return ResponseEntity.ok().build();
   }
+
+//  @PutMapping("/update/state/{state}")
+//  public void modifyMyHabitState(@RequestParam("myHabitId") long myHabitId, @PathVariable("state") String state) {
+//    if ("start".equals(state)) {
+//      habitService.modifyMyHabitStateS(myHabitId);
+//    } else if ("wait".equals(state)) {
+//      habitService.modifyMyHabitStateW(myHabitId);
+//    } else {
+//      throw new IllegalArgumentException("Invalid state: " + state);
+//    }
+//  }
 }

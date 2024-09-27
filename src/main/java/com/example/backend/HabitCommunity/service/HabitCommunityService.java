@@ -26,4 +26,5 @@ public interface HabitCommunityService {
   // HabitCommunity 삭제
   void deleteHabitCommunity(Long communityId);
 
+
 }
