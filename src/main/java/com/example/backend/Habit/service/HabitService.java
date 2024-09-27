@@ -1,66 +1,35 @@
 package com.example.backend.Habit.service;
 
-import com.example.backend.Habit.mapper.MyHabitMapper;
-import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Service
-public class HabitService {
-
-  @Autowired
-  private MyHabitMapper myHabitMapper;
-  private HabitCheckMapper habitCheckMapper;
-
+public interface HabitService {
   // 1. 나의 습관 조회
-  public List<MyHabitVO> getMyHabit(long userId) {
-    return myHabitMapper.selectMyHabit(userId);
-  }
+  List<MyHabitVO> getMyHabit(long userId);
 
   // 2. 습관 달성 체크
-  public void addHabitChecked(HabitCheckVO habitCheckVO) {
-    habitCheckMapper.insertHabitChecked(habitCheckVO);
-  }
+  void addHabitChecked(HabitCheckVO habitCheckVO);
 
   // 3. 달성한 습관 조회
-  public List<MyHabitVO> getCheckedHabit() {
-    return habitCheckMapper.selectHabitChecked();
-  }
+  List<MyHabitVO> getCheckedHabit();
 
   // 4. 새로운 습관 체크 작성
-  public void addMyHabit(MyHabitVO myHabitVO) {
-    myHabitMapper.insertMyHabit(myHabitVO);
-  }
+  void addMyHabit(MyHabitVO myHabitVO);
 
   // 5. 체크된 습관 가져오기
-  public void addMyHabitFromOther(MyHabitVO myHabitVO) {
-    myHabitMapper.insertMyHabitFromOther(myHabitVO);
-  }
+  void addMyHabitFromOther(MyHabitVO myHabitVO);
 
   // 6. 습관 수정
-  public void modifyMyHabit(MyHabitVO myHabitVO) {
-    myHabitMapper.updateMyHabit(myHabitVO);
-  }
+  public void modifyMyHabit(MyHabitVO myHabitVO);
 
   // 7. 습관 삭제
-  public void deleteMyHabit(long myHabitId) {
-    myHabitMapper.deleteMyHabit(myHabitId);
-  }
+  public void deleteMyHabit(long myHabitId);
 
   // 8. 습관 상태를 '진행'으로 변경
-  public void modifyMyHabitStateS(long myHabitId) {
-    myHabitMapper.updateMyHabitStateS(myHabitId);
-  }
+  public void modifyMyHabitStateS(long myHabitId);
 
   // 9. 습관 상태를 '대기'로 변경
-  public void modifyMyHabitStateW(long myHabitId) {
-    myHabitMapper.updateMyHabitStateW(myHabitId);
-  }
+  public void modifyMyHabitStateW(long myHabitId);
 }
