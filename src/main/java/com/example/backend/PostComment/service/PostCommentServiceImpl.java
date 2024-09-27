@@ -17,28 +17,38 @@ public class PostCommentServiceImpl implements PostCommentService {
     this.postCommentMapper = postCommentMapper;
   }
 
-  // 댓글 삽입
+
+  // 3. 댓글 삽입 -->
+  // 인증 커뮤니티 페이지 explore탭
+  @Override
   public void insertComment(PostCommentVO comment) {
     postCommentMapper.insertComment(comment);
   }
 
-  // 특정 ID로 댓글 조회
+  // 5. 댓글 수정 -->
+  // 인증 커뮤니티 페이지 explore탭
+  @Override
+  public void updateComment(PostCommentVO comment) {
+    postCommentMapper.updateComment(comment);
+  }
+
+  // 6. 댓글 삭제 -->
+  // 인증 커뮤니티 페이지 explore탭
+  @Override
+  public void deleteComment(Long commentId) {
+    postCommentMapper.deleteComment(commentId);
+  }
+
+  // 댓글 ID로 댓글 조회
+  @Override
   public PostCommentVO selectCommentById(Long commentId) {
     return postCommentMapper.selectCommentById(commentId);
   }
 
   // 모든 댓글 조회
+  @Override
   public List<PostCommentVO> selectAllComments() {
     return postCommentMapper.selectAllComments();
   }
 
-  // 댓글 업데이트
-  public void updateComment(PostCommentVO comment) {
-    postCommentMapper.updateComment(comment);
-  }
-
-  // 댓글 삭제
-  public void deleteComment(Long commentId) {
-    postCommentMapper.deleteComment(commentId);
-  }
 }

@@ -5,6 +5,24 @@
 
 <mapper namespace="com.example.backend.PostCommunity.mapper.PostCommunityMapper">
 
+    <!-- 4. 인증커뮤니티 인증한 습관리스트 조회 -->
+    <!-- 인증커뮤니티 페이지의 My Shots탭,Explore탭에서 사용 -->
+    <select id="selectPostsByCategory" parameterType="map" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT pc.*
+        FROM PostCommunity pc
+        JOIN Habit h ON pc.habit_id = h.habit_id
+        WHERE 1=1
+        <!-- 사용자 ID로 필터링 (My Shots) -->
+        <if test="userId != null">
+            AND pc.user_id = #{userId}
+        </if>
+        <!-- 카테고리 필터링 -->
+        <if test="categoryTitle != null and categoryTitle != ''">
+            AND h.category_title = #{categoryTitle}
+        </if>
+        ORDER BY pc.created_at DESC  <!-- 최신순 정렬 -->
+    </select>
+
     <insert id="insertPost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
         INSERT INTO PostCommunity (user_id, habit_id, post_likes, image_url, content, hashtag, created_at)
         VALUES (#{userId}, #{habitId}, #{postLikes}, #{imageURL}, #{content}, #{hashtag}, #{createdAt})
@@ -28,5 +46,7 @@
     <delete id="deletePost" parameterType="long">
         DELETE FROM PostCommunity WHERE post_id = #{postId}
     </delete>
+
+
 
 </mapper>

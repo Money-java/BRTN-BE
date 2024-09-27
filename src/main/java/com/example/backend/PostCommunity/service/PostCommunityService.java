@@ -5,15 +5,14 @@ import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import java.util.List;
 
 public interface PostCommunityService {
+  // 4. 인증커뮤니티 인증한 습관리스트 조회
+  // 인증커뮤니티 페이지의 My Shots탭, Explore탭에서 사용
+  List<PostCommunityVO> selectPostsByCategory(Long userId, String categoryTitle);
 
-    // PostCommunity 삽입
-    void insertPost(PostCommunityVO post);
-    // 특정 ID로 PostCommunity 조회
-    PostCommunityVO selectPostById(Long postId);
-    // 모든 PostCommunity 조회
-    List<PostCommunityVO> selectAllPosts();
-    // PostCommunity 업데이트
-    void updatePost(PostCommunityVO post);
-    // PostCommunity 삭제
-    void deletePost(Long postId);
+  void insertPost(PostCommunityVO postCommunityVO);
+  PostCommunityVO selectPostById(Long postId);
+  List<PostCommunityVO> selectAllPosts();
+  void updatePost(PostCommunityVO postCommunityVO);
+  void deletePost(Long postId);
+
 }

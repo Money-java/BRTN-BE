@@ -28,34 +28,55 @@
     <delete id="deleteHabitCommunity" parameterType="long">
         DELETE FROM HabitCommunity WHERE community_id = #{communityId}
     </delete>
-    <!-- 최신순 -->
-    <select id="selectByUploadDate" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT DISTINCT h.category_name, h.habit_title, u.nickname, hc.habit_likes, hc.participants, hc.upload_date
+
+    <!-- 1. 습관리스트 조회1 -->
+    <!--최신순 , 좋아요 순, 참여자순, 달성자 순, 정렬한 습관커뮤니티 정보 조회 -->
+    <!-- 루틴공유커뮤니티 페이지 -->
+    <select id="selectHabitList" parameterType="map" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT h.category_title, h.habit_title, u.nickname, hc.habit_likes, hc.participants, hc.complete, hc.upload_date
         FROM HabitCommunity hc
-                 JOIN Habit h ON hc.habit_id = h.habit_id
-                 JOIN User u ON h.writer_id = u.user_id
-        WHERE h.category_name = #{categoryName}
-        ORDER BY hc.upload_date DESC
+        JOIN Habit h ON hc.habit_id = h.habit_id
+        JOIN Users u ON h.writer_id = u.user_id
+        WHERE 1 = 1
+        <if test="categoryName != null and categoryName != ''">
+            AND h.category_title = #{categoryName}
+        </if>
+
+        <!-- 동적 정렬 조건 -->
+        <choose>
+            <!-- 좋아요순 정렬 -->
+            <when test="sortType == 'likes'">
+                ORDER BY hc.habit_likes DESC
+            </when>
+            <!-- 참여자순 정렬-->
+            <when test="sortType == 'participants'">
+                ORDER BY hc.participants DESC
+            </when>
+            <!-- 달성자순 정렬 -->
+            <when test="sortType == 'complete'">
+                ORDER BY hc.complete DESC
+            </when>
+            <!-- 최신순 정렬 -->
+            <when test="sortType == 'recent'">
+                ORDER BY hc.upload_date DESC
+            </when>
+            <otherwise>
+                ORDER BY hc.upload_date DESC <!-- 기본값은 최신순으로 정렬 -->
+            </otherwise>
+        </choose>
     </select>
 
-    <!-- 좋아요순 -->
-    <select id="selectByLikes" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT DISTINCT h.category_name, h.habit_title, u.nickname, hc.habit_likes, hc.participants
-        FROM HabitCommunity hc
-                 JOIN Habit h ON hc.habit_id = h.habit_id
-                 JOIN User u ON h.writer_id = u.user_id
-        WHERE h.category_name = #{categoryName}
-        ORDER BY hc.habit_likes DESC
-    </select>
 
-    <!-- 참여자순 -->
-    <select id="selectByParticipants" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT DISTINCT h.category_name, h.habit_title, u.nickname, hc.habit_likes, hc.participants
+    <!-- 2. 습관리스트 조회2 -->
+    <!-- 내가 좋아요한 루틴 조회 -->
+    <!-- 루틴공유커뮤니티 페이지-->
+    <select id="selectLikedCommunities" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        SELECT hc.community_id, h.habit_title, h.category_title, u.nickname, hc.habit_likes, hc.participants, hc.complete, hc.upload_date
         FROM HabitCommunity hc
+                 JOIN PostLikes pl ON hc.community_id = pl.post_id
                  JOIN Habit h ON hc.habit_id = h.habit_id
-                 JOIN User u ON h.writer_id = u.user_id
-        WHERE h.category_name = #{categoryName}
-        ORDER BY hc.participants DESC
+                 JOIN Users u ON h.writer_id = u.user_id
+        WHERE pl.user_id = #{userId}
     </select>
 
 </mapper>
