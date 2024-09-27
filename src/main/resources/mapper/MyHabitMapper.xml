@@ -3,76 +3,63 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.backend.Myhabit.mapper.MyHabitMapper">
+<mapper namespace="com.example.backend.Habit.mapper.MyHabitMapper">
 
-    <!-- 습관 삽입 -->
-    <insert id="insertMyHabit" parameterType="com.example.backend.Myhabit.vo.MyHabitVO">
-        INSERT INTO MyHabit (user_id, habit_id, state)
-        VALUES (#{userId}, #{habitId}, #{state})
-    </insert>
-
-    <!-- 오늘 진행 중인 습관 목록 출력 -->
-    <select id="selectMyHabitToday" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT h.habit_title FROM MyHabit mh JOIN HABIT h ON mh.habit_id = h.habit_id
+    <!-- 1. 나의 습관 조회 -->
+    <select id="selectMyHabit" parameterType="long" resultType="com.example.backend.Habit.vo.MyHabitVO">
+        SELECT mh.my_habit_id, h.habit_id, h.habit_title, h.category_title
+        FROM MyHabit mh
+                 JOIN HABIT h ON mh.habit_id = h.habit_id
         WHERE mh.user_id = #{userId} AND mh.state = '진행';
     </select>
 
-    <!-- 습관 상태 변경 -->
-    <update id="updateMyHabit" parameterType="com.example.backend.Myhabit.vo.MyHabitVO">
-        UPDATE MyHabit
-        SET state = #{state}
-        WHERE my_habit_id = #{myHabitId}
+    <!-- 4. 새로운 습관 작성 -->
+    <insert id="insertMyHabit" parameterType="com.example.backend.Habit.vo.MyHabitVO">
+        INSERT INTO Habit (user_id, habit_title, category_title)
+        VALUES (#{userId}, #{habitTitle}, #{categoryTitle});
+
+        INSERT INTO MyHabit (user_id, habit_id, state)
+        VALUES (#{userId}, LAST_INSERT_ID(), '대기');
+    </insert>
+
+    <!-- 5. 습관 가져오기 -->
+    <insert id="insertMyHabitFromOther" parameterType="com.example.backend.Habit.vo.MyHabitVO">
+        INSERT INTO MyHabit (user_id, habit_id, state)
+        VALUES (#{userId}, LAST_INSERT_ID(), "대기");
+    </insert>
+
+    <!-- 6. 습관 수정하기 -->
+    <update id="updateMyHabit" parameterType="com.example.backend.Habit.vo.MyHabitVO">
+        UPDATE Habit
+        <set>
+            <if test="habitTitle != null">
+                habit_title = #{habitTitle},
+            </if>
+            <if test="categoryTitle != null">
+                category_title = #{categoryTitle},
+            </if>
+        </set>
+        WHERE my_habit_id = #{myHabitId};
     </update>
 
-    <!-- 습관 삭제 -->
+    <!-- 7. 습관 삭제하기 -->
     <delete id="deleteMyHabit" parameterType="long">
-        DELETE FROM MyHabit WHERE my_habit_id = #{myHabitId}
+        DELETE
+        FROM MyHabit
+        WHERE my_habit_id = #{myHabitId};
     </delete>
-    <!-- 대기 상태 (OFF)인 습관 목록 조회 -->
-    <select id="selectHabitsByStateOff" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT h.habit_title, h.category_title
-        FROM MyHabit mh
-                 JOIN Habit h ON mh.habit_id = h.habit_id
-        WHERE mh.state = 'OFF';
-    </select>
 
-    <!-- 진행 상태 (ON)인 습관 목록 조회 -->
-    <select id="selectHabitsByStateOn" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT h.habit_title, h.category_title
-        FROM MyHabit mh
-                 JOIN Habit h ON mh.habit_id = h.habit_id
-        WHERE mh.state = 'ON';
-    </select>
-
-    <!-- 습관 상태 'ON'으로 변경 -->
-    <update id="updateHabitStateOn">
+    <!-- 8. 습관 상태 진행으로 변경하기 -->
+    <update id="updateMyHabitStateS" parameterType="long">
         UPDATE MyHabit
-        SET state = 'ON'
+        SET state = "진행"
         WHERE my_habit_id = #{myHabitId};
     </update>
 
-    <!-- 습관 상태 'OFF'로 변경 -->
-    <update id="updateHabitStateOff">
+    <!-- 9. 습관 상태 대기로 변경하기 -->
+    <update id="updateMyHabitStateW" parameterType="long">
         UPDATE MyHabit
-        SET state = 'OFF'
+        SET state = "대기"
         WHERE my_habit_id = #{myHabitId};
     </update>
-
-    <!-- 진행중인 습관 제목을 가져오는 쿼리 -->
-    <select id="selectHabitTitlesByState" resultType="String">
-        SELECT h.habit_title
-        FROM MyHabit mh
-                 JOIN Habit h ON mh.habit_id = h.habit_id
-        WHERE mh.state = 'on'
-    </select>
-
-    <!-- 습관 하나 출력  -->
-    <select id="selectMyHabitById" parameterType="long" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT * FROM MyHabit WHERE my_habit_id = #{myHabitId}
-    </select>
-
-    <!-- 습관 모두 출력  -->
-    <select id="selectAllMyHabits" resultType="com.example.backend.Myhabit.vo.MyHabitVO">
-        SELECT * FROM MyHabit
-    </select>
 </mapper>
