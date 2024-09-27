@@ -1,59 +1,29 @@
 package com.example.backend.HabitCommunity.service;
 
-import com.example.backend.HabitCommunity.mapper.HabitCommunityMapper;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-public class HabitCommunityService {
+public interface HabitCommunityService {
 
-  private final HabitCommunityMapper habitCommunityMapper;
+  // 1. 습관 리스트 조회 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
+  List<HabitCommunityVO> selectHabitList(String categoryName, String sortType);
 
-  @Autowired
-  public HabitCommunityService(HabitCommunityMapper habitCommunityMapper) {
-    this.habitCommunityMapper = habitCommunityMapper;
-  }
+  // 2. 내가 좋아요한 루틴 조회
+  List<HabitCommunityVO> selectLikedCommunities(String userId);
 
   // HabitCommunity 삽입
-  public void insertHabitCommunity(HabitCommunityVO habitCommunity) {
-    habitCommunityMapper.insertHabitCommunity(habitCommunity);
-  }
+  void insertHabitCommunity(HabitCommunityVO habitCommunity);
 
   // 특정 ID로 HabitCommunity 조회
-  public HabitCommunityVO selectHabitCommunityById(Long communityId) {
-    return habitCommunityMapper.selectHabitCommunityById(communityId);
-  }
+  HabitCommunityVO selectHabitCommunityById(Long communityId);
 
   // 모든 HabitCommunity 조회
-  public List<HabitCommunityVO> selectAllHabitCommunities() {
-    return habitCommunityMapper.selectAllHabitCommunities();
-  }
+  List<HabitCommunityVO> selectAllHabitCommunities();
 
   // HabitCommunity 업데이트
-  public void updateHabitCommunity(HabitCommunityVO habitCommunity) {
-    habitCommunityMapper.updateHabitCommunity(habitCommunity);
-  }
+  void updateHabitCommunity(HabitCommunityVO habitCommunity);
 
   // HabitCommunity 삭제
-  public void deleteHabitCommunity(Long communityId) {
-    habitCommunityMapper.deleteHabitCommunity(communityId);
-  }
+  void deleteHabitCommunity(Long communityId);
 
-  // 카테고리별 최신순 조회
-  public List<HabitCommunityVO> selectByUploadDate(String categoryName) {
-    return habitCommunityMapper.selectByUploadDate(categoryName);
-  }
-
-  // 카테고리별 좋아요순 조회
-  public List<HabitCommunityVO> selectByLikes(String categoryName) {
-    return habitCommunityMapper.selectByLikes(categoryName);
-  }
-
-  // 카테고리별 참여자순 조회
-  public List<HabitCommunityVO> selectByParticipants(String categoryName) {
-    return habitCommunityMapper.selectByParticipants(categoryName);
-  }
 }

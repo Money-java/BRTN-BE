@@ -1,44 +1,18 @@
 package com.example.backend.PostCommunity.service;
 
-import com.example.backend.PostCommunity.mapper.PostCommunityMapper;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-public class PostCommunityService {
+public interface PostCommunityService {
+  // 4. 인증커뮤니티 인증한 습관리스트 조회
+  // 인증커뮤니티 페이지의 My Shots탭, Explore탭에서 사용
+  List<PostCommunityVO> selectPostsByCategory(Long userId, String categoryTitle);
 
-  private final PostCommunityMapper postCommunityMapper;
+  void insertPost(PostCommunityVO postCommunityVO);
+  PostCommunityVO selectPostById(Long postId);
+  List<PostCommunityVO> selectAllPosts();
+  void updatePost(PostCommunityVO postCommunityVO);
+  void deletePost(Long postId);
 
-  @Autowired
-  public PostCommunityService(PostCommunityMapper postCommunityMapper) {
-    this.postCommunityMapper = postCommunityMapper;
-  }
 
-  // PostCommunity 삽입
-  public void insertPost(PostCommunityVO post) {
-    postCommunityMapper.insertPost(post);
-  }
-
-  // 특정 ID로 PostCommunity 조회
-  public PostCommunityVO selectPostById(Long postId) {
-    return postCommunityMapper.selectPostById(postId);
-  }
-
-  // 모든 PostCommunity 조회
-  public List<PostCommunityVO> selectAllPosts() {
-    return postCommunityMapper.selectAllPosts();
-  }
-
-  // PostCommunity 업데이트
-  public void updatePost(PostCommunityVO post) {
-    postCommunityMapper.updatePost(post);
-  }
-
-  // PostCommunity 삭제
-  public void deletePost(Long postId) {
-    postCommunityMapper.deletePost(postId);
-  }
 }
