@@ -3,92 +3,28 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.backend.HabitCheck.mapper.HabitCheckMapper">
+<mapper namespace="com.example.backend.Habit.mapper.HabitCheckMapper">
 
-    <!-- HabitCheckVO에 대한 resultMap 정의 -->
-    <resultMap id="HabitCheckResultMap" type="com.example.backend.HabitCheck.vo.HabitCheckVO">
-        <result property="checkDate" column="check_date"/>
-        <result property="myHabitId" column="my_habit_id"/>
-        <result property="userId" column="user_id"/>
-        <result property="habitId" column="habit_id"/>
-    </resultMap>
-
-    <!-- 달성한 습관 삽입 -->
-    <insert id="insertHabitCheck" parameterType="com.example.backend.HabitCheck.vo.HabitCheckVO">
+    <!-- 2. 달성한 습관 삽입 -->
+    <!-- 체크리스트 사용 -->
+    <insert id="insertHabitChecked" parameterType="com.example.backend.Habit.vo.HabitCheckVO">
         INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
-        VALUES (#{checkDate}, #{myHabitId}, #{userId}, #{habitId})
+        VALUES (CURRENT_DATE, #{myHabitId}, #{userId}, #{habitId})
     </insert>
 
-    <!-- 오늘 달성한 습관 목록 -->
-    <select id="selectTodayHabitCheck" parameterType="long" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
+    <!-- 3. 달성한 습관 조회 -->
+    <!-- 오늘과 과거에 달성한 습관 목록 -->
+    <!-- 나 vs 나 페이지 -->
+    <select id="selectHabitChecked" parameterType="map" resultType="com.example.backend.Habit.vo.MyHabitVO">
+        SELECT hc.my_habit_id, hc.habit_id, hc.user_id, hc.check_date, h.habit_title, h.category_title
         FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = CURDATE() AND user_id = #{userId};
-    </select>
-
-    <!-- 과거 달성한 습관 목록 -->
-    <select id="selectPastHabitCheck" parameterType="map" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
-        FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = CURDATE() AND user_id = #{userId};
-    </select>
-
-    <!-- 과거 달성한 습관 목록 (특정 날짜) -->
-    <select id="selectPastHabitCheckDate" parameterType="map" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
-        FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = #{checkDate} AND user_id = #{userId};
-    </select>
-
-    <!-- 과거 달성한 습관 목록 (1일 전) -->
-    <select id="selectPastHabitCheckDay" parameterType="map" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
-        FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 DAY AND user_id = #{userId};
-    </select>
-
-    <!-- 과거 달성한 습관 목록 (1주 전) -->
-    <select id="selectPastHabitCheckWeek" parameterType="map" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
-        FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 WEEK AND user_id = #{userId};
-    </select>
-
-    <!-- 과거 달성한 습관 목록 (1달 전) -->
-    <select id="selectPastHabitCheckMonth" parameterType="map" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
-        FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 MONTH AND user_id = #{userId};
-    </select>
-
-    <!-- 과거 달성한 습관 목록 (1년 전) -->
-    <select id="selectPastHabitCheckYear" parameterType="map" resultMap="HabitCheckResultMap">
-        SELECT h.habit_title, h.category_title
-        FROM `HabitCheck` hc
-                 JOIN `MyHabit` mh ON hc.my_habit_id = mh.my_habit_id
-                 JOIN `Habit` h ON mh.habit_id = h.habit_id
-        WHERE DATE(hc.check_date) = CURDATE() - INTERVAL 1 YEAR AND user_id = #{userId};
-    </select>
-
-    <!-- 특정 습관 -->
-    <select id="selectHabitCheckById" parameterType="long" resultMap="HabitCheckResultMap">
-        SELECT * FROM HabitCheck WHERE my_habit_id = #{myHabitId}
-    </select>
-
-    <!-- 모든 습관  -->
-    <select id="selectAllHabitChecks" resultMap="HabitCheckResultMap">
-        SELECT * FROM HabitCheck
+        JOIN `Habit` h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+        <if test="checkDate != null">
+            AND DATE(check_date) = #{checkDate}
+        </if>
+        <if test="checkDate == null">
+            AND DATE(check_date) = CURDATE()
+        </if>
     </select>
 </mapper>

@@ -1,44 +1,66 @@
 package com.example.backend.Habit.service;
 
-import com.example.backend.Habit.mapper.HabitMapper;
-import com.example.backend.Habit.vo.HabitVO;
+import com.example.backend.Habit.mapper.MyHabitMapper;
+import com.example.backend.Habit.mapper.HabitCheckMapper;
+import com.example.backend.Habit.vo.HabitCheckVO;
+import com.example.backend.Habit.vo.MyHabitVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Service
 public class HabitService {
 
-  private final HabitMapper habitMapper;
-
   @Autowired
-  public HabitService(HabitMapper habitMapper) {
-    this.habitMapper = habitMapper;
+  private MyHabitMapper myHabitMapper;
+  private HabitCheckMapper habitCheckMapper;
+
+  // 1. 나의 습관 조회
+  public List<MyHabitVO> getMyHabit(long userId) {
+    return myHabitMapper.selectMyHabit(userId);
   }
 
-  // Habit 삽입
-  public void insertHabit(HabitVO habit) {
-    habitMapper.insertHabit(habit);
+  // 2. 습관 달성 체크
+  public void addHabitChecked(HabitCheckVO habitCheckVO) {
+    habitCheckMapper.insertHabitChecked(habitCheckVO);
   }
 
-  // 특정 ID로 Habit 조회
-  public HabitVO selectHabitById(Long habitId) {
-    return habitMapper.selectHabitById(habitId);
+  // 3. 달성한 습관 조회
+  public List<MyHabitVO> getCheckedHabit() {
+    return habitCheckMapper.selectHabitChecked();
   }
 
-  // 모든 Habit 조회
-  public List<HabitVO> selectAllHabits() {
-    return habitMapper.selectAllHabits();
+  // 4. 새로운 습관 체크 작성
+  public void addMyHabit(MyHabitVO myHabitVO) {
+    myHabitMapper.insertMyHabit(myHabitVO);
   }
 
-  // Habit 업데이트
-  public void updateHabit(HabitVO habit) {
-    habitMapper.updateHabit(habit);
+  // 5. 체크된 습관 가져오기
+  public void addMyHabitFromOther(MyHabitVO myHabitVO) {
+    myHabitMapper.insertMyHabitFromOther(myHabitVO);
   }
 
-  // Habit 삭제
-  public void deleteHabit(Long habitId) {
-    habitMapper.deleteHabit(habitId);
+  // 6. 습관 수정
+  public void modifyMyHabit(MyHabitVO myHabitVO) {
+    myHabitMapper.updateMyHabit(myHabitVO);
+  }
+
+  // 7. 습관 삭제
+  public void deleteMyHabit(long myHabitId) {
+    myHabitMapper.deleteMyHabit(myHabitId);
+  }
+
+  // 8. 습관 상태를 '진행'으로 변경
+  public void modifyMyHabitStateS(long myHabitId) {
+    myHabitMapper.updateMyHabitStateS(myHabitId);
+  }
+
+  // 9. 습관 상태를 '대기'로 변경
+  public void modifyMyHabitStateW(long myHabitId) {
+    myHabitMapper.updateMyHabitStateW(myHabitId);
   }
 }
