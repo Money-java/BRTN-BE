@@ -25,19 +25,19 @@ public class PostCommunityController {
   @GetMapping("/explore")
   public List<PostCommunityVO> selectPostsByCategory(@RequestParam(value = "userId", required = false) Long userId,
                                                      @RequestParam(value = "category", required = false) String categoryTitle) {
-    return postCommunityService.selectPostsByCategory(userId, categoryTitle);
+    return postCommunityServiceImpl.selectPostsByCategory(userId, categoryTitle);
   }
 
   // Post 추가
   @PostMapping("/add")
   public void insertPost(@RequestBody PostCommunityVO postCommunityVO) {
-    postCommunityService.insertPost(postCommunityVO);
+    postCommunityServiceImpl.insertPost(postCommunityVO);
   }
 
   // 특정 Post 조회 (by ID)
   @GetMapping("/{postId}")
   public PostCommunityVO selectPostById(@PathVariable Long postId) {
-    return postCommunityService.selectPostById(postId);
+    return postCommunityServiceImpl.selectPostById(postId);
   }
 
   // 모든 Post 조회
@@ -50,13 +50,13 @@ public class PostCommunityController {
   @PutMapping("/update/{postId}")
   public void updatePost(@PathVariable Long postId, @RequestBody PostCommunityVO postCommunityVO) {
     postCommunityVO.setPostId(postId);
-    postCommunityService.updatePost(postCommunityVO);
+    postCommunityServiceImpl.updatePost(postCommunityVO);
   }
 
   // Post 삭제
   @DeleteMapping("/delete/{postId}")
   public void deletePost(@PathVariable Long postId) {
-    postCommunityService.deletePost(postId);
+    postCommunityServiceImpl.deletePost(postId);
   }
 
 }

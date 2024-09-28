@@ -17,14 +17,14 @@ public class HabitCommunityController {
   @GetMapping("/sort/{sortType}")
   public List<HabitCommunityVO> selectHabitList(@RequestParam(required = false) String categoryName,
                                                 @PathVariable String sortType) {
-    return habitCommunityService.selectHabitList(categoryName, sortType);
+    return habitCommunityServiceImpl.selectHabitList(categoryName, sortType);
   }
 
   // 2. 습관리스트 조회2
   // 내가 좋아요한 루틴 조회
   @GetMapping("/liked")
   public List<HabitCommunityVO> selectLikedCommunities(@RequestParam String userId) {
-    return habitCommunityService.selectLikedCommunities(userId);
+    return habitCommunityServiceImpl.selectLikedCommunities(userId);
   }
 
   @Autowired
