@@ -8,37 +8,55 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UsersServiceImpl implements UsersService {
 
   private final UserMapper userMapper;
 
   @Autowired
-  public UserService(UserMapper userMapper) {
+  public UsersServiceImpl(UserMapper userMapper) {
     this.userMapper = userMapper;
   }
 
   // 신규 사용자 등록
-  public void registerUser(UserVO user) {
-    userMapper.insertUser(user);
+  @Override
+  public void insertUser(UserVO userVO) {
+    userMapper.insertUser(userVO);
   }
 
-  // 이메일로 사용자 찾기
+  // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
+  @Override
   public UserVO findUserByEmail(String email) {
     return userMapper.findUserByEmail(email);
   }
 
   // 특정 사용자 찾기
+  @Override
   public UserVO findOneUser(String email) {
     return userMapper.findOneUser(email);
   }
 
   // 모든 사용자 찾기
+  @Override
   public List<UserVO> findAllUsers() {
     return userMapper.findAllUsers();
   }
 
-  // 사용자 삭제
+  // 닉네임 변경
+  @Override
+  public void updateUser(String nickname, Long userId) {
+    userMapper.updateUser(nickname, userId);
+  }
+
+  // 회원 탈퇴
+  @Override
   public void deleteUser(String email) {
     userMapper.deleteUser(email);
+  }
+
+  // 1. 리워드 증가
+  // 인증 커뮤니티에서 인증 시 Users 테이블의 특정 사용자의 reward 올리기
+  @Override
+  public void incrementUserReward(Long userId) {
+    userMapper.incrementUserReward(userId);
   }
 }

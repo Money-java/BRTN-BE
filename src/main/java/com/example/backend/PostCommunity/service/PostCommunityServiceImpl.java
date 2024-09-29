@@ -27,6 +27,14 @@ public class PostCommunityServiceImpl implements PostCommunityService {
     return postCommunityMapper.selectPostsByCategory(userId, categoryTitle);
   }
 
+  // 9. 인증개수 조회
+  // 특정 사용자가 인증한 게시글의 총 개수를 구하는 메서드
+  // 인증커뮤니티 페이지 (레벨)
+  @Override
+  public int countUserCertifications(Long userId) {
+    return postCommunityMapper.countUserCertifications(userId);
+  }
+
   @Override
   public void insertPost(PostCommunityVO postCommunityVO) {
     postCommunityMapper.insertPost(postCommunityVO);

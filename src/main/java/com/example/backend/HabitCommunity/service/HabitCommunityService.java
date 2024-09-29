@@ -11,6 +11,12 @@ public interface HabitCommunityService {
   // 2. 내가 좋아요한 루틴 조회
   List<HabitCommunityVO> selectLikedCommunities(String userId);
 
+  // 7. 도전하기 기능(스크랩)
+  void addHabitToMyHabit(Long userId, Long habitId);
+
+  // 8. 습관검색기능
+  List<HabitCommunityVO> searchHabitCommunities(String keyword);
+
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
 

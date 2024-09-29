@@ -27,6 +27,17 @@ public class HabitCommunityController {
     return habitCommunityServiceImpl.selectLikedCommunities(userId);
   }
 
+  // 7. 도전하기 기능: 특정 습관을 MyHabit 테이블에 추가
+  @PostMapping("/challenge")
+  public void addHabitToMyHabit(@RequestParam Long userId, @RequestParam Long habitId) {
+    habitCommunityServiceImpl.addHabitToMyHabit(userId, habitId);
+  }
+
+  // 8. 습관검색기능
+  @GetMapping("/search")
+  public List<HabitCommunityVO> searchHabitCommunities(@RequestParam String keyword) {
+    return habitCommunityServiceImpl.searchHabitCommunities(keyword);
+  }
   @Autowired
   public HabitCommunityController(HabitCommunityServiceImpl habitCommunityServiceImpl) {
     this.habitCommunityServiceImpl = habitCommunityServiceImpl;

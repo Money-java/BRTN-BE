@@ -4,6 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.backend.Users.mapper.UserMapper">
+
+    <!-- 1. 리워드 증가 -->
+    <!--인증 커뮤니티에서 인증 시 Users 테이블의 특정 사용자의 reward 올리기 -->
+    <update id="incrementUserReward">
+        UPDATE Users
+        SET reward = reward + 1
+        WHERE user_id = #{userId}
+    </update>
+
     <!-- 신규 사용자 등록 -->
     <insert id="insertUser" parameterType="com.example.backend.Users.vo.UserVO">
         INSERT INTO Users (email, name, nickname, provider, role)
