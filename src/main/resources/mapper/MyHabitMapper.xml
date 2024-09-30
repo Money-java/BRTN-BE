@@ -88,7 +88,14 @@
     <!-- 13. 인증 커뮤니티에 업로드하기 -->
     <insert id="insertPostCommunity" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
         INSERT INTO PostCommunity (user_id, habit_id, imageURL, content, hashtag)
-        VALUES (#{userId}, #{habitId}, #{imageURL}, #{content}, #{hashtag});
+        VALUES (#{userId}, #{habitId}, #{imageURL}, #{content}, #{hasht
+
+        INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
+        VALUES (CURRENT_DATE, #{myHabitId}, #{userId}, #{habitId})
+
+        UPDATE MyHabit
+        SET state = '완료'
+        WHERE habit_id = #{habitId} AND user_id = #{userId}
     </insert>
 
 </mapper>
