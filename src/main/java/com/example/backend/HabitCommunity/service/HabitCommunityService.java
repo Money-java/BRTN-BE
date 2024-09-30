@@ -11,9 +11,6 @@ public interface HabitCommunityService {
   // 2. 내가 좋아요한 루틴 조회
   List<HabitCommunityVO> selectLikedCommunities(String userId);
 
-  // HabitCommunity 삽입
-  void insertHabitCommunity(HabitCommunityVO habitCommunity);
-
   // 특정 ID로 HabitCommunity 조회
   HabitCommunityVO selectHabitCommunityById(Long communityId);
 

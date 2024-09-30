@@ -14,7 +14,7 @@
 
     <!-- 4. 새로운 습관 작성 -->
     <insert id="insertMyHabit" parameterType="com.example.backend.Habit.vo.MyHabitVO">
-        INSERT INTO Habit (user_id, habit_title, category_title)
+        INSERT INTO Habit (user_id, habit_title, category_title, save_amount, certification)
         VALUES (#{userId}, #{habitTitle}, #{categoryTitle});
 
         INSERT INTO MyHabit (user_id, habit_id, state)
@@ -61,4 +61,34 @@
         SET state = "대기"
         WHERE my_habit_id = #{myHabitId};
     </update>
+
+    <!-- 10. 오늘 절약 가능한 예상 금액 -->
+    <select id="totalSaveAmount" resultType="int">
+        SELECT SUM(h.save_amount) as total_save_amount
+        FROM Habit h
+                 JOIN Myhabit mh ON h.habit_id = mh.habit_id
+        WHERE mh.state = "진행";
+    </select>
+
+    <!-- 11. 실제 절약 금액 -->
+    <select id="realSaveAmount" parameterType="int" resultType="int">
+        SELECT SUM(h.save_amount) AS total_save_amount
+        FROM HabitCheck hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+          AND DATE(hc.check_date) = CURDATE();
+    </select>
+
+    <!-- 12. 습관 커뮤니티에 업로드하기 -->
+    <insert id="insertHabitCommunity" parameterType="int">
+        INSERT INTO HabitCommunity (habit_id)
+        VALUES (#{habitId});
+    </insert>
+
+    <!-- 13. 인증 커뮤니티에 업로드하기 -->
+    <insert id="insertPostCommunity" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        INSERT INTO PostCommunity (user_id, habit_id, imageURL, content, hashtag)
+        VALUES (#{userId}, #{habitId}, #{imageURL}, #{content}, #{hashtag});
+    </insert>
+
 </mapper>

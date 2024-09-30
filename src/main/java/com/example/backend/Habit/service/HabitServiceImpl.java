@@ -62,4 +62,24 @@ public class HabitServiceImpl implements HabitService {
     public void modifyMyHabitStateW(long myHabitId) {
         myHabitMapper.updateMyHabitStateW(myHabitId);
     }
+
+    // 10. 오늘 절약 가능한 예상 금액
+    public int saveTotalAmount() {
+        return myHabitMapper.totalSaveAmount();
+    }
+
+    // 11. 실제 절약 금액
+    public int saveRealAmount() {
+        return myHabitMapper.realSaveAmount();
+    }
+
+    // 12. 습관 커뮤니티에 업로드하기
+    public void addHabitCommunity() {
+        myHabitMapper.insertHabitCommunity();
+    }
+
+    // 13. 인증 커뮤니티에 업로드하기
+    public void addPostCommunity() {
+        myHabitMapper.insertPostCommunity();
+    }
 }

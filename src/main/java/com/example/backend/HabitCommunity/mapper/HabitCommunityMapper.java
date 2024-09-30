@@ -16,9 +16,6 @@ public interface HabitCommunityMapper {
   // 내가 좋아요한 루틴 조회
   List<HabitCommunityVO> selectLikedCommunities(@Param("userId") String userId);
 
-  // HabitCommunity 삽입
-  void insertHabitCommunity(HabitCommunityVO habitCommunity);
-
   // communityId로 HabitCommunity 조회
   HabitCommunityVO selectHabitCommunityById(Long communityId);
 
