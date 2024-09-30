@@ -3,6 +3,7 @@ package com.example.backend.Habit.controller;
 import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,14 +76,27 @@ public class HabitController {
     habitService.modifyMyHabitStateW(myHabitId);
   }
 
-//  @PutMapping("/update/state/{state}")
-//  public void modifyMyHabitState(@RequestParam("myHabitId") long myHabitId, @PathVariable("state") String state) {
-//    if ("start".equals(state)) {
-//      habitService.modifyMyHabitStateS(myHabitId);
-//    } else if ("wait".equals(state)) {
-//      habitService.modifyMyHabitStateW(myHabitId);
-//    } else {
-//      throw new IllegalArgumentException("Invalid state: " + state);
-//    }
-//  }
+  // 10. 오늘 절약 가능한 예상 금액
+  @GetMapping("/save/expection")
+  public int saveTotalAmount() {
+    return habitService.saveTotalAmount();
+  }
+
+  // 11. 실제 절약 금액
+  @GetMapping("/save/real")
+  public int saveRealAmount() {
+    return habitService.saveRealAmount();
+  }
+
+  // 12. 습관 커뮤니티에 업로드하기
+  @PostMapping("/upload/habit")
+  public void addHabitCommunity(@RequestParam("userId") long userId) {
+    habitService.addHabitCommunity();
+  }
+
+  // 13. 인증 커뮤니티에 업로드하기
+  @PostMapping("/upload/post")
+  public void addPostCommunity(@RequestBody PostCommunityVO postCommunityVO) {
+    habitService.addPostCommunity();
+  }
 }

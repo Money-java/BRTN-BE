@@ -22,14 +22,26 @@ public interface HabitService {
   void addMyHabitFromOther(MyHabitVO myHabitVO);
 
   // 6. 습관 수정
-  public void modifyMyHabit(MyHabitVO myHabitVO);
+  void modifyMyHabit(MyHabitVO myHabitVO);
 
   // 7. 습관 삭제
-  public void deleteMyHabit(long myHabitId);
+  void deleteMyHabit(long myHabitId);
 
   // 8. 습관 상태를 '진행'으로 변경
-  public void modifyMyHabitStateS(long myHabitId);
+  void modifyMyHabitStateS(long myHabitId);
 
   // 9. 습관 상태를 '대기'로 변경
-  public void modifyMyHabitStateW(long myHabitId);
+  void modifyMyHabitStateW(long myHabitId);
+
+  // 10. 오늘 절약 가능한 예상 금액
+  int saveTotalAmount();
+
+  // 11. 실제 절약 금액
+  int saveRealAmount();
+
+  // 12. 습관 커뮤니티에 업로드하기
+  void addHabitCommunity();
+
+  // 13. 인증 커뮤니티에 업로드하기
+  void addPostCommunity();
 }

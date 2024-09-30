@@ -30,12 +30,6 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     return habitCommunityMapper.selectLikedCommunities(userId);
   }
 
-  // HabitCommunity 삽입
-  @Override
-  public void insertHabitCommunity(HabitCommunityVO habitCommunity) {
-    habitCommunityMapper.insertHabitCommunity(habitCommunity);
-  }
-
   // 특정 ID로 HabitCommunity 조회
 
   @Override

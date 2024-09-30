@@ -32,12 +32,6 @@ public class HabitCommunityController {
     this.habitCommunityServiceImpl = habitCommunityServiceImpl;
   }
 
-  // HabitCommunity 삽입
-  @PostMapping
-  public void insertHabitCommunity(@RequestBody HabitCommunityVO habitCommunity) {
-    habitCommunityServiceImpl.insertHabitCommunity(habitCommunity);
-  }
-
   // 특정 ID로 HabitCommunity 조회
   @GetMapping("/{id}")
   public HabitCommunityVO selectHabitCommunityById(@PathVariable Long id) {
