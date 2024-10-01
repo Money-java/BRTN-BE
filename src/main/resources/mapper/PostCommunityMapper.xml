@@ -23,6 +23,15 @@
         ORDER BY pc.created_at DESC  <!-- 최신순 정렬 -->
     </select>
 
+   <!-- 9. 인증개수 조회 -->
+    <!-- 특정 사용자가 인증한 게시글의 총 개수를 구하는 메서드 -->
+    <!-- 인증커뮤니티 페이지 (레벨) -->
+    <select id="countUserCertifications" resultType="int">
+        SELECT COUNT(*)
+        FROM PostCommunity
+        WHERE user_id = #{userId}
+    </select>
+
     <insert id="insertPost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
         INSERT INTO PostCommunity (user_id, habit_id, post_likes, image_url, content, hashtag, created_at)
         VALUES (#{userId}, #{habitId}, #{postLikes}, #{imageURL}, #{content}, #{hashtag}, #{createdAt})

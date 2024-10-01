@@ -16,6 +16,19 @@ public interface HabitCommunityMapper {
   // 내가 좋아요한 루틴 조회
   List<HabitCommunityVO> selectLikedCommunities(@Param("userId") String userId);
 
+
+
+  // 새로운 습관을 MyHabit 테이블에 추가하는 쿼리 (도전하기 기능)
+  void addHabitToMyHabit(@Param("userId") Long userId, @Param("habitId") Long habitId);
+  // 8. 습관검색기능 
+  // 루틴커뮤니티 페이지
+  List<HabitCommunityVO> searchHabitCommunities(@Param("keyword") String keyword);
+
+
+
+  // HabitCommunity 삽입
+  void insertHabitCommunity(HabitCommunityVO habitCommunity);
+
   // communityId로 HabitCommunity 조회
   HabitCommunityVO selectHabitCommunityById(Long communityId);
 
