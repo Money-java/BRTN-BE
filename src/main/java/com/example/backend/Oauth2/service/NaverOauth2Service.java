@@ -1,9 +1,11 @@
 package com.example.backend.Oauth2.service;
 
 import com.example.backend.Oauth2.utils.KakaoUserInfo;
+import com.example.backend.Oauth2.utils.NaverUserInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
@@ -15,25 +17,24 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @PropertySource("classpath:application.properties")
-public class KakaoOauth2Service implements CustomOauth2Service{
+public class NaverOauth2Service implements CustomOauth2Service{
 
-    @Value("${kakao.token-url}")
-    private String KAKAO_TOKEN_URL;
-    @Value("${kakao.client-id}")
-    private String KAKAO_CLIENT_ID;
-    @Value("${kakao.client-secret}")
-    private String KAKAO_CLIENT_SECRET;
-    @Value("${kakao.redirect-url}")
-    private String KAKAO_REDIRECT_URL;
+    @Value("${naver.token-url}")
+    private String NAVER_TOKEN_URL;
+    @Value("${naver.client-id}")
+    private String NAVER_CLIENT_ID;
+    @Value("${naver.client-secret}")
+    private String NAVER_CLIENT_SECRET;
 
-    public KakaoUserInfo getKakaoUserInfo(ResponseEntity<String> response) throws JsonProcessingException {
+    public NaverUserInfo getNaverUserInfo(ResponseEntity<String> response) throws JsonProcessingException {
+
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-        String nickname = jsonNode.get("properties").get("nickname").asText();
-        String email = jsonNode.get("kakao_account").get("email").asText();
+        String nickname = jsonNode.get("response").get("name").asText();
+        String email = jsonNode.get("response").get("email").asText();
 
-        return new KakaoUserInfo(email,nickname, "kakao");
+        return new NaverUserInfo(email,nickname, "naver");
     }
 
 
@@ -49,7 +50,7 @@ public class KakaoOauth2Service implements CustomOauth2Service{
         HttpEntity<MultiValueMap<String,String>> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
+                "https://openapi.naver.com/v1/nid/me",
                 HttpMethod.POST,
                 request,
                 String.class
@@ -59,10 +60,10 @@ public class KakaoOauth2Service implements CustomOauth2Service{
             return response;
         }
         return null;
-
     }
 
-    //AccessToken을 받아오는 메소드
+
+
     public String getAccessToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -74,16 +75,15 @@ public class KakaoOauth2Service implements CustomOauth2Service{
         // 바디 설정
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", KAKAO_CLIENT_ID);
-        params.add("redirect_uri", KAKAO_REDIRECT_URL);
+        params.add("client_id", NAVER_CLIENT_ID);
+        params.add("client_secret", NAVER_CLIENT_SECRET);
         params.add("code", code);
-        params.add("client_secret", KAKAO_CLIENT_SECRET);
 
         // 요청 엔티티 생성
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
 
         // 요청 전송
-        ResponseEntity<String> response = restTemplate.exchange(KAKAO_TOKEN_URL, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NAVER_TOKEN_URL, HttpMethod.POST, requestEntity, String.class);
 
         if(response.getStatusCode() == HttpStatus.OK){
             try {

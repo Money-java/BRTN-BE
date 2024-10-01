@@ -4,5 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface CustomOauth2Service {
 
-    ResponseEntity<String> getUserInfo(String code);
+    ResponseEntity<String> getUserProfile(String code);
+    String getAccessToken(String code);
 }
