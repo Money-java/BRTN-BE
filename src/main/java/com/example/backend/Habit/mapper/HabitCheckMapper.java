@@ -16,6 +16,5 @@ public interface HabitCheckMapper {
     void addHabitChecked(HabitCheckVO habitCheckVO);
 
     // 3. 달성한 습관 조회
-//    List<MyHabitVO> getCheckedHabit(@Param("userId") long userId, @Param("checkDate") Date checkDate);
     List<MyHabitVO> getCheckedHabit(Map<String, Object> map);
 }

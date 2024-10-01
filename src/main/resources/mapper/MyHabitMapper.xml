@@ -5,7 +5,7 @@
 <mapper namespace="com.example.backend.Habit.mapper.MyHabitMapper">
 
     <!-- 1. 나의 습관 조회 -->
-    <select id="getMyHabit" parameterType="long" resultType="com.example.backend.Habit.vo.MyHabitVO">
+    <select id="getMyHabit" parameterType="long" resultType="MyHabitVO">
         SELECT mh.my_habit_id, h.habit_id, h.habit_title, h.category_title
         FROM MyHabit mh
                  JOIN HABIT h ON mh.habit_id = h.habit_id
@@ -13,22 +13,23 @@
     </select>
 
     <!-- 4. 새로운 습관 작성 -->
-    <insert id="insertMyHabit" parameterType="com.example.backend.Habit.vo.MyHabitVO">
+    <!-- step 1 : Habit 테이블에 습관 삽입 -->
+    <insert id="insertHabit" parameterType="MyHabitVO">
         INSERT INTO Habit (user_id, habit_title, category_title, save_amount, certification)
-        VALUES (#{userId}, #{habitTitle}, #{categoryTitle});
-
+        VALUES (#{userId}, #{habitTitle}, #{categoryTitle}, #{saveAmount}, #{certification})
+    </insert>
+    <!-- step 2 : 방금 추가한 habitId 조회 -->
+    <select id="selectLastInsertedHabitId" resultType="long">
+        SELECT LAST_INSERT_ID();
+    </select>
+    <!-- step 3 : MyHabit 테이블에 습관 삽입 -->
+    <insert id="insertMyHabit" parameterType="MyHabitVO">
         INSERT INTO MyHabit (user_id, habit_id, state)
-        VALUES (#{userId}, LAST_INSERT_ID(), '대기');
+        VALUES (#{userId}, #{habitId}, '대기')
     </insert>
 
-    <!-- 5. 습관 가져오기 -->
-    <insert id="insertMyHabitFromOther" parameterType="com.example.backend.Habit.vo.MyHabitVO">
-        INSERT INTO MyHabit (user_id, habit_id, state)
-        VALUES (#{userId}, #{habitId}, "대기");
-    </insert>
-
-    <!-- 6. 습관 수정하기 -->
-    <update id="updateMyHabit" parameterType="com.example.backend.Habit.vo.MyHabitVO">
+    <!-- 5. 습관 수정하기 -->
+    <update id="updateMyHabit" parameterType="MyHabitVO">
         UPDATE Habit
         <set>
             <if test="habitTitle != null">
@@ -37,29 +38,40 @@
             <if test="categoryTitle != null">
                 category_title = #{categoryTitle},
             </if>
+            <if test="saveAmount != null">
+                save_amount = #{saveAmount},
+            </if>
+            <if test="certification != null">
+                certification = #{certification}
+            </if>
         </set>
         WHERE habit_id = #{habitId};
     </update>
 
-    <!-- 7. 습관 삭제하기 -->
+    <!-- 6. 습관 삭제하기 -->
     <delete id="deleteMyHabit" parameterType="long">
         DELETE
         FROM MyHabit
         WHERE my_habit_id = #{myHabitId};
     </delete>
 
-    <!-- 8. 습관 상태 진행으로 변경하기 -->
-    <update id="updateMyHabitStateS" parameterType="long">
+    <!-- 7. 습관 상태 변경하기 -->
+<!--    <update id="updateMyHabitState" parameterType="MyHabitVO">-->
+<!--        UPDATE MyHabit-->
+<!--        SET state = #{state}-->
+<!--        WHERE my_habit_id = #{myHabitId};-->
+<!--    </update>-->
+    <update id="updateMyHabitState" parameterType="java.util.List">
         UPDATE MyHabit
-        SET state = "진행"
-        WHERE my_habit_id = #{myHabitId};
-    </update>
-
-    <!-- 9. 습관 상태 대기로 변경하기 -->
-    <update id="updateMyHabitStateW" parameterType="long">
-        UPDATE MyHabit
-        SET state = "대기"
-        WHERE my_habit_id = #{myHabitId};
+        SET state = CASE my_habit_id
+        <foreach collection="list" item="habit" separator="">
+            WHEN #{habit.myHabitId} THEN #{habit.state}
+        </foreach>
+        END
+        WHERE my_habit_id IN
+        <foreach collection="list" item="habit" open="(" separator="," close=")">
+            #{habit.myHabitId}
+        </foreach>;
     </update>
 
     <!-- 10. 오늘 절약 가능한 예상 금액 -->
