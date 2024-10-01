@@ -1,4 +1,4 @@
-package com.example.backend.Oauth2.service;
+package com.example.backend.oauth2.service;
 
 import org.springframework.http.ResponseEntity;
 

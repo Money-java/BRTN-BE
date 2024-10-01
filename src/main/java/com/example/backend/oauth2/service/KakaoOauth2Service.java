@@ -1,6 +1,6 @@
-package com.example.backend.Oauth2.service;
+package com.example.backend.oauth2.service;
 
-import com.example.backend.Oauth2.utils.KakaoUserInfo;
+import com.example.backend.oauth2.dto.KakaoUserInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
