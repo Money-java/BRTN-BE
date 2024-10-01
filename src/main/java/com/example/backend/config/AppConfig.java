@@ -20,9 +20,24 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@MapperScan(basePackages = "com.example")
+@MapperScan(basePackages = {"com.example.backend.Account.mapper",
+        "com.example.backend.Users.mapper",
+        "com.example.backend.Habit.mapper",
+        "com.example.backend.HabitCommunity.mapper",
+        "com.example.backend.PostComment.mapper",
+        "com.example.backend.PostCommunity.mapper",
+        "com.example.backend.PostLikes.mapper",
+        "com.example.backend.Transaction.mapper"})
 @EnableTransactionManagement
 @PropertySource({"classpath:/application.properties"})
+@ComponentScan(basePackages = {"com.example.backend.Account.service",
+        "com.example.backend.Users.service",
+        "com.example.backend.Habit.service",
+        "com.example.backend.HabitCommunity.service",
+        "com.example.backend.PostComment.service",
+        "com.example.backend.PostCommunity.service",
+        "com.example.backend.PostLikes.service",
+        "com.example.backend.Transaction.service"})
 public class AppConfig {
     public AppConfig() {
         System.out.println("AppConfig created");

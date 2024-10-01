@@ -15,7 +15,7 @@ public interface HabitService {
   void addHabitChecked(HabitCheckVO habitCheckVO);
 
   // 3. 달성한 습관 조회
-  List<MyHabitVO> getCheckedHabit();
+  List<MyHabitVO> getCheckedHabit(long userId, String checkDate);
 
   // 4. 새로운 습관 체크 작성
   void addMyHabit(MyHabitVO myHabitVO);

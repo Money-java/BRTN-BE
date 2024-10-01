@@ -3,9 +3,11 @@ package com.example.backend.Habit.mapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface HabitCheckMapper {
@@ -14,5 +16,6 @@ public interface HabitCheckMapper {
     void addHabitChecked(HabitCheckVO habitCheckVO);
 
     // 3. 달성한 습관 조회
-    List<MyHabitVO> getCheckedHabit();
+//    List<MyHabitVO> getCheckedHabit(@Param("userId") long userId, @Param("checkDate") Date checkDate);
+    List<MyHabitVO> getCheckedHabit(Map<String, Object> map);
 }
