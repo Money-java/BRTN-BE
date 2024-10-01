@@ -45,7 +45,7 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
   public List<HabitCommunityVO> searchHabitCommunities(String keyword) {
     return habitCommunityMapper.searchHabitCommunities(keyword);
   }
-  // 0929 추가 ___________________________________________________
+
 
   // HabitCommunity 삽입
   @Override
