@@ -2,12 +2,14 @@ package com.example.backend.Habit.service;
 
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface HabitService {
   // 1. 나의 습관 조회
-  List<MyHabitVO> getMyHabit(long userId);
+  List<MyHabitVO> getMyHabit(@Param("userId") long userId);
 
   // 2. 습관 달성 체크
   void addHabitChecked(HabitCheckVO habitCheckVO);

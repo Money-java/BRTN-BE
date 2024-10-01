@@ -7,6 +7,7 @@ import com.example.backend.Habit.vo.MyHabitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,17 +21,17 @@ public class HabitServiceImpl implements HabitService {
 
     // 1. 나의 습관 조회
     public List<MyHabitVO> getMyHabit(long userId) {
-        return myHabitMapper.selectMyHabit(userId);
+        return myHabitMapper.getMyHabit(userId);
     }
 
     // 2. 습관 달성 체크
     public void addHabitChecked(HabitCheckVO habitCheckVO) {
-        habitCheckMapper.insertHabitChecked(habitCheckVO);
+        habitCheckMapper.addHabitChecked(habitCheckVO);
     }
 
     // 3. 달성한 습관 조회
     public List<MyHabitVO> getCheckedHabit() {
-        return habitCheckMapper.selectHabitChecked();
+        return habitCheckMapper.getCheckedHabit();
     }
 
     // 4. 새로운 습관 체크 작성

@@ -3,25 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.backend.Habit.mapper.HabitCheckMapper">
+<mapper namespace="com.example.backend.Habit.service.HabitService">
 
     <!-- 2. 인증한 습관 삽입 -->
-    <insert id="insertHabitChecked" parameterType="com.example.backend.Habit.vo.HabitCheckVO">
+    <insert id="addHabitChecked" parameterType="com.example.backend.Habit.vo.HabitCheckVO">
         INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
         VALUES (CURRENT_DATE, #{myHabitId}, #{userId}, #{habitId})
     </insert>
 
     <!-- 3. 인증한 습관 조회 -->
-    <select id="selectHabitChecked" parameterType="map" resultType="com.example.backend.Habit.vo.MyHabitVO">
+    <select id="getCheckedHabit" parameterType="map" resultType="com.example.backend.Habit.vo.MyHabitVO">
         SELECT hc.my_habit_id, hc.habit_id, hc.user_id, hc.check_date, h.habit_title, h.category_title
         FROM `HabitCheck` hc
         JOIN `Habit` h ON hc.habit_id = h.habit_id
         WHERE hc.user_id = #{userId}
         <if test="checkDate != null">
-            AND DATE(check_date) = #{checkDate}
+            AND DATE(hc.check_date) = DATE(#{checkDate})
         </if>
         <if test="checkDate == null">
-            AND DATE(check_date) = CURDATE()
+            AND DATE(hc.check_date) = CURDATE()
         </if>
     </select>
 </mapper>
