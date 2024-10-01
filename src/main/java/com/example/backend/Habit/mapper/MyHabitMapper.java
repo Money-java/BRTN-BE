@@ -12,23 +12,19 @@ public interface MyHabitMapper {
   // 1. 나의 습관 조회
   List<MyHabitVO> getMyHabit(@Param("userId") long userId);
 
-  // 4. 새로운 습관 체크 작성
-  void insertMyHabit(MyHabitVO myHabitVO);
+  // 4. 새로운 습관 작성
+  void insertHabit(MyHabitVO myHabitVO);     // step 1 : Habit 테이블에 습관 삽입
+  Long selectLastInsertedHabitId();          // step 2 : 방금 추가한 habitId 조회
+  void insertMyHabit(MyHabitVO myHabitVO);   // step 3
 
-  // 5. 체크된 습관 가져오기
-  void insertMyHabitFromOther(MyHabitVO myHabitVO);
-
-  // 6. 습관 수정
+  // 5. 습관 수정
   void updateMyHabit(MyHabitVO myHabitVO);
 
-  // 7. 습관 삭제
+  // 6. 습관 삭제
   void deleteMyHabit(long myHabitId);
 
-  // 8. 습관 상태를 '진행'으로 변경
-  void updateMyHabitStateS(long myHabitId);
-
-  // 9. 습관 상태를 '대기'로 변경
-  void updateMyHabitStateW(long myHabitId);
+  // 7. 습관 상태 변경
+  void updateMyHabitState(List<MyHabitVO> habitList);
 
   // 10. 오늘 절약 가능한 예상 금액
   int totalSaveAmount();
