@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.backend.Habit.service.HabitService">
+<mapper namespace="com.example.backend.Habit.mapper.HabitCheckMapper">
 
     <!-- 2. 인증한 습관 삽입 -->
     <insert id="addHabitChecked" parameterType="com.example.backend.Habit.vo.HabitCheckVO">

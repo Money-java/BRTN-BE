@@ -1,19 +1,23 @@
 package com.example.backend.Habit.controller;
 
 import com.example.backend.Habit.service.HabitService;
+import com.example.backend.Habit.service.HabitServieImp;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import com.example.backend.exception.NotFoundException;
 import com.example.backend.exception.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/habits")
 public class HabitController {
@@ -65,21 +69,40 @@ public class HabitController {
 
   // 3. 달성한 습관 조회
   @GetMapping("/checked")
-  public ResponseEntity<List<MyHabitVO>> getCheckedHabit() {
+  public ResponseEntity<List<MyHabitVO>> getCheckedHabit(@RequestParam long userId,
+                                                         @RequestParam(required = false)
+                                                         String checkDate) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date dt;
     try {
-      List<MyHabitVO> checkedHabits = habitService.getCheckedHabit();
-      System.out.println("(3) Successfully retrieved the checked habits.");
-      return ResponseEntity.ok(checkedHabits);
-    } catch (UnauthorizedException e) {
-      System.out.println("401 Unauthorized: The access token is invalid or has expired.");
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-    } catch (NotFoundException e) {
-      System.out.println("404 Not Found: The requested data could not be found.");
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    } catch (Exception e) {
-      System.out.println("500 Internal Server Error: An error occurred on the server.");
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+      dt = sdf.parse(checkDate);
+      System.out.println("Parsed date: " + dt);
+    } catch (ParseException e) {
+      System.err.println("Date parsing failed: " + e.getMessage());
+      // 추가적인 로깅 또는 에러 처리 로직을 여기에 추가
     }
+//    try {
+    log.info("checkDate = {}", checkDate);
+    log.info("userId = {}", userId);
+    log.info("habitService = {}", habitService);
+    log.info("instanceof HabitServiceImp = {}", habitService instanceof HabitServieImp);
+    List<MyHabitVO> checkedHabits = habitService.getCheckedHabit(userId, checkDate);
+    System.out.println("(3) Successfully retrieved the checked habits.");
+    return ResponseEntity.ok(checkedHabits);
+//      return null;
+//    } catch (UnauthorizedException e) {
+//      System.out.println("401 Unauthorized: The access token is invalid or has expired.");
+//      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//    } catch (NotFoundException e) {
+//      System.out.println("404 Not Found: The requested data could not be found.");
+//      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//    } catch (Exception e) {
+//      System.out.println("500 Internal Server Error: An error occurred on the server. : ");
+//
+//      e.printStackTrace();
+//      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//    }
+
   }
 
   // 4. 새로운 습관 체크 작성
