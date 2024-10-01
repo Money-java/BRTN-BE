@@ -1,13 +1,16 @@
 package com.example.backend.Habit.mapper;
 
+import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 @Mapper
 public interface MyHabitMapper {
   // 1. 나의 습관 조회
-  List<MyHabitVO> selectMyHabit(long userId);
+  List<MyHabitVO> getMyHabit(@Param("userId") long userId);
 
   // 4. 새로운 습관 체크 작성
   void insertMyHabit(MyHabitVO myHabitVO);

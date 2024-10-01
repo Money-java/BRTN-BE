@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.backend.Habit.mapper.MyHabitMapper">
+<mapper namespace="com.example.backend.Habit.service.HabitService">
 
     <!-- 1. 나의 습관 조회 -->
-    <select id="selectMyHabit" parameterType="long" resultType="com.example.backend.Habit.vo.MyHabitVO">
+    <select id="getMyHabit" parameterType="long" resultType="com.example.backend.Habit.vo.MyHabitVO">
         SELECT mh.my_habit_id, h.habit_id, h.habit_title, h.category_title
         FROM MyHabit mh
                  JOIN HABIT h ON mh.habit_id = h.habit_id
