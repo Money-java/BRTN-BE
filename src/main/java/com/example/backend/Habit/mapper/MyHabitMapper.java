@@ -2,6 +2,7 @@ package com.example.backend.Habit.mapper;
 
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,23 +19,28 @@ public interface MyHabitMapper {
   void insertMyHabit(MyHabitVO myHabitVO);   // step 3
 
   // 5. 습관 수정
+  MyHabitVO getHabitById(Long habitId);
+  int getHabitCommunityById(Long habitId);
   void updateMyHabit(MyHabitVO myHabitVO);
 
   // 6. 습관 삭제
-  void deleteMyHabit(long myHabitId);
+  void deleteMyHabit(MyHabitVO myHabitVO);
 
   // 7. 습관 상태 변경
-  void updateMyHabitState(List<MyHabitVO> habitList);
+  void updateMyHabitState(@Param("habitList") List<MyHabitVO> habitList, @Param("userId") Long userId);
 
-  // 10. 오늘 절약 가능한 예상 금액
+  // 8. 절약 예상 금액
   int totalSaveAmount();
 
-  // 11. 실제 절약 금액
-  int realSaveAmount();
+  // 9. 실제 절약 금액
+  Integer realSaveAmount(long userId);
 
-  // 12. 습관 커뮤니티에 업로드하기
-  void insertHabitCommunity();
+  // 10. 습관 커뮤니티 업로드
+  void insertHabitCommunity(long habitId);
 
-  // 13. 인증 커뮤니티에 업로드하기
-  void insertPostCommunity();
+  // 11. 인증 커뮤니티 업로드
+  int insertPostCommunity(PostCommunityVO postCommunityVO);              // step 1 : PostCommunity 테이블에 정보 삽입
+  int checkHabitExists(PostCommunityVO postCommunityVO);                 // step 2 : HabitCheck 테이블의 정보 조회
+  void addHabitCheck(PostCommunityVO postCommunityVO);                   // step 3 : HabitCheck 테이블에 입력하려는 정보가 없다면 삽입
+  void updateMyHabitStateClear(PostCommunityVO postCommunityVO);         // step 4 : MyHabit 테이블에서 해당 습관 상태 완료로 변경
 }

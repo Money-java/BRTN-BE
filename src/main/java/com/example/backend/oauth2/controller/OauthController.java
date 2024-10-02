@@ -1,7 +1,7 @@
 package com.example.backend.oauth2.controller;
 
 
-import com.example.backend.Users.service.UserService;
+import com.example.backend.Users.service.UsersService;
 import com.example.backend.Users.vo.UserVO;
 import com.example.backend.oauth2.service.GoogleOauth2Service;
 import com.example.backend.oauth2.service.KakaoOauth2Service;
@@ -39,7 +39,7 @@ public class OauthController {
     private JWTUtil jwtUtil;
 
     @Autowired
-    private UserService userService;
+    private UsersService userService;
 
 
     @GetMapping("/google")
