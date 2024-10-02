@@ -17,7 +17,7 @@ public interface UserMapper {
   void insertUser(UserVO user);
 
   // 기존 사용자 로그인
-  UserVO findUserByEmail(@Param("email") String email);
+  UserVO findUserByEmailandProvider(@Param("email") String email, @Param("provider") String provider);
 
   // 특정 사용자 찾기
   UserVO findOneUser(@Param("email") String email);

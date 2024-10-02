@@ -1,7 +1,6 @@
-package com.example.backend.security.util;
+package com.example.backend.security.jwt;
 
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -35,6 +34,7 @@ public class JWTUtil {
                 .setHeader(headerMap)
                 .setSubject(email)
                 .claim("role", role)
+                .claim("provider", provider)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(key)

@@ -37,7 +37,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "com.example.backend.PostComment.service",
         "com.example.backend.PostCommunity.service",
         "com.example.backend.PostLikes.service",
-        "com.example.backend.Transaction.service"})
+        "com.example.backend.Transaction.service",
+        "com.example.backend.oauth2.service",
+        "com.example.backend.security"})
 public class AppConfig {
     public AppConfig() {
         System.out.println("AppConfig created");

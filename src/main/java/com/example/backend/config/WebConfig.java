@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "com.example.backend.PostCommunity.controller",
         "com.example.backend.PostLikes.controller",
         "com.example.backend.Transaction.controller",
+        "com.example.backend.oauth2.controller"
 })
 public class WebConfig implements WebMvcConfigurer {
 

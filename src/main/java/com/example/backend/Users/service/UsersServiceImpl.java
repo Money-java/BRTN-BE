@@ -25,8 +25,8 @@ public class UsersServiceImpl implements UsersService {
 
   // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
   @Override
-  public UserVO findUserByEmail(String email) {
-    return userMapper.findUserByEmail(email);
+  public UserVO findUserByEmailandProvider(String email, String provider) {
+    return userMapper.findUserByEmailandProvider(email,provider);
   }
 
   // 특정 사용자 찾기
@@ -59,4 +59,7 @@ public class UsersServiceImpl implements UsersService {
   public void incrementUserReward(Long userId) {
     userMapper.incrementUserReward(userId);
   }
+
+
+
 }

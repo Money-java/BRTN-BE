@@ -25,10 +25,10 @@ public class UsersController {
   }
 
   // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
-  @GetMapping("/login")
-  public UserVO findUserByEmail(@RequestParam String email) {
-    return usersService.findUserByEmail(email);
-  }
+//  @GetMapping("/login")
+//  public UserVO findUserByEmail(@RequestParam String email) {
+//    return usersService.findUserByEmail(email);
+//  }
 
   // 특정 사용자 찾기
   @GetMapping("/find")

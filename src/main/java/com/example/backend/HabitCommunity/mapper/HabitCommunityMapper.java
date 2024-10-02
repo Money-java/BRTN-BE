@@ -24,8 +24,6 @@ public interface HabitCommunityMapper {
   // 루틴커뮤니티 페이지
   List<HabitCommunityVO> searchHabitCommunities(@Param("keyword") String keyword);
 
-
-
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
 
