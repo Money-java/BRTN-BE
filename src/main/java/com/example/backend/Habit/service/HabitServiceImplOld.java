@@ -1,3 +1,4 @@
+/*
 package com.example.backend.Habit.service;
 
 import com.example.backend.Habit.vo.HabitCheckVO;
@@ -93,3 +94,4 @@ public class HabitServiceImplOld implements HabitService {
 //        myHabitMapper.insertPostCommunity();
     }
 }
+*/

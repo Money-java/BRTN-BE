@@ -1,5 +1,7 @@
 package com.example.backend.Habit.controller;
 
+import com.example.backend.Habit.dto.HabitCheckCountDTO;
+import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.service.HabitServieImp;
 import com.example.backend.Habit.vo.HabitCheckVO;
@@ -163,5 +165,10 @@ public class HabitController {
   @PostMapping("/upload/post")
   public void addPostCommunity(@RequestBody PostCommunityVO postCommunityVO) {
     habitService.addPostCommunity();
+  }
+
+  @PostMapping("/counts")
+  public List<HabitCheckCountDTO> getHabitCheckCounts(@RequestBody HabitCheckRequestDTO habitCheckRequestDTO) {
+    return habitService.getHabitCheckCounts(habitCheckRequestDTO);
   }
 }

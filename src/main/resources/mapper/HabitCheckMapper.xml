@@ -24,4 +24,27 @@
             AND DATE(hc.check_date) = CURDATE()
         </if>
     </select>
+
+    <!-- 루틴 연속 달성일 계산 -->
+    <!--인증 커뮤니티에서 루틴 성공 인증시 각 루틴에 대한 연속 달성일 계산 -->
+    <select id="getHabitCheckCounts"
+            parameterType="com.example.backend.Habit.dto.HabitCheckRequestDTO"
+            resultType="com.example.backend.Habit.dto.HabitCheckCountDTO">
+        SELECT grp AS timeDiff, COUNT(*) AS continuousDateCount
+        FROM (
+                 SELECT
+                     check_date,
+                     DATEDIFF(CURDATE(), check_date) -
+                     (ROW_NUMBER() OVER (ORDER BY check_date DESC) - 1) AS grp
+                 FROM (
+                          SELECT DISTINCT DATE(check_date) AS check_date
+                     FROM HabitCheck
+                 WHERE user_id = #{userId}
+                   AND habit_id = #{habitId}
+                   AND DATE(check_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 32 DAY) AND CURDATE()
+             ) sub
+            ) t
+        GROUP BY grp
+        ORDER BY grp;
+    </select>
 </mapper>
