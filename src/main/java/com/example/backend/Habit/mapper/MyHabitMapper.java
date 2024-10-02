@@ -2,6 +2,7 @@ package com.example.backend.Habit.mapper;
 
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -36,6 +37,7 @@ public interface MyHabitMapper {
   Integer realSaveAmount(long userId);
 
   // 10. 습관 커뮤니티 업로드
+  int checkHabitCommunityExists(long habitId);
   void insertHabitCommunity(long habitId);
 
   // 11. 인증 커뮤니티 업로드
