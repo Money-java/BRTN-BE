@@ -20,23 +20,19 @@ public interface HabitService {
   // 3. 달성한 습관 조회
   List<MyHabitVO> getCheckedHabit(long userId, String checkDate);
 
-  // 4. 새로운 습관 체크 작성
-  void addMyHabit(MyHabitVO myHabitVO);
+  // 4. 새로운 습관 작성
+  void addMyHabit(MyHabitVO myHabitVO);               // step 1 : Habit 테이블에 습관 삽입
+  Long getLastInsertedHabitId();                      // step 2 : 방금 추가한 habitId 조회
+  void createHabitWithMyHabit(MyHabitVO myHabitVO);
 
-  // 5. 체크된 습관 가져오기
-  void addMyHabitFromOther(MyHabitVO myHabitVO);
-
-  // 6. 습관 수정
+  // 5. 습관 수정
   void modifyMyHabit(MyHabitVO myHabitVO);
 
-  // 7. 습관 삭제
+  // 6. 습관 삭제
   void deleteMyHabit(long myHabitId);
 
-  // 8. 습관 상태를 '진행'으로 변경
-  void modifyMyHabitStateS(long myHabitId);
-
-  // 9. 습관 상태를 '대기'로 변경
-  void modifyMyHabitStateW(long myHabitId);
+  // 7. 습관 상태 변경
+  void modifyMyHabitState(List<MyHabitVO> habitList);
 
   // 10. 오늘 절약 가능한 예상 금액
   int saveTotalAmount();

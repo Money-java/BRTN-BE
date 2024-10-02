@@ -17,4 +17,6 @@ public class MyHabitVO {
     private String categoryTitle;     // 카테고리 제목
     private String state;             // 습관 상태
     private Date checkDate;           // 체크 날짜
+    private Long saveAmount;
+    private String certification;
 }
