@@ -29,6 +29,19 @@
     </insert>
 
     <!-- 5. 습관 수정하기 -->
+    <!-- step 1 : 습관 작성자 아이디 가져오기 -->
+    <select id="getHabitById" parameterType="long" resultType="MyHabitVO">
+        SELECT habit_id, user_id, habit_title, category_title
+        FROM Habit
+        WHERE habit_id = #{habitId}
+    </select>
+    <!-- step 2 : 습관 공유 커뮤니티에 내가 작성한 습관을 공유했는지 확인하기 -->
+    <select id="getHabitCommunityById" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCommunity
+        WHERE habit_id = #{habitId}
+    </select>
+    <!-- step 3 : 내가 직접 작성한 습관이고 습관 공유 커뮤니티에 올라가지 않은 경우에만 습관 수정 가능 -->
     <update id="updateMyHabit" parameterType="MyHabitVO">
         UPDATE Habit
         <set>
@@ -45,69 +58,88 @@
                 certification = #{certification}
             </if>
         </set>
-        WHERE habit_id = #{habitId};
+        WHERE habit_id = #{habitId} AND user_id = #{userId};
     </update>
 
     <!-- 6. 습관 삭제하기 -->
-    <delete id="deleteMyHabit" parameterType="long">
+    <delete id="deleteMyHabit" parameterType="MyHabitVO">
         DELETE
         FROM MyHabit
-        WHERE my_habit_id = #{myHabitId};
+        WHERE my_habit_id = #{myHabitId} AND user_id = #{userId};
     </delete>
 
     <!-- 7. 습관 상태 변경하기 -->
-<!--    <update id="updateMyHabitState" parameterType="MyHabitVO">-->
-<!--        UPDATE MyHabit-->
-<!--        SET state = #{state}-->
-<!--        WHERE my_habit_id = #{myHabitId};-->
-<!--    </update>-->
-    <update id="updateMyHabitState" parameterType="java.util.List">
+    <update id="updateMyHabitState" parameterType="map">
         UPDATE MyHabit
         SET state = CASE my_habit_id
-        <foreach collection="list" item="habit" separator="">
+        <foreach collection="habitList" item="habit" separator="">
             WHEN #{habit.myHabitId} THEN #{habit.state}
         </foreach>
         END
         WHERE my_habit_id IN
-        <foreach collection="list" item="habit" open="(" separator="," close=")">
+        <foreach collection="habitList" item="habit" open="(" separator="," close=")">
             #{habit.myHabitId}
-        </foreach>;
+        </foreach>
+        AND user_id = #{userId}
     </update>
 
-    <!-- 10. 오늘 절약 가능한 예상 금액 -->
+    <!-- 8. 절약 예상 금액 -->
     <select id="totalSaveAmount" resultType="int">
-        SELECT SUM(h.save_amount) as total_save_amount
+        SELECT IFNULL(SUM(h.save_amount), 0) as total_save_amount
         FROM Habit h
                  JOIN Myhabit mh ON h.habit_id = mh.habit_id
         WHERE mh.state = "진행";
     </select>
 
-    <!-- 11. 실제 절약 금액 -->
-    <select id="realSaveAmount" parameterType="int" resultType="int">
-        SELECT SUM(h.save_amount) AS total_save_amount
+    <!-- 9. 실제 절약 금액 -->
+    <select id="realSaveAmount" parameterType="long" resultType="int">
+        SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
         FROM HabitCheck hc
                  JOIN Habit h ON hc.habit_id = h.habit_id
         WHERE hc.user_id = #{userId}
           AND DATE(hc.check_date) = CURDATE();
     </select>
 
-    <!-- 12. 습관 커뮤니티에 업로드하기 -->
-    <insert id="insertHabitCommunity" parameterType="int">
+    <!-- 10. 습관 커뮤니티 업로드 -->
+    <insert id="insertHabitCommunity" parameterType="long">
         INSERT INTO HabitCommunity (habit_id)
         VALUES (#{habitId});
     </insert>
 
-    <!-- 13. 인증 커뮤니티에 업로드하기 -->
-    <insert id="insertPostCommunity" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
-        INSERT INTO PostCommunity (user_id, habit_id, imageURL, content, hashtag)
-        VALUES (#{userId}, #{habitId}, #{imageURL}, #{content}, #{hashtag}
-
+    <!-- 11. 인증 커뮤니티 업로드 -->
+    <!-- step 1 : PostCommunity 테이블에 정보 삽입 -->
+    <insert id="insertPostCommunity" parameterType="PostCommunityVO">
+        INSERT INTO PostCommunity (user_id, habit_id
+        <if test="imageURL != null">
+            , imageURL
+        </if>
+        , content, hashtag)
+        VALUES (#{userId}, #{habitId}
+        <if test="imageURL != null">
+            , #{imageURL}
+        </if>
+        , #{content}, #{hashtag})
+    </insert>
+    <!-- step 2 : HabitCheck 테이블의 정보 조회 -->
+    <select id="checkHabitExists" parameterType="PostCommunityVO" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCheck
+        WHERE my_habit_id = (SELECT my_habit_id FROM MyHabit WHERE habit_id = #{habitId})
+          AND user_id = #{userId}
+          AND habit_id = #{habitId}
+    </select>
+    <!-- step 3 : HabitCheck 테이블에 입력하려는 정보가 없다면 삽입 -->
+    <insert id="addHabitCheck" parameterType="PostCommunityVO">
         INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
-        VALUES (CURRENT_DATE, #{myHabitId}, #{userId}, #{habitId})
-
+        SELECT CURRENT_DATE,
+               (SELECT my_habit_id FROM MyHabit WHERE habit_id = #{habitId}),
+               #{userId},
+               #{habitId}
+    </insert>
+    <!-- step 4 : MyHabit 테이블에서 해당 습관 상태 완료로 변경 -->
+    <update id="updateMyHabitStateClear" parameterType="PostCommunityVO">
         UPDATE MyHabit
         SET state = '완료'
         WHERE habit_id = #{habitId} AND user_id = #{userId}
-    </insert>
-
+    </update>
 </mapper>
