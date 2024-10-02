@@ -59,4 +59,9 @@ public class UsersServiceImpl implements UsersService {
   public void incrementUserReward(Long userId) {
     userMapper.incrementUserReward(userId);
   }
+
+  @Override
+  public void registerUser(UserVO newUser) {
+
+  }
 }

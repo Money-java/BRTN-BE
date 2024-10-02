@@ -2,6 +2,7 @@ package com.example.backend.Habit.service;
 
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -23,24 +24,23 @@ public interface HabitService {
   void createHabitWithMyHabit(MyHabitVO myHabitVO);
 
   // 5. 습관 수정
-  void modifyMyHabit(MyHabitVO myHabitVO);
+  String modifyMyHabit(MyHabitVO myHabitVO);
 
   // 6. 습관 삭제
-  void deleteMyHabit(long myHabitId);
+  void deleteMyHabit(MyHabitVO myHabitVO);
 
   // 7. 습관 상태 변경
-  void modifyMyHabitState(List<MyHabitVO> habitList);
+  void modifyMyHabitState(List<MyHabitVO> habitList, long userId);
 
-  // 10. 오늘 절약 가능한 예상 금액
+  // 8. 절약 예상 금액
   int saveTotalAmount();
 
-  // 11. 실제 절약 금액
-  int saveRealAmount();
+  // 9. 실제 절약 금액
+  int saveRealAmount(long userId);
 
-  // 12. 습관 커뮤니티에 업로드하기
-  void addHabitCommunity();
+  // 10. 습관 커뮤니티 업로드
+  void addHabitCommunity(long habitId);
 
-  // 13. 인증 커뮤니티에 업로드하기
-  void addPostCommunity();
-
+  // 11. 인증 커뮤니티 업로드
+  void addPostCommunity(PostCommunityVO postCommunityVO);
 }
