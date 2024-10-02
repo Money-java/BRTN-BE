@@ -5,6 +5,7 @@ import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.service.HabitServieImp;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import com.example.backend.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -223,9 +224,9 @@ public class HabitController {
   @PostMapping("/upload/habit")
   public ResponseEntity<String> addHabitCommunity(@RequestParam long habitId) {
     try {
-      habitService.addHabitCommunity(habitId);
-      log.info("(10) Successfully uploaded to Habit Community");
-      return ResponseEntity.ok("(10) Successfully uploaded to Habit Community");
+      String resultMessage = habitService.addHabitCommunity(habitId);
+      log.info(resultMessage);
+      return ResponseEntity.ok(resultMessage);
     } catch (BadRequestException e) {
       log.info("400 Bad request: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

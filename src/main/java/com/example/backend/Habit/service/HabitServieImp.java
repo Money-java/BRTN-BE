@@ -4,6 +4,7 @@ import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import com.example.backend.exception.ConflictException;
 import lombok.extern.slf4j.Slf4j;
@@ -111,8 +112,19 @@ public class HabitServieImp implements HabitService {
 
     // 10. 습관 커뮤니티 업로드
     @Override
-    public void addHabitCommunity(long userId) {
-        myHabitMapper.insertHabitCommunity(userId);
+    public String addHabitCommunity(long habitId) {
+        // step 1 : HabitCommunity에 습관의 존재 여부 확인
+        int count = myHabitMapper.checkHabitCommunityExists(habitId);
+
+        // step 2 : 업로드 되어있지 않다면 habitId 삽입
+        if (count == 0) {
+            HabitCommunityVO habitCommunity = new HabitCommunityVO();
+            habitCommunity.setHabitId(habitId);
+            myHabitMapper.insertHabitCommunity(habitId);
+            return "Habit ID " + habitId + " has been inserted into HabitCommunity.";
+        } else {
+            return "Habit ID " + habitId + " already exists in HabitCommunity.";
+        }
     }
 
     // 11. 인증 커뮤니티 업로드

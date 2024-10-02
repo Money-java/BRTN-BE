@@ -101,7 +101,14 @@
     </select>
 
     <!-- 10. 습관 커뮤니티 업로드 -->
-    <insert id="insertHabitCommunity" parameterType="long">
+    <!-- step 1 : HabitCommunity에 습관의 존재 여부 확인 -->
+    <select id="checkHabitCommunityExists" parameterType="HabitCommunityVO" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCommunity
+        WHERE habit_id = #{habitId}
+    </select>
+    <!-- step 2 : 업로드 되어있지 않다면 habitId 삽입 -->
+    <insert id="insertHabitCommunity" parameterType="HabitCommunityVO">
         INSERT INTO HabitCommunity (habit_id)
         VALUES (#{habitId});
     </insert>
