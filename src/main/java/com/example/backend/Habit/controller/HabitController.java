@@ -1,5 +1,7 @@
 package com.example.backend.Habit.controller;
 
+import com.example.backend.Habit.dto.HabitCheckCountDTO;
+import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.service.HabitServieImp;

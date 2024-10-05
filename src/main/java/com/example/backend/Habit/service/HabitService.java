@@ -1,10 +1,13 @@
 package com.example.backend.Habit.service;
 
+import com.example.backend.Habit.dto.HabitCheckCountDTO;
+import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.List;
@@ -42,6 +45,9 @@ public interface HabitService {
   // 10. 습관 커뮤니티 업로드
   String addHabitCommunity(long habitId);
 
+  // 특정 습관에 해당하는 연속 달성일 정보 갖고오기
+  List<HabitCheckCountDTO> getHabitCheckCounts(HabitCheckRequestDTO habitCheckRequestDTO);
+  
   // 11. 인증 커뮤니티 업로드
   void addPostCommunity(PostCommunityVO postCommunityVO);
 }

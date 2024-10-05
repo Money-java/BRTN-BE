@@ -1,5 +1,7 @@
 package com.example.backend.Habit.service;
 
+import com.example.backend.Habit.dto.HabitCheckCountDTO;
+import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
@@ -148,5 +150,9 @@ public class HabitServieImp implements HabitService {
 
         // step 4 : MyHabit 테이블에서 해당 습관 상태 완료로 변경
         myHabitMapper.updateMyHabitStateClear(postCommunityVO);
+    }
+
+    public List<HabitCheckCountDTO> getHabitCheckCounts(HabitCheckRequestDTO habitCheckRequestDTO) {
+        return habitCheckMapper.getHabitCheckCounts(habitCheckRequestDTO);
     }
 }
