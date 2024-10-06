@@ -10,5 +10,6 @@ public class UserVO {
   private String nickname;
   private String provider;
   private String role;
+  private String avatar;
   private int reward;
 }

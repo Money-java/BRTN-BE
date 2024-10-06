@@ -47,6 +47,11 @@ public class UsersServiceImpl implements UsersService {
     userMapper.updateUser(nickname, userId);
   }
 
+  @Override
+  public void updateUserProfile(Long userId, String nickname, String avatar){
+    userMapper.updateUserProfile(userId, nickname, avatar);
+  }
+
   // 회원 탈퇴
   @Override
   public void deleteUser(String email) {

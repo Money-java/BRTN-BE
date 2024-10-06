@@ -55,6 +55,12 @@ public class OauthController {
 
         GoogleUserInfo userInfo = googleOauth2Service.getGoogleUserInfo(googleResponse);
 
+        String token = jwtUtil.generateToken(userInfo.getEmail(), userInfo.getProvider(), "ROLE_USER");
+        // JWT 토큰을 쿠키에 담아서 설정
+        Cookie jwtCookie = cookieUtil.generateCookie(token);
+        // 쿠키를 응답에 추가
+        response.addCookie(jwtCookie);
+
         UserVO existingUser = userService.findUserByEmailandProvider(userInfo.getEmail(), userInfo.getProvider());
 
         if (existingUser == null) {
@@ -65,14 +71,13 @@ public class OauthController {
             newUser.setProvider(userInfo.getProvider());
             newUser.setRole("ROLE_USER");  // 기본 역할 설정
             userService.insertUser(newUser);
+
+            response.sendRedirect("http://localhost:5173/register");
         }
-        String token = jwtUtil.generateToken(userInfo.getEmail(), userInfo.getProvider(), "ROLE_USER");
-        // JWT 토큰을 쿠키에 담아서 설정
-        Cookie jwtCookie = cookieUtil.generateCookie(token);
-        // 쿠키를 응답에 추가
-        response.addCookie(jwtCookie);
-        // 프론트엔드로 리다이렉트
-        response.sendRedirect("http://localhost:5173/");
+        else {
+            // 프론트엔드로 리다이렉트
+            response.sendRedirect("http://localhost:5173/myroutine");
+        }
     }
 
     @GetMapping("/kakao")
@@ -84,6 +89,12 @@ public class OauthController {
 
         KakaoUserInfo userInfo = kakaoOauth2Service.getKakaoUserInfo(kakaoResponse);
 
+        String token = jwtUtil.generateToken(userInfo.getEmail(), userInfo.getProvider(), "ROLE_USER");
+        // JWT 토큰을 쿠키에 담아서 설정
+        Cookie jwtCookie = cookieUtil.generateCookie(token);
+        // 쿠키를 응답에 추가
+        response.addCookie(jwtCookie);
+
         UserVO existingUser = userService.findUserByEmailandProvider(userInfo.getEmail(), userInfo.getProvider());
 
         if (existingUser == null) {
@@ -94,14 +105,13 @@ public class OauthController {
             newUser.setProvider(userInfo.getProvider());
             newUser.setRole("ROLE_USER");  // 기본 역할 설정
             userService.insertUser(newUser);
+
+            response.sendRedirect("http://localhost:5173/register");
         }
-        String token = jwtUtil.generateToken(userInfo.getEmail(), userInfo.getProvider(), "ROLE_USER");
-        // JWT 토큰을 쿠키에 담아서 설정
-        Cookie jwtCookie = cookieUtil.generateCookie(token);
-        // 쿠키를 응답에 추가
-        response.addCookie(jwtCookie);
-        // 프론트엔드로 리다이렉트
-        response.sendRedirect("http://localhost:5173/");
+        else {
+            // 프론트엔드로 리다이렉트
+            response.sendRedirect("http://localhost:5173/myroutine");
+        }
     }
 
 
@@ -114,6 +124,12 @@ public class OauthController {
 
         NaverUserInfo userInfo = naverOauth2Service.getNaverUserInfo(naverResponse);
 
+        String token = jwtUtil.generateToken(userInfo.getEmail(), userInfo.getProvider(), "ROLE_USER");
+        // JWT 토큰을 쿠키에 담아서 설정
+        Cookie jwtCookie = cookieUtil.generateCookie(token);
+        // 쿠키를 응답에 추가
+        response.addCookie(jwtCookie);
+
         UserVO existingUser = userService.findUserByEmailandProvider(userInfo.getEmail(), userInfo.getProvider());
 
         if (existingUser == null) {
@@ -124,14 +140,12 @@ public class OauthController {
             newUser.setProvider(userInfo.getProvider());
             newUser.setRole("ROLE_USER");  // 기본 역할 설정
             userService.insertUser(newUser);
+
+            response.sendRedirect("http://localhost:5173/register");
+        } else {
+            // 프론트엔드로 리다이렉트
+            response.sendRedirect("http://localhost:5173/myroutine");
         }
-        String token = jwtUtil.generateToken(userInfo.getEmail(), userInfo.getProvider(), "ROLE_USER");
-        // JWT 토큰을 쿠키에 담아서 설정
-        Cookie jwtCookie = cookieUtil.generateCookie(token);
-        // 쿠키를 응답에 추가
-        response.addCookie(jwtCookie);
-        // 프론트엔드로 리다이렉트
-        response.sendRedirect("http://localhost:5173/");
     }
 
 }

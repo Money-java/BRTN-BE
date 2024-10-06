@@ -48,7 +48,17 @@ public class JWTUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject().toString();
+    }
+
+    // JWT 토큰에서 provider 추출
+    public String getUserProvider(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("provider").toString();
     }
 
     // JWT 토큰이 만료되었는지 확인

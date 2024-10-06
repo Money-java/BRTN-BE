@@ -16,6 +16,9 @@ public interface UserMapper {
   // 신규 사용자 등록
   void insertUser(UserVO user);
 
+  // 닉네임 변경
+  void updateUserProfile(@Param("userId") Long userId, @Param("nickname") String nickname,@Param("avatar") String avatar);
+
   // 기존 사용자 로그인
   UserVO findUserByEmailandProvider(@Param("email") String email, @Param("provider") String provider);
 

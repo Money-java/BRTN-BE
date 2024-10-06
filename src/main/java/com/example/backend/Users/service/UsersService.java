@@ -11,6 +11,7 @@ public interface UsersService {
   // 주어진 이메일과 소셜 provider을 사용해 기존 사용자 존재 여부 확인
   UserVO findUserByEmailandProvider(String email, String provider);
 
+  void updateUserProfile(Long userId, String nickname, String avatar);
   // 특정 사용자 찾기
   UserVO findOneUser(String email);
 

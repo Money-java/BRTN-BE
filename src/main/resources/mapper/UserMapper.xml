@@ -19,6 +19,15 @@
         VALUES (#{email}, #{name}, #{nickname}, #{provider}, #{role})
     </insert>
 
+    <update id="updateUserProfile">
+        UPDATE Users
+        SET
+            nickname = #{nickname},
+            avatar = #{avatar}
+        WHERE
+            user_id = #{userId}
+    </update>
+
     <!-- 기존 사용자 로그인 : 주어진 이메일과 소셜 provider 사용해 기존 사용자 존재 여부 확인 -->
     <select id="findUserByEmailandProvider" parameterType="string" resultType="com.example.backend.Users.vo.UserVO">
         SELECT * FROM Users WHERE email = #{email} and provider = #{provider}
