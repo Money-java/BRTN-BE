@@ -65,6 +65,4 @@ public class UsersServiceImpl implements UsersService {
     userMapper.incrementUserReward(userId);
   }
 
-
-
 }

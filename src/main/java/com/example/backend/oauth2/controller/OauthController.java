@@ -1,7 +1,5 @@
 package com.example.backend.oauth2.controller;
 
-
-
 import com.example.backend.Users.service.UsersService;
 import com.example.backend.Users.vo.UserVO;
 import com.example.backend.oauth2.service.GoogleOauth2Service;

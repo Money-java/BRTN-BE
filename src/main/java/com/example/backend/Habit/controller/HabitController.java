@@ -1,9 +1,13 @@
 package com.example.backend.Habit.controller;
 
+import com.example.backend.Habit.dto.HabitCheckCountDTO;
+import com.example.backend.Habit.dto.HabitCheckRequestDTO;
+import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.service.HabitServieImp;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import com.example.backend.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +26,12 @@ import java.util.List;
 public class HabitController {
 
   private final HabitService habitService;
+  private final MyHabitMapper myHabitMapper;
 
   @Autowired
-  public HabitController(HabitService habitService) {
+  public HabitController(HabitService habitService, MyHabitMapper myHabitMapper) {
     this.habitService = habitService;
+    this.myHabitMapper = myHabitMapper;
   }
 
   // 1. 나의 습관 조회
@@ -52,8 +58,8 @@ public class HabitController {
   public ResponseEntity<String> addHabitChecked(@RequestBody HabitCheckVO habitCheckVO) {
     try {
       habitService.addHabitChecked(habitCheckVO);
-      log.info("(2) Successfully completed the habit achievement check.");
-      return ResponseEntity.ok("(2) Successfully completed the habit achievement check.");
+      log.info("(2) Successfully completed the habit achievement check");
+      return ResponseEntity.ok("(2) Successfully completed the habit achievement check");
     } catch (UnauthorizedException e) {
       log.info("401 Unauthorized: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -123,9 +129,9 @@ public class HabitController {
   @PutMapping("/update")
   public ResponseEntity<String> modifyMyHabit(@RequestBody MyHabitVO myHabitVO) {
     try {
-      habitService.modifyMyHabit(myHabitVO);
-      log.info("(5) Successfully updated habit");
-      return ResponseEntity.ok("(5) Successfully updated habit");
+      String resultMessage = habitService.modifyMyHabit(myHabitVO);
+      log.info(resultMessage);
+      return ResponseEntity.ok(resultMessage);
     } catch (BadRequestException e) {
       log.info("400 Bad request: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -135,14 +141,16 @@ public class HabitController {
     } catch (InternalServerErrorException e) {
       log.info("500 Internal Server Error: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The habit does not belong to this user");
     }
   }
 
   // 6. 습관 삭제
   @DeleteMapping("/delete")
-  public ResponseEntity<String> deleteMyHabit(@RequestParam("myHabitId") long myHabitId) {
+  public ResponseEntity<String> deleteMyHabit(@RequestBody MyHabitVO myHabitVO) {
     try {
-      habitService.deleteMyHabit(myHabitId);
+      habitService.deleteMyHabit(myHabitVO);
       log.info("(6) Successfully deleted habit");
       return ResponseEntity.ok("(6) Successfully deleted habit");
     } catch (BadRequestException e) {
@@ -159,9 +167,9 @@ public class HabitController {
 
   // 7. 습관 상태 변경
   @PutMapping("/update/state")
-  public ResponseEntity<String> modifyMyHabitState(@RequestBody List<MyHabitVO> habits) {
+  public ResponseEntity<String> modifyMyHabitState(@RequestBody List<MyHabitVO> habits, @RequestParam long userId) {
     try {
-      habitService.modifyMyHabitState(habits);
+      habitService.modifyMyHabitState(habits, userId);
       log.info("(7) Successfully updated habit state");
       return ResponseEntity.ok("(7) Successfully updated habit state");
     } catch (BadRequestException e) {
@@ -176,34 +184,89 @@ public class HabitController {
     }
   }
 
-//
-//  // 9. 습관 상태를 '대기'로 변경
-//  @PutMapping("/update/state/wait")
-//  public void modifyMyHabitStateW(@RequestParam("myHabitId") long myHabitId) {
-//    habitService.modifyMyHabitStateW(myHabitId);
-//  }
-//
-//  // 10. 오늘 절약 가능한 예상 금액
-//  @GetMapping("/save/expection")
-//  public int saveTotalAmount() {
-//    return habitService.saveTotalAmount();
-//  }
-//
-//  // 11. 실제 절약 금액
-//  @GetMapping("/save/real")
-//  public int saveRealAmount() {
-//    return habitService.saveRealAmount();
-//  }
-//
-//  // 12. 습관 커뮤니티에 업로드하기
-//  @PostMapping("/upload/habit")
-//  public void addHabitCommunity(@RequestParam("userId") long userId) {
-//    habitService.addHabitCommunity();
-//  }
-//
-//  // 13. 인증 커뮤니티에 업로드하기
-//  @PostMapping("/upload/post")
-//  public void addPostCommunity(@RequestBody PostCommunityVO postCommunityVO) {
-//    habitService.addPostCommunity();
-//  }
+  // 8. 절약 예상 금액
+  @GetMapping("/save/expection")
+  public ResponseEntity<Integer> saveTotalAmount() {
+    try {
+      int amount = habitService.saveTotalAmount();
+      log.info("(8) Successfully retrieved the expected amount you can save today");
+      return ResponseEntity.ok(amount);
+    } catch (BadRequestException e) {
+      log.info("400 Bad request: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 9. 실제 절약 금액
+  @GetMapping("/save/real")
+  public ResponseEntity<Integer> saveRealAmount(@RequestParam long userId) {
+    try {
+      int amount = habitService.saveRealAmount(userId);
+      log.info("(9) Successfully retrieved today's actual savings amount");
+      return ResponseEntity.ok(amount);
+    } catch (BadRequestException e) {
+      log.info("400 Bad request: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 10. 습관 커뮤니티 업로드
+  @PostMapping("/upload/habit")
+  public ResponseEntity<String> addHabitCommunity(@RequestParam long habitId) {
+    try {
+      String resultMessage = habitService.addHabitCommunity(habitId);
+      log.info(resultMessage);
+      return ResponseEntity.ok(resultMessage);
+    } catch (BadRequestException e) {
+      log.info("400 Bad request: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (ConflictException e) {
+      log.info("409 Conflict: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 11. 인증 커뮤니티에 업로드하기
+  @PostMapping("/upload/post")
+  public ResponseEntity<String> addPostCommunity(@RequestBody PostCommunityVO postCommunityVO) {
+    try {
+      if (postCommunityVO.getImageURL() == null) {
+        postCommunityVO.setImageURL(null);
+      }
+
+      habitService.addPostCommunity(postCommunityVO);
+      log.info("(11) Successfully uploaded to Post Community");
+      return ResponseEntity.ok("(11) Successfully uploaded to Post Community");
+    } catch (BadRequestException e) {
+      log.info("400 Bad request: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (ConflictException e) {
+      log.info("409 Conflict: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+  }
 }
