@@ -1,7 +1,6 @@
-package com.example.backend.security.util;
+package com.example.backend.security.jwt;
 
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -35,6 +34,7 @@ public class JWTUtil {
                 .setHeader(headerMap)
                 .setSubject(email)
                 .claim("role", role)
+                .claim("provider", provider)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(key)
@@ -48,7 +48,17 @@ public class JWTUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject().toString();
+    }
+
+    // JWT 토큰에서 provider 추출
+    public String getUserProvider(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("provider").toString();
     }
 
     // JWT 토큰이 만료되었는지 확인
