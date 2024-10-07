@@ -51,7 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("/resources/");
     }
 
-////     MultipartResolver 설정
+    // MultipartResolver 설정
 //    @Bean
 //    public MultipartResolver multipartResolver() {
 //        return new StandardServletMultipartResolver();
