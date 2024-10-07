@@ -1,8 +1,12 @@
 package com.example.backend.PostCommunity.controller;
 
+import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.service.PostCommunityServiceImpl;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,10 +40,16 @@ public class PostCommunityController {
     return postCommunityServiceImpl.countUserCertifications(userId);
   }
 
-  // Post 추가
-  @PostMapping("/add")
-  public void insertPost(@RequestBody PostCommunityVO postCommunityVO) {
-    postCommunityServiceImpl.insertPost(postCommunityVO);
+
+  @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Void> insertPost(@ModelAttribute PostCommunityRequestDTO requestDTO) {
+    try {
+      postCommunityServiceImpl.insertPost(requestDTO);
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      // 예외 처리 및 로깅
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
   }
 
   // 특정 Post 조회 (by ID)
