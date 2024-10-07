@@ -77,4 +77,14 @@ public class JWTUtil {
             return true;
         }
     }
+
+    // JWT 토큰에서 아이디 추출
+    public Long getUserId(String token) {
+        return Long.parseLong(Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId").toString());  // 클레임에서 userId를 추출
+    }
 }

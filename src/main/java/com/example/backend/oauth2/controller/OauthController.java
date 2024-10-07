@@ -11,6 +11,7 @@ import com.example.backend.oauth2.dto.NaverUserInfo;
 import com.example.backend.security.cookie.CookieUtil;
 import com.example.backend.security.jwt.JWTUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
