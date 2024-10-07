@@ -118,13 +118,13 @@ public class UsersController {
     usersService.incrementUserReward(userId);
   }
 
-  // 2. 아이디로 특정 사용자 찾기
+  // 아이디로 특정 사용자 찾기
   @GetMapping("/mypage")
   public UserVO findUserById(@RequestParam Long userId) {
     return usersService.findUserById(userId);
   }
 
-  // 3. 닉네임 변경
+  // 닉네임 변경
   @PutMapping("/updateNickname")
   public void updateUser(@RequestParam String nickname, @RequestParam Long userId) {
     usersService.updateUser(nickname, userId);
