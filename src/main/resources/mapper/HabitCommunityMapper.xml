@@ -5,53 +5,57 @@
 
 <mapper namespace="com.example.backend.HabitCommunity.mapper.HabitCommunityMapper">
 
-    <select id="selectHabitCommunityById" parameterType="long" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT * FROM HabitCommunity WHERE community_id = #{communityId}
-    </select>
+    <resultMap id="HabitCommunityResultMap" type="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        <id column="community_id" property="communityId"/>
+        <result column="habit_id" property="habitId"/>
+        <result column="habit_likes" property="habitLikes"/>
+        <result column="participants" property="participants"/>
+        <result column="complete" property="complete"/>
+        <result column="upload_date" property="uploadDate"/>
+        <result column="habit_title" property="habitTitle"/>
+        <result column="category_title" property="categoryTitle"/>
+        <result column="nickname" property="nickname"/>
+    </resultMap>
 
-    <select id="selectAllHabitCommunities" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT * FROM HabitCommunity
-    </select>
-
-    <update id="updateHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        UPDATE HabitCommunity
-        SET habit_id = #{habitId}, habit_likes = #{habitLikes}, participants = #{participants},
-            complete = #{complete}, upload_date = #{uploadDate}
-        WHERE community_id = #{communityId}
-    </update>
-
-    <delete id="deleteHabitCommunity" parameterType="long">
-        DELETE FROM HabitCommunity WHERE community_id = #{communityId}
-    </delete>
-
-    <!-- 1. 습관리스트 조회1 -->
-    <!--최신순 , 좋아요 순, 참여자순, 달성자 순, 정렬한 습관커뮤니티 정보 조회 -->
-    <!-- 루틴공유커뮤니티 페이지 -->
-    <select id="selectHabitList" parameterType="map" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT h.category_title, h.habit_title, u.nickname, hc.habit_likes, hc.participants, hc.complete, hc.upload_date
+    <!-- 메인 기능 -->
+    <select id="searchHabitCommunities" parameterType="map" resultMap="HabitCommunityResultMap">
+        SELECT
+        hc.community_id,
+        hc.habit_id,
+        h.category_title,
+        h.habit_title,
+        u.nickname,
+        hc.habit_likes,
+        hc.participants,
+        hc.complete,
+        hc.upload_date
         FROM HabitCommunity hc
         JOIN Habit h ON hc.habit_id = h.habit_id
-        JOIN Users u ON h.writer_id = u.user_id
+        JOIN Users u ON h.user_id = u.user_id
         WHERE 1 = 1
+
+        <!-- 검색어 필터 적용 -->
+        <if test="keyword != null and keyword != ''">
+            AND (h.habit_title LIKE CONCAT('%', #{keyword}, '%')
+            OR h.category_title LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <!-- 카테고리 필터 적용 -->
         <if test="categoryName != null and categoryName != ''">
             AND h.category_title = #{categoryName}
         </if>
 
         <!-- 동적 정렬 조건 -->
         <choose>
-            <!-- 좋아요순 정렬 -->
-            <when test="sortType == 'likes'">
+            <when test="sortType == 'manyLikes'">
                 ORDER BY hc.habit_likes DESC
             </when>
-            <!-- 참여자순 정렬-->
-            <when test="sortType == 'participants'">
+            <when test="sortType == 'manyParticipants'">
                 ORDER BY hc.participants DESC
             </when>
-            <!-- 달성자순 정렬 -->
-            <when test="sortType == 'complete'">
+            <when test="sortType == 'manyCompletions'">
                 ORDER BY hc.complete DESC
             </when>
-            <!-- 최신순 정렬 -->
             <when test="sortType == 'recent'">
                 ORDER BY hc.upload_date DESC
             </when>
@@ -61,38 +65,141 @@
         </choose>
     </select>
 
+    <!-- HabitCommunity를 communityId로 조회 -->
+    <select id="selectHabitCommunityById" parameterType="long" resultMap="HabitCommunityResultMap">
+        SELECT * FROM HabitCommunity WHERE community_id = #{communityId}
+    </select>
 
-    <!-- 2. 습관리스트 조회2 -->
+    <!-- 모든 HabitCommunity 조회 -->
+    <select id="selectAllHabitCommunities" resultMap="HabitCommunityResultMap">
+        SELECT * FROM HabitCommunity
+    </select>
+
+    <!-- HabitCommunity 업데이트 -->
+    <update id="updateHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        UPDATE HabitCommunity
+        SET habit_id = #{habitId}, habit_likes = #{habit_likes}, participants = #{participants},
+            complete = #{complete}, upload_date = #{uploadDate}
+        WHERE community_id = #{communityId}
+    </update>
+
+    <!-- HabitCommunity 삭제 -->
+    <delete id="deleteHabitCommunity" parameterType="long">
+        DELETE FROM HabitCommunity WHERE community_id = #{communityId}
+    </delete>
+
+<!--    &lt;!&ndash; 1. 습관 리스트 조회 &ndash;&gt;-->
+<!--    &lt;!&ndash; 최신순, 좋아요 순, 참여자순, 달성자 순으로 정렬한 습관 커뮤니티 정보 조회 &ndash;&gt;-->
+<!--    <select id="selectHabitList" parameterType="map" resultMap="HabitCommunityResultMap">-->
+<!--        SELECT-->
+<!--        hc.community_id,-->
+<!--        hc.habit_id,-->
+<!--        h.category_title,-->
+<!--        h.habit_title,-->
+<!--        u.nickname,-->
+<!--        hc.habit_likes,-->
+<!--        hc.participants,-->
+<!--        hc.complete,-->
+<!--        hc.upload_date-->
+<!--        FROM HabitCommunity hc-->
+<!--        JOIN Habit h ON hc.habit_id = h.habit_id-->
+<!--        JOIN Users u ON h.user_id = u.user_id-->
+<!--        WHERE 1 = 1-->
+<!--        &lt;!&ndash; 카테고리 필터 적용 &ndash;&gt;-->
+<!--        <if test="categoryName != null and categoryName != ''">-->
+<!--            AND h.category_title = #{categoryName}-->
+<!--        </if>-->
+
+<!--        &lt;!&ndash; 동적 정렬 조건 &ndash;&gt;-->
+<!--        <choose>-->
+<!--            &lt;!&ndash; 좋아요순 정렬 &ndash;&gt;-->
+<!--            <when test="sortType == 'manyLikes'">-->
+<!--                ORDER BY hc.habit_likes DESC-->
+<!--            </when>-->
+<!--            &lt;!&ndash; 참여자순 정렬 &ndash;&gt;-->
+<!--            <when test="sortType == 'manyParticipants'">-->
+<!--                ORDER BY hc.participants DESC-->
+<!--            </when>-->
+<!--            &lt;!&ndash; 달성자순 정렬 &ndash;&gt;-->
+<!--            <when test="sortType == 'manyCompletions'">-->
+<!--                ORDER BY hc.complete DESC-->
+<!--            </when>-->
+<!--            &lt;!&ndash; 최신순 정렬 &ndash;&gt;-->
+<!--            <when test="sortType == 'recent'">-->
+<!--                ORDER BY hc.upload_date DESC-->
+<!--            </when>-->
+<!--            <otherwise>-->
+<!--                ORDER BY hc.upload_date DESC &lt;!&ndash; 기본값은 최신순으로 정렬 &ndash;&gt;-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+<!--    </select>-->
+
+
     <!-- 내가 좋아요한 루틴 조회 -->
-    <!-- 루틴공유커뮤니티 페이지-->
-    <select id="selectLikedCommunities" parameterType="string" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+    <select id="selectLikedCommunities" parameterType="string" resultMap="HabitCommunityResultMap">
         SELECT hc.community_id, h.habit_title, h.category_title, u.nickname, hc.habit_likes, hc.participants, hc.complete, hc.upload_date
         FROM HabitCommunity hc
                  JOIN PostLikes pl ON hc.community_id = pl.post_id
                  JOIN Habit h ON hc.habit_id = h.habit_id
-                 JOIN Users u ON h.writer_id = u.user_id
+                 JOIN Users u ON h.user_id = u.user_id
         WHERE pl.user_id = #{userId}
     </select>
 
-    <!-- 7. 도전하기 기능(스크랩) -->
-    <!-- 다른 사람이 공유한 습관을 보고 도전하기 버튼을 누르면 나의 습관으로 추가 -->
-    <!-- 루틴공유커뮤니티 페이지 -->
+    <!-- 도전하기 기능 (습관을 나의 습관으로 추가) -->
     <insert id="addHabitToMyHabit">
         INSERT INTO MyHabit (user_id, habit_id, state)
         VALUES (#{userId}, #{habitId}, '대기');
     </insert>
 
-    <!-- 8. 습관검색기능 -->
-    <!-- 루틴커뮤니티 페이지 -->
-    <select id="searchHabitCommunities" resultType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
-        SELECT *
-        FROM HabitCommunity
-        WHERE habit_id IN (
-            SELECT habit_id
-            FROM Habit
-            WHERE habit_title LIKE CONCAT('%', #{keyword}, '%')
-               OR category_title LIKE CONCAT('%', #{keyword}, '%')
+
+
+    <!-- 좋아요 추가 -->
+    <insert id="addLike">
+        INSERT INTO PostLikes (user_id, community_id)
+        VALUES (#{userId}, #{communityId})
+    </insert>
+
+    <!-- habit_likes 증가 -->
+    <update id="incrementHabitLikes">
+        UPDATE habitcommunity
+        SET habit_likes = habit_likes + 1
+        WHERE community_id = #{communityId};
+    </update>
+
+    <!-- 좋아요 취소 -->
+    <delete id="removeLike">
+       DELETE FROM PostLikes
+       WHERE user_id = #{userId} AND community_id = #{communityId}
+    </delete>
+
+    <!-- habit_likes 감소 -->
+    <update id="decrementHabitLikes">
+        UPDATE HabitCommunity
+        SET habit_likes = habit_likes - 1
+        WHERE community_id = #{communityId}
+    </update>
+
+
+    <!-- HabitCommunity 데이터 삽입 -->
+    <insert id="insertHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
+        INSERT INTO HabitCommunity (
+            habit_id,
+            community_id,
+            habit_likes,
+            participants,
+            complete,
+            upload_date
         )
-    </select>
+        VALUES (
+                   #{habitId},
+                   #{communityId},
+                   #{habitLikes},
+                   #{participants},
+                   #{complete},
+                   #{uploadDate}
+               )
+    </insert>
+
+
 
 </mapper>

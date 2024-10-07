@@ -15,7 +15,7 @@ public interface HabitCommunityService {
   void addHabitToMyHabit(Long userId, Long habitId);
 
   // 8. 습관검색기능
-  List<HabitCommunityVO> searchHabitCommunities(String keyword);
+  List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType,String keyword);
 
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
@@ -31,6 +31,11 @@ public interface HabitCommunityService {
 
   // HabitCommunity 삭제
   void deleteHabitCommunity(Long communityId);
+
+  // 좋아요 추가
+  void addLike(Long userId, Long communityId);
+  // 좋아요 삭제
+  void removeLike(Long userId, Long communityId);
 
 
 }
