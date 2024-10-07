@@ -37,6 +37,24 @@ public class UsersController {
     usersService.insertUser(userVO);
   }
 
+  @CrossOrigin(origins = "http://localhost:5173")
+  @PostMapping("/findId")
+  public ResponseEntity<?> findId(HttpServletRequest request) {
+    String authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      return ResponseEntity.status(401).body("JWT Token is missing or invalid.");
+    }
+    String token = authorizationHeader.substring(7);
+
+    String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출
+    String provider = jwtUtil.getUserProvider(token);// 토큰에서 provider 추출
+    UserVO user = usersService.findUserByEmailandProvider(email,provider);
+    if(user == null) {
+      return ResponseEntity.status(401).body("해당 사용자가 존재하지 않습니다.");
+    }
+    return ResponseEntity.ok(user);
+  }
+
 
   @CrossOrigin(origins = "http://localhost:5173")
   @PostMapping("/updateProfile")
@@ -51,9 +69,6 @@ public class UsersController {
       return ResponseEntity.status(401).body("JWT Token is missing or invalid.");
     }
     String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰
-
-    System.out.println(nickname);
-    System.out.println(image);
 
     String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출
     String provider = jwtUtil.getUserProvider(token);// 토큰에서 provider 추출
