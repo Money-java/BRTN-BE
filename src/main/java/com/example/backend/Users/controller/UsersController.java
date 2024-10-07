@@ -1,21 +1,35 @@
 package com.example.backend.Users.controller;
 
 import com.example.backend.Users.service.UsersService;
+import com.example.backend.Users.service.UsersServiceImpl;
 import com.example.backend.Users.vo.UserVO;
+import com.example.backend.security.jwt.JWTUtil;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
 
-  private final UsersService usersService;
+  private final UsersServiceImpl usersService;
+  private final JWTUtil jwtUtil;
 
   @Autowired
-  public UsersController(UsersService usersService) {
+  public UsersController(UsersServiceImpl usersService, JWTUtil jwtUtil) {
     this.usersService = usersService;
+    this.jwtUtil = jwtUtil;
   }
 
   // 신규 사용자 등록
@@ -24,11 +38,60 @@ public class UsersController {
     usersService.insertUser(userVO);
   }
 
-  // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
-  @GetMapping("/login")
-  public UserVO findUserByEmail(@RequestParam String email) {
-    return usersService.findUserByEmail(email);
+  @CrossOrigin(origins = "http://localhost:5173")
+  @PostMapping("/findId")
+  public ResponseEntity<?> findId(HttpServletRequest request) {
+    String authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      return ResponseEntity.status(401).body("JWT Token is missing or invalid.");
+    }
+    String token = authorizationHeader.substring(7);
+
+    String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출
+    String provider = jwtUtil.getUserProvider(token);// 토큰에서 provider 추출
+    UserVO user = usersService.findUserByEmailandProvider(email,provider);
+    if(user == null) {
+      return ResponseEntity.status(401).body("해당 사용자가 존재하지 않습니다.");
+    }
+    return ResponseEntity.ok(user);
   }
+
+  @PostMapping("/updateProfile")
+  public ResponseEntity<String> updateProfile(
+          @RequestPart("image") MultipartFile image,
+          @RequestParam("nickname") String nickname,
+          HttpServletRequest request) {
+
+    // 1. JWT 토큰 추출 및 검증
+    String authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      return ResponseEntity.status(401).body("JWT Token is missing or invalid.");
+    }
+    String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰
+
+    String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출A
+    String provider = jwtUtil.getUserProvider(token);// 토큰에서 provider 추출
+
+    // 2. 사용자 검증 및 프로필 업데이트 로직
+    UserVO user = usersService.findUserByEmailandProvider(email,provider);
+
+    Long userId = user.getUserId();
+   // 이미지 파일 이름 저장
+    usersService.updateUserProfile(userId, nickname, image);
+
+    return ResponseEntity.ok("Profile updated successfully.");
+  }
+
+  @GetMapping("/getUserInfo")
+  public UserVO getUserInfo(@RequestParam Long userId) {
+    return usersService.findUserById(userId);
+  }
+
+  // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
+//  @GetMapping("/login")
+//  public UserVO findUserByEmail(@RequestParam String email) {
+//    return usersService.findUserByEmail(email);
+//  }
 
   // 특정 사용자 찾기
   @GetMapping("/find")
@@ -42,12 +105,6 @@ public class UsersController {
     return usersService.findAllUsers();
   }
 
-  // 닉네임 변경
-  @PutMapping("/updateNickname")
-  public void updateUser(@RequestParam String nickname, @RequestParam Long userId) {
-    usersService.updateUser(nickname, userId);
-  }
-
   // 회원 탈퇴
   @DeleteMapping("/delete")
   public void deleteUser(@RequestParam String email) {
@@ -59,5 +116,17 @@ public class UsersController {
   @PostMapping("/increment-reward")
   public void incrementUserReward(@RequestParam Long userId) {
     usersService.incrementUserReward(userId);
+  }
+
+  // 아이디로 특정 사용자 찾기
+  @GetMapping("/mypage")
+  public UserVO findUserById(@RequestParam Long userId) {
+    return usersService.findUserById(userId);
+  }
+
+  // 닉네임 변경
+  @PutMapping("/updateNickname")
+  public void updateUser(@RequestParam String nickname, @RequestParam Long userId) {
+    usersService.updateUser(nickname, userId);
   }
 }

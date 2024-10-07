@@ -1,5 +1,7 @@
 package com.example.backend.PostCommunity.service;
 
+import com.example.backend.ImageUpload.ImageUploadService;
+import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.mapper.PostCommunityMapper;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,12 @@ import java.util.Map;
 public class PostCommunityServiceImpl implements PostCommunityService {
 
   private final PostCommunityMapper postCommunityMapper;
+  private final ImageUploadService imageUploadService;
 
   @Autowired
-  public PostCommunityServiceImpl(PostCommunityMapper postCommunityMapper) {
+  public PostCommunityServiceImpl(PostCommunityMapper postCommunityMapper, ImageUploadService imageUploadService) {
     this.postCommunityMapper = postCommunityMapper;
+    this.imageUploadService = imageUploadService;
   }
 
 
@@ -36,7 +40,11 @@ public class PostCommunityServiceImpl implements PostCommunityService {
   }
 
   @Override
-  public void insertPost(PostCommunityVO postCommunityVO) {
+  public void insertPost(PostCommunityRequestDTO requestDTO) {
+    // DTO에서 VO로 변환
+    PostCommunityVO postCommunityVO = convertToVO(requestDTO);
+
+    //  MyBatis Mapper를 통해 데이터베이스에 저장
     postCommunityMapper.insertPost(postCommunityVO);
   }
 
@@ -64,4 +72,20 @@ public class PostCommunityServiceImpl implements PostCommunityService {
     postCommunityMapper.deletePost(postId);
   }
 
+  private PostCommunityVO convertToVO(PostCommunityRequestDTO requestDTO) {
+    PostCommunityVO postCommunityVO = new PostCommunityVO();
+    postCommunityVO.setUserId(requestDTO.getUserId());
+    postCommunityVO.setHabitId(requestDTO.getHabitId());
+    postCommunityVO.setContent(requestDTO.getContent());
+    postCommunityVO.setHashtag(requestDTO.getHashtag());
+
+    // S3에 이미지 업로드 및 URL 설정
+    String imageUrl = null;
+    if (requestDTO.getImage() != null && !requestDTO.getImage().isEmpty()) {
+      imageUrl = imageUploadService.saveFile(requestDTO.getImage());
+    }
+    postCommunityVO.setImageURL(imageUrl);
+
+    return postCommunityVO;
+  }
 }

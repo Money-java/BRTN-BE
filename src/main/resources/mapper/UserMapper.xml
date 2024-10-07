@@ -19,9 +19,18 @@
         VALUES (#{email}, #{name}, #{nickname}, #{provider}, #{role})
     </insert>
 
-    <!-- 기존 사용자 로그인 : 주어진 이메일 사용해 기존 사용자 존재 여부 확인 -->
-    <select id="findUserByEmail" parameterType="long" resultType="com.example.backend.Users.vo.UserVO">
-        SELECT * FROM Users WHERE email = #{email}
+    <update id="updateUserProfile">
+        UPDATE Users
+        SET
+            nickname = #{nickname},
+            avatar = #{avatar}
+        WHERE
+            user_id = #{userId}
+    </update>
+
+    <!-- 기존 사용자 로그인 : 주어진 이메일과 소셜 provider 사용해 기존 사용자 존재 여부 확인 -->
+    <select id="findUserByEmailandProvider" parameterType="string" resultType="com.example.backend.Users.vo.UserVO">
+        SELECT * FROM Users WHERE email = #{email} and provider = #{provider}
     </select>
 
     <!-- 특정 사용자 찾기 -->
@@ -34,15 +43,20 @@
         SELECT * FROM Users
     </select>
 
-    <!-- 닉네임 변경 -->
-    <update id="updateUser" parameterType="String" >
-        UPDATE Users
-        SET nickname = #{nickname}
-        WHERE user_id = #{userId}
-    </update>
-
     <!-- 회원 탈퇴  -->
     <delete id="deleteUser" parameterType="String">
         DELETE FROM Users WHERE email = #{email}
     </delete>
+
+    <!-- 아이디로 특정 사용자 찾기 -->
+    <select id="findUserById" parameterType="long" resultType="com.example.backend.Users.vo.UserVO">
+        SELECT * FROM Users WHERE user_id = #{userId}
+    </select>
+
+    <!-- 닉네임 변경 -->
+    <update id="updateUser" parameterType="map">
+        UPDATE Users
+        SET nickname = #{nickname}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

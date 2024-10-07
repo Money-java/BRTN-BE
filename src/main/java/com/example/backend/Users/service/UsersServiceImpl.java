@@ -1,20 +1,27 @@
 package com.example.backend.Users.service;
 
+import com.example.backend.ImageUpload.ImageUploadService;
 import com.example.backend.Users.mapper.UserMapper;
 import com.example.backend.Users.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
   private final UserMapper userMapper;
+  private final ImageUploadService imageUploadService;
 
   @Autowired
-  public UsersServiceImpl(UserMapper userMapper) {
+  public UsersServiceImpl(UserMapper userMapper, ImageUploadService imageUploadService) {
     this.userMapper = userMapper;
+      this.imageUploadService = imageUploadService;
   }
 
   // 신규 사용자 등록
@@ -25,8 +32,13 @@ public class UsersServiceImpl implements UsersService {
 
   // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
   @Override
-  public UserVO findUserByEmail(String email) {
-    return userMapper.findUserByEmail(email);
+  public UserVO findUserByEmailandProvider(String email, String provider) {
+    return userMapper.findUserByEmailandProvider(email,provider);
+  }
+
+  @Override
+  public void updateUserProfile(Long userId, String nickname, String avatar) {
+
   }
 
   // 특정 사용자 찾기
@@ -41,10 +53,14 @@ public class UsersServiceImpl implements UsersService {
     return userMapper.findAllUsers();
   }
 
-  // 닉네임 변경
   @Override
-  public void updateUser(String nickname, Long userId) {
-    userMapper.updateUser(nickname, userId);
+  public void updateUserProfile(Long userId, String nickname, MultipartFile image){
+
+    String avatar = null;
+    if(image!=null){
+      avatar = imageUploadService.saveFile(image);
+    }
+    userMapper.updateUserProfile(userId, nickname, avatar);
   }
 
   // 회원 탈퇴
@@ -58,5 +74,20 @@ public class UsersServiceImpl implements UsersService {
   @Override
   public void incrementUserReward(Long userId) {
     userMapper.incrementUserReward(userId);
+  }
+
+  // 아이디로 특정 사용자 찾기
+  public UserVO findUserById(Long userId) {
+    return userMapper.findUserById(userId);
+  }
+
+  // 닉네임 변경
+  @Override
+  public void updateUser(String nickname, Long userId) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("nickname", nickname);
+    params.put("userId", userId);
+
+    userMapper.updateUser(params);
   }
 }

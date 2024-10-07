@@ -1,5 +1,8 @@
 package com.example.backend.config;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -20,9 +23,28 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@MapperScan(basePackages = "com.example")
+@MapperScan(basePackages = {"com.example.backend.Account.mapper",
+        "com.example.backend.Users.mapper",
+        "com.example.backend.Habit.mapper",
+        "com.example.backend.HabitCommunity.mapper",
+        "com.example.backend.PostComment.mapper",
+        "com.example.backend.PostCommunity.mapper",
+        "com.example.backend.PostLikes.mapper",
+        "com.example.backend.Transaction.mapper"})
 @EnableTransactionManagement
 @PropertySource({"classpath:/application.properties"})
+@ComponentScan(basePackages = {"com.example.backend.Account.service",
+        "com.example.backend.Users.service",
+        "com.example.backend.Habit.service",
+        "com.example.backend.HabitCommunity.service",
+        "com.example.backend.PostComment.service",
+        "com.example.backend.PostCommunity.service",
+        "com.example.backend.PostLikes.service",
+        "com.example.backend.Transaction.service",
+        "com.example.backend.oauth2.service",
+        "com.example.backend.security",
+        "com.example.backend.ImageUpload"
+})
 public class AppConfig {
     public AppConfig() {
         System.out.println("AppConfig created");
@@ -36,6 +58,15 @@ public class AppConfig {
 
     @Value("${spring.datasource.password}")
     private String password;
+
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String awsAccessKey;
+
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String awsSecretKey;
+
+    @Value("${cloud.aws.region.static}")
+    private String awsRegion;
 
     @Bean
     public DataSource dataSource() {
@@ -112,4 +143,13 @@ public class AppConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    @Bean
+    public AmazonS3Client s3Client() {
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+
+        return (AmazonS3Client) AmazonS3Client.builder()
+                .withRegion(awsRegion)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .build();
+    }
 }
