@@ -52,10 +52,10 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     // MultipartResolver 설정
-    @Bean
-    public MultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
-    }
+//    @Bean
+//    public MultipartResolver multipartResolver() {
+//        return new StandardServletMultipartResolver();
+//    }
 
     // CORS 설정
     @Override
