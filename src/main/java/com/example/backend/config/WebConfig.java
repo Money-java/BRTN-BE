@@ -3,10 +3,10 @@ package com.example.backend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,6 +22,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "com.example.backend.PostCommunity.controller",
         "com.example.backend.PostLikes.controller",
         "com.example.backend.Transaction.controller",
+        "com.example.backend.oauth2.controller"
 })
 public class WebConfig implements WebMvcConfigurer {
 
@@ -35,6 +36,13 @@ public class WebConfig implements WebMvcConfigurer {
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".jsp");
         return resolver;
+    }
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(10485760); // 10MB
+        return multipartResolver;
     }
 
     @Override

@@ -41,6 +41,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "com.example.backend.PostCommunity.service",
         "com.example.backend.PostLikes.service",
         "com.example.backend.Transaction.service",
+        "com.example.backend.oauth2.service",
+        "com.example.backend.security",
         "com.example.backend.ImageUpload"
 })
 public class AppConfig {

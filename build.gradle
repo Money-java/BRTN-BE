@@ -97,6 +97,9 @@ dependencies {
     implementation("org.springframework.security:spring-security-core:${springSecurityVersion}")
     implementation("org.springframework.security:spring-security-taglibs:${springSecurityVersion}")
 
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+
+
     // AWS S3
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
