@@ -36,6 +36,11 @@ public class UsersServiceImpl implements UsersService {
     return userMapper.findUserByEmailandProvider(email,provider);
   }
 
+  @Override
+  public void updateUserProfile(Long userId, String nickname, String avatar) {
+
+  }
+
   // 특정 사용자 찾기
   @Override
   public UserVO findOneUser(String email) {
@@ -46,16 +51,6 @@ public class UsersServiceImpl implements UsersService {
   @Override
   public List<UserVO> findAllUsers() {
     return userMapper.findAllUsers();
-  }
-
-  // 닉네임 변경
-  @Override
-  public void updateUser(String nickname, Long userId) {
-    Map<String, Object> params = new HashMap<>();
-    params.put("nickname", nickname);
-    params.put("userId", userId);
-
-    userMapper.updateUser(params);
   }
 
   @Override
@@ -84,5 +79,15 @@ public class UsersServiceImpl implements UsersService {
   // 아이디로 특정 사용자 찾기
   public UserVO findUserById(Long userId) {
     return userMapper.findUserById(userId);
+  }
+
+  // 닉네임 변경
+  @Override
+  public void updateUser(String nickname, Long userId) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("nickname", nickname);
+    params.put("userId", userId);
+
+    userMapper.updateUser(params);
   }
 }

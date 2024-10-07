@@ -38,6 +38,6 @@ public interface UserMapper {
   // 닉네임 변경
   void updateUser(@Param("nickname") String nickname, @Param("userId") Long userId);
 
-  // 닉네임 업데이트 메서드
+  // 닉네임 업데이트
   void updateUser(Map<String, Object> params);
 }
