@@ -96,6 +96,12 @@ dependencies {
     implementation("org.springframework.security:spring-security-config:${springSecurityVersion}")
     implementation("org.springframework.security:spring-security-core:${springSecurityVersion}")
     implementation("org.springframework.security:spring-security-taglibs:${springSecurityVersion}")
+
+    // AWS S3
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.2'
 }
 
 test {

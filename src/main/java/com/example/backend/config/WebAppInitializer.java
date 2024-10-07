@@ -1,15 +1,22 @@
 package com.example.backend.config;
 
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.Filter;
+import javax.servlet.*;
 
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     public WebAppInitializer(){
         System.out.println("WebAppInitializer created");
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        registration.setMultipartConfig(new MultipartConfigElement("/tmp", 2097152, 4194304, 0));
     }
 
     //인코딩 필터 설정
