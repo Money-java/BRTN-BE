@@ -3,9 +3,12 @@ package com.example.backend.Users.service;
 import com.example.backend.Users.mapper.UserMapper;
 import com.example.backend.Users.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -44,7 +47,11 @@ public class UsersServiceImpl implements UsersService {
   // 닉네임 변경
   @Override
   public void updateUser(String nickname, Long userId) {
-    userMapper.updateUser(nickname, userId);
+    Map<String, Object> params = new HashMap<>();
+    params.put("nickname", nickname);
+    params.put("userId", userId);
+
+    userMapper.updateUser(params);
   }
 
   @Override
@@ -65,4 +72,8 @@ public class UsersServiceImpl implements UsersService {
     userMapper.incrementUserReward(userId);
   }
 
+  // 아이디로 특정 사용자 찾기
+  public UserVO findUserById(Long userId) {
+    return userMapper.findUserById(userId);
+  }
 }
