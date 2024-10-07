@@ -75,23 +75,9 @@ public class UsersController {
     // 2. 사용자 검증 및 프로필 업데이트 로직
     UserVO user = usersService.findUserByEmailandProvider(email,provider);
 
-    // 3. 파일 저장 경로 설정 (C:/upload/ 디렉토리)
     Long userId = user.getUserId();
-    String uploadDir = "C:/upload/profile/"; // C 드라이브의 upload 디렉토리
-    String avatar = userId + "_" + image.getOriginalFilename(); // 유저 ID를 파일 이름에 추가
-
-    File imageFile = new File(uploadDir + avatar);
-    try {
-      // 디렉토리가 없을 경우 생성
-      Files.createDirectories(Paths.get(uploadDir));
-      // 이미지 파일 저장
-      image.transferTo(imageFile);
-    } catch (IOException e) {
-      return ResponseEntity.status(500).body("Error saving image file: " + e.getMessage());
-    }
-
    // 이미지 파일 이름 저장
-    usersService.updateUserProfile(userId, nickname, avatar);
+    usersService.updateUserProfile(userId, nickname, image);
 
     return ResponseEntity.ok("Profile updated successfully.");
   }

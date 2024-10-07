@@ -1,7 +1,7 @@
 package com.example.backend.Users.service;
 
 import com.example.backend.Users.vo.UserVO;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,8 +15,9 @@ public interface UsersService {
 
   void updateUserProfile(Long userId, String nickname, String avatar);
 
-  // 아이디로 특정 사용자 찾기
   UserVO findUserById(Long userId);
+
+  void updateUserProfile(Long userId, String nickname, MultipartFile image);
 
   // 특정 사용자 찾기
   UserVO findOneUser(String email);
