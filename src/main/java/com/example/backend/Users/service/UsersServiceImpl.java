@@ -1,9 +1,11 @@
 package com.example.backend.Users.service;
 
+import com.example.backend.ImageUpload.ImageUploadService;
 import com.example.backend.Users.mapper.UserMapper;
 import com.example.backend.Users.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,10 +13,12 @@ import java.util.List;
 public class UsersServiceImpl implements UsersService {
 
   private final UserMapper userMapper;
+  private final ImageUploadService imageUploadService;
 
   @Autowired
-  public UsersServiceImpl(UserMapper userMapper) {
+  public UsersServiceImpl(UserMapper userMapper, ImageUploadService imageUploadService) {
     this.userMapper = userMapper;
+      this.imageUploadService = imageUploadService;
   }
 
   // 신규 사용자 등록
@@ -48,7 +52,12 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
-  public void updateUserProfile(Long userId, String nickname, String avatar){
+  public void updateUserProfile(Long userId, String nickname, MultipartFile image){
+
+    String avatar = null;
+    if(image!=null){
+      avatar = imageUploadService.saveFile(image);
+    }
     userMapper.updateUserProfile(userId, nickname, avatar);
   }
 

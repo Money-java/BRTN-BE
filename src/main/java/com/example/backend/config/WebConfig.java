@@ -51,13 +51,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("/resources/");
     }
 
-    // MultipartResolver 설정
-    @Bean
-    public MultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
-    }
+////     MultipartResolver 설정
+//    @Bean
+//    public MultipartResolver multipartResolver() {
+//        return new StandardServletMultipartResolver();
+//    }
 
-    // CORS 설정
+//     CORS 설정
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -66,5 +66,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
+
 }
 
