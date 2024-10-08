@@ -6,10 +6,10 @@
 
     <!-- 1. 나의 습관 조회 -->
     <select id="getMyHabit" parameterType="long" resultType="MyHabitVO">
-        SELECT mh.my_habit_id, h.habit_id, h.habit_title, h.category_title
+        SELECT mh.my_habit_id, h.habit_id, h.habit_title, h.category_title, mh.state
         FROM MyHabit mh
                  JOIN HABIT h ON mh.habit_id = h.habit_id
-        WHERE mh.user_id = #{userId} AND mh.state = '진행';
+        WHERE mh.user_id = #{userId};
     </select>
 
     <!-- 4. 새로운 습관 작성 -->

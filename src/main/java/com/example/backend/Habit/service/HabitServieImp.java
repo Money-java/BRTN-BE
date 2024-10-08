@@ -59,11 +59,12 @@ public class HabitServieImp implements HabitService {
         return myHabitMapper.selectLastInsertedHabitId();
     }
     @Override
-    public void createHabitWithMyHabit(MyHabitVO myHabitVO) {
+    public Long createHabitWithMyHabit(MyHabitVO myHabitVO) {
         myHabitMapper.insertHabit(myHabitVO);
         Long habitId = myHabitMapper.selectLastInsertedHabitId();
         myHabitVO.setHabitId(habitId);
         myHabitMapper.insertMyHabit(myHabitVO);
+        return habitId;
     }
 
     // 5. 습관 수정

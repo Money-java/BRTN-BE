@@ -25,7 +25,7 @@ public interface HabitService {
   // 4. 새로운 습관 작성
   void addMyHabit(MyHabitVO myHabitVO);               // step 1 : Habit 테이블에 습관 삽입
   Long getLastInsertedHabitId();                      // step 2 : 방금 추가한 habitId 조회
-  void createHabitWithMyHabit(MyHabitVO myHabitVO);
+  Long createHabitWithMyHabit(MyHabitVO myHabitVO);
 
   // 5. 습관 수정
   String modifyMyHabit(MyHabitVO myHabitVO);

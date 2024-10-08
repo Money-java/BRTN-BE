@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class MyHabitVO {
-    private Long myHabitId;           // 나의 습관 ID
+    private Long myHabitId;           // 나의 습관 ID autoincrement
     private Long habitId;             // 습관 ID
     private Long userId;              // 사용자 ID
     private String habitTitle;        // 습관 제목
