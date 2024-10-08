@@ -18,6 +18,8 @@ public interface MyHabitMapper {
   void insertHabit(MyHabitVO myHabitVO);     // step 1 : Habit 테이블에 습관 삽입
   Long selectLastInsertedHabitId();          // step 2 : 방금 추가한 habitId 조회
   void insertMyHabit(MyHabitVO myHabitVO);   // step 3
+  Long selectLastInsertedMyHabitId();        // step 4 : 방금 추가한 MyHabitId 조회
+                                             // step 5 : HabitCreateResponseDTO 응답
 
   // 5. 습관 수정
   MyHabitVO getHabitById(Long habitId);
@@ -25,7 +27,7 @@ public interface MyHabitMapper {
   void updateMyHabit(MyHabitVO myHabitVO);
 
   // 6. 습관 삭제
-  void deleteMyHabit(MyHabitVO myHabitVO);
+  void deleteMyHabit(@Param("myHabitId") Long myHabitId);
 
   // 7. 습관 상태 변경
   void updateMyHabitState(@Param("habitList") List<MyHabitVO> habitList, @Param("userId") Long userId);

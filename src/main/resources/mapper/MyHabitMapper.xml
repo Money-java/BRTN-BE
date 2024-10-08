@@ -6,7 +6,7 @@
 
     <!-- 1. 나의 습관 조회 -->
     <select id="getMyHabit" parameterType="long" resultType="MyHabitVO">
-        SELECT mh.my_habit_id, h.habit_id, h.habit_title, h.category_title, mh.state
+        SELECT mh.my_habit_id, mh.user_id, h.habit_id, h.habit_title, h.category_title, mh.state
         FROM MyHabit mh
                  JOIN HABIT h ON mh.habit_id = h.habit_id
         WHERE mh.user_id = #{userId};
@@ -27,6 +27,10 @@
         INSERT INTO MyHabit (user_id, habit_id, state)
         VALUES (#{userId}, #{habitId}, '대기')
     </insert>
+    <!-- step 4 : 방금 추가한 MyHabitId 조회 -->
+    <select id="selectLastInsertedMyHabitId" resultType="long">
+        SELECT LAST_INSERT_ID();
+    </select>
 
     <!-- 5. 습관 수정하기 -->
     <!-- step 1 : 습관 작성자 아이디 가져오기 -->
@@ -62,10 +66,10 @@
     </update>
 
     <!-- 6. 습관 삭제하기 -->
-    <delete id="deleteMyHabit" parameterType="MyHabitVO">
+    <delete id="deleteMyHabit" parameterType="long">
         DELETE
         FROM MyHabit
-        WHERE my_habit_id = #{myHabitId} AND user_id = #{userId};
+        WHERE my_habit_id = #{myHabitId};
     </delete>
 
     <!-- 7. 습관 상태 변경하기 -->

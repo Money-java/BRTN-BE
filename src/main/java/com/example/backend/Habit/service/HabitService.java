@@ -2,6 +2,7 @@ package com.example.backend.Habit.service;
 
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
+import com.example.backend.Habit.dto.HabitCreateResponseDTO;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
@@ -25,13 +26,13 @@ public interface HabitService {
   // 4. 새로운 습관 작성
   void addMyHabit(MyHabitVO myHabitVO);               // step 1 : Habit 테이블에 습관 삽입
   Long getLastInsertedHabitId();                      // step 2 : 방금 추가한 habitId 조회
-  Long createHabitWithMyHabit(MyHabitVO myHabitVO);
+  HabitCreateResponseDTO createHabitWithMyHabit(MyHabitVO myHabitVO);
 
   // 5. 습관 수정
   String modifyMyHabit(MyHabitVO myHabitVO);
 
   // 6. 습관 삭제
-  void deleteMyHabit(MyHabitVO myHabitVO);
+  void deleteMyHabit(Long myHabitId);
 
   // 7. 습관 상태 변경
   void modifyMyHabitState(List<MyHabitVO> habitList, long userId);

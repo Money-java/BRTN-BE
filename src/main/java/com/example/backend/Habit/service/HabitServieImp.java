@@ -2,6 +2,7 @@ package com.example.backend.Habit.service;
 
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
+import com.example.backend.Habit.dto.HabitCreateResponseDTO;
 import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
@@ -59,12 +60,17 @@ public class HabitServieImp implements HabitService {
         return myHabitMapper.selectLastInsertedHabitId();
     }
     @Override
-    public Long createHabitWithMyHabit(MyHabitVO myHabitVO) {
+    public HabitCreateResponseDTO createHabitWithMyHabit(MyHabitVO myHabitVO) {
         myHabitMapper.insertHabit(myHabitVO);
         Long habitId = myHabitMapper.selectLastInsertedHabitId();
         myHabitVO.setHabitId(habitId);
         myHabitMapper.insertMyHabit(myHabitVO);
-        return habitId;
+        Long myHabitId = myHabitMapper.selectLastInsertedMyHabitId();
+
+        HabitCreateResponseDTO responseDTO = new HabitCreateResponseDTO();
+        responseDTO.setHabitId(habitId);
+        responseDTO.setMyHabitId(myHabitId);
+        return responseDTO;
     }
 
     // 5. 습관 수정
@@ -91,8 +97,8 @@ public class HabitServieImp implements HabitService {
 
     // 6. 습관 삭제
     @Override
-    public void deleteMyHabit(MyHabitVO myHabitVO) {
-        myHabitMapper.deleteMyHabit(myHabitVO);
+    public void deleteMyHabit(Long myHabitId) {
+        myHabitMapper.deleteMyHabit(myHabitId);
     }
 
     // 7. 습관 상태 변경
