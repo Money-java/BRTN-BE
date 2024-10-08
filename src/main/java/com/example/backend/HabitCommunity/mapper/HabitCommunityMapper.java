@@ -30,7 +30,8 @@ public interface HabitCommunityMapper {
   // habit_likes 증가
   void incrementHabitLikes(@Param("communityId") Long communityId);
 
-  // habecrementHabitLikes(@Param("communityId") Long communityId);
+  // habit_likes 감소
+  void decrementHabitLikes(@Param("communityId") Long communityId);
 
 
   // HabitCommunity 삽입
