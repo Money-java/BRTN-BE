@@ -27,12 +27,12 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     this.habitCommunityMapper = habitCommunityMapper;
   }
 
-  // 1. 습관 리스트 조회 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
-  @Override
-  public List<HabitCommunityVO> selectHabitList(String categoryName, String sortType) {
-    System.out.println("Received categoryName: " + categoryName); // 로그 확인용
-    return habitCommunityMapper.selectHabitList(categoryName, sortType);
-  }
+//  // 1. 습관 리스트 조회 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
+//  @Override
+//  public List<HabitCommunityVO> selectHabitList(String categoryName, String sortType) {
+//    System.out.println("Received categoryName: " + categoryName); // 로그 확인용
+//    return habitCommunityMapper.selectHabitList(categoryName, sortType);
+//  }
 
   // 2. 습관리스트 조회2
   // 내가 좋아요한 루틴 조회
