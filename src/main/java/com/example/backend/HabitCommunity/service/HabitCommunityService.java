@@ -5,8 +5,6 @@ import java.util.List;
 
 public interface HabitCommunityService {
 
-//  // 1. 습관 리스트 조회 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
-//  List<HabitCommunityVO> selectHabitList(String categoryName, String sortType);
 
   // 2. 내가 좋아요한 루틴 조회
   List<HabitCommunityVO> selectLikedCommunities(String userId);
