@@ -2,6 +2,7 @@ package com.example.backend.Habit.controller;
 
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
+import com.example.backend.Habit.dto.HabitCreateResponseDTO;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.service.HabitServieImp;
@@ -23,6 +24,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/habits")
+@CrossOrigin(origins = "http://localhost:5173")
 public class HabitController {
 
   private final HabitService habitService;
@@ -107,9 +109,9 @@ public class HabitController {
   @PostMapping("/add/my")
   public ResponseEntity<?> addMyHabit(@RequestBody MyHabitVO myHabitVO) {
     try {
-      Long habitId = habitService.createHabitWithMyHabit(myHabitVO);
+      HabitCreateResponseDTO responseDto = habitService.createHabitWithMyHabit(myHabitVO);
       log.info("(4) Successfully created a new habit");
-      return ResponseEntity.ok(habitId);
+      return ResponseEntity.ok(responseDto);
     } catch (BadRequestException e) {
       log.info("400 Bad request: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -148,9 +150,10 @@ public class HabitController {
 
   // 6. 습관 삭제
   @DeleteMapping("/delete")
-  public ResponseEntity<String> deleteMyHabit(@RequestBody MyHabitVO myHabitVO) {
+  public ResponseEntity<String> deleteMyHabit(
+          @RequestParam Long myHabitId) {
     try {
-      habitService.deleteMyHabit(myHabitVO);
+      habitService.deleteMyHabit(myHabitId);
       log.info("(6) Successfully deleted habit");
       return ResponseEntity.ok("(6) Successfully deleted habit");
     } catch (BadRequestException e) {
