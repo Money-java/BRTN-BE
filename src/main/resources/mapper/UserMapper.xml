@@ -53,10 +53,19 @@
         SELECT * FROM Users WHERE user_id = #{userId}
     </select>
 
-    <!-- 닉네임 변경 -->
+    <!-- 프로필 변경 - 닉네임 변경 -->
     <update id="updateUser" parameterType="map">
         UPDATE Users
         SET nickname = #{nickname}
         WHERE user_id = #{userId}
+    </update>
+
+    <!-- 프로필 변경 - 이미지 변경 -->
+    <update id="updateUserProfileWithImage">
+        UPDATE Users
+        SET
+            avatar = #{avatar}
+        WHERE
+            user_id = #{userId}
     </update>
 </mapper>
