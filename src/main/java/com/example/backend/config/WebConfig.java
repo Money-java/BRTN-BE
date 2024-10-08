@@ -11,6 +11,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -32,6 +33,13 @@ public class WebConfig implements WebMvcConfigurer {
         System.out.println("WebConfig created");
     }
 
+    // ViewController 설정 추가
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/")
+//                .setViewName("forward:/resources/index.html");
+//    }
+
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -51,6 +59,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
+//        registry.addResourceHandler("/assets/**") // Vue 사용 경로
+//                .addResourceLocations(("/resources/assets/")); // 서버 경로
     }
 
 

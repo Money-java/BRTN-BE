@@ -5,27 +5,33 @@
 
 <mapper namespace="com.example.backend.PostComment.mapper.PostCommentMapper">
 
-    <select id="selectCommentById" parameterType="Long" resultType="com.example.backend.PostComment.vo.PostCommentVO">
-        SELECT * FROM PostComment WHERE comment_id = #{commentId}
+    <select id="selectCommentById" parameterType="Long" resultType="com.example.backend.PostComment.vo.PostCommentVO">-->
+        SELECT * FROM PostComment WHERE comment_id = #{commentId}-->
     </select>
 
-    <select id="selectAllComments" resultType="com.example.backend.PostComment.vo.PostCommentVO">
+<!--    <select id="selectAllComments" resultType="com.example.backend.PostComment.vo.PostCommentVO">-->
+<!--        SELECT * FROM PostComment-->
+<!--    </select>-->
+
+<!--    1. 댓글 조회 - 특정 게시물(postID)에 대한 댓글 전체 조회 -->
+    <select id="selectCommentsByPostId" parameterType="Long" resultType="com.example.backend.PostComment.vo.PostCommentVO">
         SELECT * FROM PostComment
+        WHERE post_id = #{postId}
     </select>
+
 
     <!-- 3. 댓글 삽입 -->
     <!-- 인증 커뮤니티 페이지 explore탭 -->
     <insert id="insertComment" parameterType="com.example.backend.PostComment.vo.PostCommentVO">
         INSERT INTO PostComment (post_id, comment_writer, comment_content, created_at)
-        VALUES (#{postId}, #{commentWriter}, #{commentContent}, #{createdAt})
+        VALUES (#{postId}, #{commentWriter}, #{commentContent}, NOW())
     </insert>
 
     <!-- 5. 댓글 수정 -->
     <!-- 인증 커뮤니티 페이지 explore탭 -->
     <update id="updateComment" parameterType="com.example.backend.PostComment.vo.PostCommentVO">
         UPDATE PostComment
-        SET post_id = #{postId}, comment_writer = #{commentWriter}, comment_content = #{commentContent},
-            created_at = #{createdAt}
+        SET comment_content = #{commentContent}
         WHERE comment_id = #{commentId}
     </update>
 
@@ -34,5 +40,17 @@
     <delete id="deleteComment" parameterType="long">
         DELETE FROM PostComment WHERE comment_id = #{commentId}
     </delete>
+
+    <!--  7-1. 한 postid에 대해 댓글 수 확인   -->
+    <select id="showCommentCnt" parameterType = "Long" resultType="Long">
+        SELECT COUNT(*) FROM PostComment
+        WHERE post_id = #{postId}
+    </select>
+
+
+    <!--  8.  findAllPostIds-->
+    <select id="findAllPostIds" resultType="Long">
+        SELECT post_id FROM PostCommunity;
+    </select>
 
 </mapper>
