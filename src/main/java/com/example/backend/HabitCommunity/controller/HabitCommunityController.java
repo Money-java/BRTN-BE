@@ -1,8 +1,12 @@
 package com.example.backend.HabitCommunity.controller;
 
+import com.example.backend.HabitCommunity.service.HabitCommunityService;
 import com.example.backend.HabitCommunity.service.HabitCommunityServiceImpl;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
+import com.example.backend.HabitCommunity.vo.LikeRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,14 +15,14 @@ import java.util.List;
 @RequestMapping("/routine-community")
 public class HabitCommunityController {
 
-  private final HabitCommunityServiceImpl habitCommunityServiceImpl;
+  private final HabitCommunityService habitCommunityServiceImpl;/**/
 
-  // 1. 습관리스트 조회1 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
-  @GetMapping("/sort/{sortType}")
-  public List<HabitCommunityVO> selectHabitList(@RequestParam(required = false) String categoryName,
-                                                @PathVariable String sortType) {
-    return habitCommunityServiceImpl.selectHabitList(categoryName, sortType);
+
+  public HabitCommunityController(HabitCommunityService habitCommunityServiceImpl) {
+    System.out.println("controlloer");
+    this.habitCommunityServiceImpl = habitCommunityServiceImpl;
   }
+
 
   // 2. 습관리스트 조회2
   // 내가 좋아요한 루틴 조회
@@ -31,17 +35,24 @@ public class HabitCommunityController {
   @PostMapping("/challenge")
   public void addHabitToMyHabit(@RequestParam Long userId, @RequestParam Long habitId) {
     habitCommunityServiceImpl.addHabitToMyHabit(userId, habitId);
+
   }
 
   // 8. 습관검색기능
-  @GetMapping("/search")
-  public List<HabitCommunityVO> searchHabitCommunities(@RequestParam String keyword) {
-    return habitCommunityServiceImpl.searchHabitCommunities(keyword);
+  @GetMapping("/search-or-sort")
+  public List<HabitCommunityVO> searchHabitCommunities(@RequestParam(required = false) String categoryName,
+                                                       String sortType,
+                                                       String keyword) {
+    System.out.println("Keyword: " + keyword);
+    System.out.println("CategoryName: " + categoryName);
+    System.out.println("SortType: " + sortType);
+    return habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword);
   }
-  @Autowired
-  public HabitCommunityController(HabitCommunityServiceImpl habitCommunityServiceImpl) {
-    this.habitCommunityServiceImpl = habitCommunityServiceImpl;
-  }
+
+
+
+
+
 
   // 특정 ID로 HabitCommunity 조회
   @GetMapping("/{id}")
@@ -65,6 +76,22 @@ public class HabitCommunityController {
   @DeleteMapping("/{id}")
   public void deleteHabitCommunity(@PathVariable Long id) {
     habitCommunityServiceImpl.deleteHabitCommunity(id);
+  }
+
+
+
+  // 좋아요 추가
+  @PostMapping("/like")
+  public ResponseEntity<?> addLike(@RequestBody LikeRequestVO likeRequest) {
+    habitCommunityServiceImpl.addLike(likeRequest.getUserId(), likeRequest.getCommunityId());
+    return ResponseEntity.ok().build();
+  }
+
+  // 좋아요 취소
+  @DeleteMapping("/like")
+  public ResponseEntity<?> removeLike(@RequestBody LikeRequestVO likeRequest) {
+    habitCommunityServiceImpl.removeLike(likeRequest.getUserId(), likeRequest.getCommunityId());
+    return ResponseEntity.ok().build();
   }
 
 }

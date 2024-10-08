@@ -43,15 +43,20 @@
         SELECT * FROM Users
     </select>
 
-    <!-- 닉네임 변경 -->
-    <update id="updateUser" parameterType="String" >
-        UPDATE Users
-        SET nickname = #{nickname}
-        WHERE user_id = #{userId}
-    </update>
-
     <!-- 회원 탈퇴  -->
     <delete id="deleteUser" parameterType="String">
         DELETE FROM Users WHERE email = #{email}
     </delete>
+
+    <!-- 아이디로 특정 사용자 찾기 -->
+    <select id="findUserById" parameterType="long" resultType="com.example.backend.Users.vo.UserVO">
+        SELECT * FROM Users WHERE user_id = #{userId}
+    </select>
+
+    <!-- 닉네임 변경 -->
+    <update id="updateUser" parameterType="map">
+        UPDATE Users
+        SET nickname = #{nickname}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,7 +56,6 @@ public class UsersController {
     return ResponseEntity.ok(user);
   }
 
-
   @PostMapping("/updateProfile")
   public ResponseEntity<String> updateProfile(
           @RequestPart("image") MultipartFile image,
@@ -69,7 +69,7 @@ public class UsersController {
     }
     String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰
 
-    String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출
+    String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출A
     String provider = jwtUtil.getUserProvider(token);// 토큰에서 provider 추출
 
     // 2. 사용자 검증 및 프로필 업데이트 로직
@@ -80,6 +80,11 @@ public class UsersController {
     usersService.updateUserProfile(userId, nickname, image);
 
     return ResponseEntity.ok("Profile updated successfully.");
+  }
+
+  @GetMapping("/getUserInfo")
+  public UserVO getUserInfo(@RequestParam Long userId) {
+    return usersService.findUserById(userId);
   }
 
   // 주어진 이메일을 사용해 기존 사용자 존재 여부 확인
@@ -100,12 +105,6 @@ public class UsersController {
     return usersService.findAllUsers();
   }
 
-  // 닉네임 변경
-  @PutMapping("/updateNickname")
-  public void updateUser(@RequestParam String nickname, @RequestParam Long userId) {
-    usersService.updateUser(nickname, userId);
-  }
-
   // 회원 탈퇴
   @DeleteMapping("/delete")
   public void deleteUser(@RequestParam String email) {
@@ -117,5 +116,17 @@ public class UsersController {
   @PostMapping("/increment-reward")
   public void incrementUserReward(@RequestParam Long userId) {
     usersService.incrementUserReward(userId);
+  }
+
+  // 아이디로 특정 사용자 찾기
+  @GetMapping("/mypage")
+  public UserVO findUserById(@RequestParam Long userId) {
+    return usersService.findUserById(userId);
+  }
+
+  // 닉네임 변경
+  @PutMapping("/updateNickname")
+  public void updateUser(@RequestParam String nickname, @RequestParam Long userId) {
+    usersService.updateUser(nickname, userId);
   }
 }

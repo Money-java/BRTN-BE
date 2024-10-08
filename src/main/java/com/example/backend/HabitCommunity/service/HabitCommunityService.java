@@ -5,8 +5,6 @@ import java.util.List;
 
 public interface HabitCommunityService {
 
-  // 1. 습관 리스트 조회 (동적 정렬: 최신순, 좋아요순, 참여자순, 달성자순)
-  List<HabitCommunityVO> selectHabitList(String categoryName, String sortType);
 
   // 2. 내가 좋아요한 루틴 조회
   List<HabitCommunityVO> selectLikedCommunities(String userId);
@@ -15,7 +13,7 @@ public interface HabitCommunityService {
   void addHabitToMyHabit(Long userId, Long habitId);
 
   // 8. 습관검색기능
-  List<HabitCommunityVO> searchHabitCommunities(String keyword);
+  List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType,String keyword);
 
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
@@ -31,6 +29,11 @@ public interface HabitCommunityService {
 
   // HabitCommunity 삭제
   void deleteHabitCommunity(Long communityId);
+
+  // 좋아요 추가
+  void addLike(Long userId, Long communityId);
+  // 좋아요 삭제
+  void removeLike(Long userId, Long communityId);
 
 
 }
