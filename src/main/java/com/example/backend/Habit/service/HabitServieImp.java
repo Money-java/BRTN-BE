@@ -156,4 +156,21 @@ public class HabitServieImp implements HabitService {
     public List<HabitCheckCountDTO> getHabitCheckCounts(HabitCheckRequestDTO habitCheckRequestDTO) {
         return habitCheckMapper.getHabitCheckCounts(habitCheckRequestDTO);
     }
+
+    // 인증한 습관 개수 조회
+    @Override
+    public int countCheckedHabit(long userId) {
+        return habitCheckMapper.countCheckedHabit(userId);
+    }
+
+    // 인증한 습관 금액 조회
+    @Override
+    public int countCheckedMoney(long userId) {
+        return habitCheckMapper.countCheckedMoney(userId);
+    }
+
+    @Override
+    public List<MyHabitVO> getCheckedHabitAll(long userId) {
+        return habitCheckMapper.getCheckedHabitAll(userId);
+    }
 }

@@ -269,4 +269,58 @@ public class HabitController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
   }
+
+  // 인증한 습관 개수 조회
+  @GetMapping("/count/checked")
+  public ResponseEntity<Integer> countCheckedHabit(@RequestParam long userId) {
+    try {
+      int amount = habitService.countCheckedHabit(userId);
+      return ResponseEntity.ok(amount);
+    } catch (BadRequestException e) {
+      log.info("400 Bad request: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 인증한 습관 개수 조회
+  @GetMapping("/money/checked")
+  public ResponseEntity<Integer> countCheckedMoney(@RequestParam long userId) {
+    try {
+      int amount = habitService.countCheckedMoney(userId);
+      return ResponseEntity.ok(amount);
+    } catch (BadRequestException e) {
+      log.info("400 Bad request: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 달성한 습관 조회
+  @GetMapping("/checked/all")
+  public ResponseEntity<List<MyHabitVO>> getCheckedHabitAll(@RequestParam long userId) {
+    try{
+      List<MyHabitVO> checkedHabits = habitService.getCheckedHabitAll(userId);
+      return ResponseEntity.ok(checkedHabits);
+    } catch (UnauthorizedException e) {
+      log.info("401 Unauthorized: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
 }

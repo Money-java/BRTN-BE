@@ -35,8 +35,11 @@ public interface UserMapper {
   // 회원 탈퇴
   void deleteUser(@Param("email") String email);
 
-  // 닉네임 변경
+  // 프로필 변경 - 닉네임 변경
   void updateUser(@Param("nickname") String nickname, @Param("userId") Long userId);
+
+  // 프로필 변경 - 이미지 변경
+  void updateUserProfileWithImage(@Param("userId") Long userId, @Param("avatar") String avatar);
 
   // 닉네임 업데이트
   void updateUser(Map<String, Object> params);

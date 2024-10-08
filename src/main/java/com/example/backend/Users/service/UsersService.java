@@ -35,4 +35,7 @@ public interface UsersService {
 
   // 닉네임 업데이트 메서드
   void updateUser(String nickname, Long userId);
+
+  // 프로필 변경 - 이미지 변경
+  void updateUserProfileWithImage(Long userId, MultipartFile image);
 }

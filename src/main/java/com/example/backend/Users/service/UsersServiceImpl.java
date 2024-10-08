@@ -90,4 +90,15 @@ public class UsersServiceImpl implements UsersService {
 
     userMapper.updateUser(params);
   }
+
+  // 프로필 변경 - 이미지 변경
+  @Override
+  public void updateUserProfileWithImage(Long userId, MultipartFile image){
+
+    String avatar = null;
+    if(image!=null){
+      avatar = imageUploadService.saveFile(image);
+    }
+    userMapper.updateUserProfileWithImage(userId, avatar);
+  }
 }

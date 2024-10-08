@@ -23,4 +23,12 @@ public interface HabitCheckMapper {
 
     // 얼마나 연속해서 습관을 달성했는지 조회
     List<HabitCheckCountDTO> getHabitCheckCounts(HabitCheckRequestDTO habitCheckRequestDTO);
+
+    // 인증한 습관 개수 조회
+    int countCheckedHabit(Long userId);
+
+    // 인증한 습관 금액 조회
+    int countCheckedMoney(Long userId);
+
+    List<MyHabitVO> getCheckedHabitAll(Long userId);
 }
