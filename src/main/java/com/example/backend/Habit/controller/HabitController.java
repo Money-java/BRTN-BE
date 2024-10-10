@@ -108,6 +108,10 @@ public class HabitController {
   // 4. 새로운 습관 작성
   @PostMapping("/add/my")
   public ResponseEntity<?> addMyHabit(@RequestBody MyHabitVO myHabitVO) {
+    String checkDuplicate = habitService.checkDuplicateHabit(myHabitVO.getHabitTitle());
+    if(checkDuplicate.equals("duplicate")) {
+      return ResponseEntity.status(HttpStatus.OK).body(checkDuplicate);
+    }
     try {
       HabitCreateResponseDTO responseDto = habitService.createHabitWithMyHabit(myHabitVO);
       log.info("(4) Successfully created a new habit");

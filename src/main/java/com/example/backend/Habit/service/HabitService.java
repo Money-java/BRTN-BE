@@ -23,6 +23,8 @@ public interface HabitService {
   // 3. 달성한 습관 조회
   List<MyHabitVO> getCheckedHabit(long userId, String checkDate);
 
+  String checkDuplicateHabit(String habitTitle);
+
   // 4. 새로운 습관 작성
   void addMyHabit(MyHabitVO myHabitVO);               // step 1 : Habit 테이블에 습관 삽입
   Long getLastInsertedHabitId();                      // step 2 : 방금 추가한 habitId 조회

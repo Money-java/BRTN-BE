@@ -9,7 +9,6 @@ import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
-import com.example.backend.exception.ConflictException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +46,16 @@ public class HabitServieImp implements HabitService {
         map.put("checkDate", checkDate);
         return habitCheckMapper.getCheckedHabit(map);
     }
+    //이미 있는 Habit인지 check
 
+    @Override
+    public String checkDuplicateHabit(String habitTitle){
+        MyHabitVO checkHabit = myHabitMapper.getHabitByTitle(habitTitle);
+        if(checkHabit != null){
+            return "duplicate";
+        }
+        else return "ok";
+    }
     // 4. 새로운 습관 작성
     // step 1 : Habit 테이블에 습관 삽입
     @Override
