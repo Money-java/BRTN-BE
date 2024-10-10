@@ -6,10 +6,17 @@
 
     <!-- 1. 나의 습관 조회 -->
     <select id="getMyHabit" parameterType="long" resultType="MyHabitVO">
-        SELECT mh.my_habit_id, mh.user_id, h.habit_id, h.habit_title, h.category_title, mh.state
+        SELECT mh.my_habit_id, mh.user_id, h.habit_id, h.habit_title, h.category_title, mh.state, h.save_amount, h.certification
         FROM MyHabit mh
                  JOIN HABIT h ON mh.habit_id = h.habit_id
         WHERE mh.user_id = #{userId};
+    </select>
+
+    <!-- 기존에 작성된 습관인지 조회-->
+    <select id = "getHabitByTitle" parameterType="string" resultType="MyHabitVO">
+        SELECT habit_id, user_id, category_title, habit_title, save_amount, certification
+        FROM Habit
+        WHERE habit_title = #{habitTitle};
     </select>
 
     <!-- 4. 새로운 습관 작성 -->
