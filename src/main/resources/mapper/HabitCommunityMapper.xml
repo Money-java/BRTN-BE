@@ -15,6 +15,14 @@
         <result column="habit_title" property="habitTitle"/>
         <result column="category_title" property="categoryTitle"/>
         <result column="nickname" property="nickname"/>
+        <result column="avatar" property="avatar" />
+    </resultMap>
+
+    <!-- 컬럼명과 VO 필드명 명시적 매핑 -->
+    <resultMap id="PostCommunityResultMap" type="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        <id property="postId" column="post_id"/>
+        <result property="habitId" column="habit_id"/>
+        <result property="imageURL" column="image_url"/>
     </resultMap>
 
     <!-- 메인 기능 -->
@@ -25,6 +33,7 @@
         h.category_title,
         h.habit_title,
         u.nickname,
+        u.avatar,
         hc.habit_likes,
         hc.participants,
         hc.complete,
@@ -32,7 +41,17 @@
         FROM HabitCommunity hc
         JOIN Habit h ON hc.habit_id = h.habit_id
         JOIN Users u ON h.user_id = u.user_id
-        WHERE 1 = 1
+
+        <!-- 'myLikes' 필터가 적용되었을 때 사용자가 좋아요한 루틴만 가져오기 위해 PostLikes와 JOIN -->
+        <if test="sortType == 'myLikes'">
+            LEFT JOIN PostLikes pl ON pl.community_id = hc.community_id
+            WHERE pl.user_id = #{userId}
+        </if>
+
+        <!-- 'myLikes'가 아닐 때는 기본 WHERE 조건 -->
+        <if test="sortType != 'myLikes'">
+            WHERE 1 = 1
+        </if>
 
         <!-- 검색어 필터 적용 -->
         <if test="keyword != null and keyword != ''">
@@ -63,7 +82,10 @@
                 ORDER BY hc.upload_date DESC <!-- 기본값은 최신순으로 정렬 -->
             </otherwise>
         </choose>
+        <!-- 페이지네이션 적용 -->
+        LIMIT #{size} OFFSET #{offset}
     </select>
+
 
     <!-- HabitCommunity를 communityId로 조회 -->
     <select id="selectHabitCommunityById" parameterType="long" resultMap="HabitCommunityResultMap">
@@ -88,51 +110,20 @@
         DELETE FROM HabitCommunity WHERE community_id = #{communityId}
     </delete>
 
-<!--    &lt;!&ndash; 1. 습관 리스트 조회 &ndash;&gt;-->
-<!--    &lt;!&ndash; 최신순, 좋아요 순, 참여자순, 달성자 순으로 정렬한 습관 커뮤니티 정보 조회 &ndash;&gt;-->
-<!--    <select id="selectHabitList" parameterType="map" resultMap="HabitCommunityResultMap">-->
-<!--        SELECT-->
-<!--        hc.community_id,-->
-<!--        hc.habit_id,-->
-<!--        h.category_title,-->
-<!--        h.habit_title,-->
-<!--        u.nickname,-->
-<!--        hc.habit_likes,-->
-<!--        hc.participants,-->
-<!--        hc.complete,-->
-<!--        hc.upload_date-->
-<!--        FROM HabitCommunity hc-->
-<!--        JOIN Habit h ON hc.habit_id = h.habit_id-->
-<!--        JOIN Users u ON h.user_id = u.user_id-->
-<!--        WHERE 1 = 1-->
-<!--        &lt;!&ndash; 카테고리 필터 적용 &ndash;&gt;-->
-<!--        <if test="categoryName != null and categoryName != ''">-->
-<!--            AND h.category_title = #{categoryName}-->
-<!--        </if>-->
+    <!-- 총 HabitCommunity의 루틴 개수를 구하는 메서드 -->
+    <select id="countHabitCommunities" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCommunity hc
+        JOIN Habit h ON hc.habit_id = h.habit_id
+        <if test="keyword != null and keyword != ''">
+            WHERE h.habit_title LIKE CONCAT('%', #{keyword}, '%')
+            OR h.category_title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="categoryName != null and categoryName != ''">
+            AND h.category_title = #{categoryName}
+        </if>
+    </select>
 
-<!--        &lt;!&ndash; 동적 정렬 조건 &ndash;&gt;-->
-<!--        <choose>-->
-<!--            &lt;!&ndash; 좋아요순 정렬 &ndash;&gt;-->
-<!--            <when test="sortType == 'manyLikes'">-->
-<!--                ORDER BY hc.habit_likes DESC-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 참여자순 정렬 &ndash;&gt;-->
-<!--            <when test="sortType == 'manyParticipants'">-->
-<!--                ORDER BY hc.participants DESC-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 달성자순 정렬 &ndash;&gt;-->
-<!--            <when test="sortType == 'manyCompletions'">-->
-<!--                ORDER BY hc.complete DESC-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 최신순 정렬 &ndash;&gt;-->
-<!--            <when test="sortType == 'recent'">-->
-<!--                ORDER BY hc.upload_date DESC-->
-<!--            </when>-->
-<!--            <otherwise>-->
-<!--                ORDER BY hc.upload_date DESC &lt;!&ndash; 기본값은 최신순으로 정렬 &ndash;&gt;-->
-<!--            </otherwise>-->
-<!--        </choose>-->
-<!--    </select>-->
 
 
     <!-- 내가 좋아요한 루틴 조회 -->
@@ -200,6 +191,14 @@
                )
     </insert>
 
-
+    <!-- habit_id에 따른 postcommunity 데이터를 조회 -->
+    <select id="selectPostsByHabitId" resultMap="PostCommunityResultMap">
+        SELECT
+            post_id,
+            habit_id,
+            image_url
+        FROM PostCommunity
+        WHERE habit_id = #{habitId}
+    </select>
 
 </mapper>

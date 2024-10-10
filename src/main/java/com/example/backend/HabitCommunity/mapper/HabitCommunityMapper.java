@@ -1,6 +1,7 @@
 package com.example.backend.HabitCommunity.mapper;
 
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -49,6 +50,8 @@ public interface HabitCommunityMapper {
   // HabitCommunity 삭제
   void deleteHabitCommunity(Long communityId);
 
+  List<PostCommunityVO> selectPostsByHabitId(Long habitId);
 
-
+  // 총 HabitCommunity의 루틴 개수를 구하는 메서드
+  int countHabitCommunities(Map<String, Object> params);
 }
