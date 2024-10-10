@@ -1,5 +1,6 @@
 package com.example.backend.Habit.mapper;
 
+import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
@@ -17,6 +18,8 @@ public interface MyHabitMapper {
   // 2. 기존에 있는 습관인지 조회
   MyHabitVO getHabitByTitle(@Param("habitTitle") String habitTitle);
 
+
+  List<MyHabitInfoDTO> getMyTodayHabitInfo(@Param("userId") long userId);
 
   // 4. 새로운 습관 작성
   void insertHabit(MyHabitVO myHabitVO);     // step 1 : Habit 테이블에 습관 삽입

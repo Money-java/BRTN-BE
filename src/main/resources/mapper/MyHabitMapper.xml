@@ -19,6 +19,20 @@
         WHERE habit_title = #{habitTitle};
     </select>
 
+    <!-- 유저 전체 습관 목록과 오늘 습관 달성 체크 여부 -->
+    <select id="getMyTodayHabitInfo" parameterType="long" resultType="com.example.backend.Habit.dto.MyHabitInfoDTO">
+        SELECT mh.my_habit_id, h.user_id AS writer_id, mh.state, h.save_amount, h.certification, h.habit_id, h.habit_title, h.category_title,
+               CASE
+                   WHEN hc.my_habit_id IS NOT NULL
+                       THEN 'true' ELSE 'false'
+                   END AS is_checked_today
+        FROM MyHabit mh
+                 JOIN HABIT h ON mh.habit_id = h.habit_id
+                 left join HabitCheck hc ON mh.my_habit_id = hc.my_habit_id
+            AND hc.check_date = CURDATE()
+        WHERE mh.user_id = #{userId};
+    </select>
+
     <!-- 4. 새로운 습관 작성 -->
     <!-- step 1 : Habit 테이블에 습관 삽입 -->
     <insert id="insertHabit" parameterType="MyHabitVO">

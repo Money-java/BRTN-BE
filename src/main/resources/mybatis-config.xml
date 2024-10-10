@@ -13,6 +13,7 @@
         <package name="com.example.backend.HabitCheck.vo"/>
         <package name="com.example.backend.HabitCommunity.vo"/>
         <package name="com.example.backend.MyHabit.vo"/>
+        <package name="com.example.backend.Habit.dto.MyHabitInfoDTO"/>
         <package name="com.example.backend.PostComment.vo"/>
         <package name="com.example.backend.PostLikes.vo"/>
         <package name="com.example.backend.PostCommunity.vo"/>
