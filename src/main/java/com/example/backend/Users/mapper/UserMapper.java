@@ -12,7 +12,7 @@ public interface UserMapper {
 
   // 1. 리워드 증가
   // 인증 커뮤니티에서 인증 시 Users 테이블의 특정 사용자의 reward 올리기
-  void incrementUserReward(@Param("userId") Long userId);
+  void incrementUserReward(@Param("userId") Long userId, @Param("userReward") int userReward);
 
   // 아이디로 특정 사용자 찾기
   UserVO findUserById(@Param("userId") Long userId);
