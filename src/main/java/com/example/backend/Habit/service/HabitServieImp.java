@@ -44,6 +44,9 @@ public class HabitServieImp implements HabitService {
     public List<MyHabitVO> getCheckedHabit(long userId, String checkDate) {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
+        if ("undefined".equals(checkDate)) {
+            checkDate = null;
+        }
         map.put("checkDate", checkDate);
         return habitCheckMapper.getCheckedHabit(map);
     }

@@ -132,30 +132,22 @@ public class UsersController {
 
   // 프로필 변경 - 이미지 변경
   @PostMapping("/updateImage")
-  public ResponseEntity<String> updateUser2(@RequestParam(value = "image", required = false) MultipartFile image, HttpServletRequest request) {
+  public ResponseEntity<String> updateUser2(@RequestParam(value = "image", required = false) MultipartFile image,
+                                            HttpServletRequest request) {
 
-    // 1. JWT 토큰 추출 및 검증
-    String authorizationHeader = request.getHeader("Authorization");
-    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-      return ResponseEntity.status(401).body("JWT Token is missing or invalid.");
+    String userIdHeader = request.getHeader("userId");
+    if (userIdHeader == null) {
+      return ResponseEntity.status(400).body("사용자 ID가 필요합니다.");
     }
-    String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰
 
-    String email = jwtUtil.getUserEmail(token); //토큰에서 email 추출
-    String provider = jwtUtil.getUserProvider(token);// 토큰에서 provider 추출
+    Long userId;
+    try {
+      userId = Long.parseLong(userIdHeader);
+    } catch (NumberFormatException e) {
+      return ResponseEntity.status(400).body("유효하지 않은 사용자 ID입니다.");
+    }
 
-    // 2. 사용자 검증 및 프로필 업데이트 로직
-    UserVO user = usersService.findUserByEmailandProvider(email, provider);
-    Long userId = user.getUserId();
-
-    // 이미지가 null이 아닐 경우에만 업데이트
-//    if (image != null && !image.isEmpty()) {
-//      usersService.updateUserProfileWithImage(userId, image);
-//    } else {
-//      return ResponseEntity.badRequest().body("No image provided.");
-//    }
     usersService.updateUserProfileWithImage(userId, image);
-
     return ResponseEntity.ok("Profile image updated successfully.");
   }
 }
