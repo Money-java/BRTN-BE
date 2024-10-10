@@ -31,7 +31,7 @@ public interface UsersService {
 
   // 1. 리워드 증가
   // 인증 커뮤니티에서 인증 시 Users 테이블의 특정 사용자의 reward 올리기
-  void incrementUserReward(Long userId);
+  void incrementUserReward(Long userId, int userReward);
 
   // 닉네임 업데이트 메서드
   void updateUser(String nickname, Long userId);

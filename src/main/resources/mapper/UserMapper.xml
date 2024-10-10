@@ -9,7 +9,7 @@
     <!--인증 커뮤니티에서 인증 시 Users 테이블의 특정 사용자의 reward 올리기 -->
     <update id="incrementUserReward">
         UPDATE Users
-        SET reward = reward + 1
+        SET reward = reward + #{userReward}
         WHERE user_id = #{userId}
     </update>
 

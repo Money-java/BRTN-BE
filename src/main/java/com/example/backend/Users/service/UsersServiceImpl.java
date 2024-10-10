@@ -72,8 +72,8 @@ public class UsersServiceImpl implements UsersService {
   // 1. 리워드 증가
   // 인증 커뮤니티에서 인증 시 Users 테이블의 특정 사용자의 reward 올리기
   @Override
-  public void incrementUserReward(Long userId) {
-    userMapper.incrementUserReward(userId);
+  public void incrementUserReward(Long userId, int userReward) {
+    userMapper.incrementUserReward(userId, userReward);
   }
 
   // 아이디로 특정 사용자 찾기
