@@ -81,7 +81,7 @@ public class HabitController {
     Date dt;
 
     try {
-      if (checkDate == null) {
+      if (checkDate == null || "undefined".equals(checkDate)) {
         checkDate = sdf.format(new Date());
       }
 
