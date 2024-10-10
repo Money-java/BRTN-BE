@@ -13,4 +13,5 @@ public class HabitCommunityVO {
   private String habitTitle;      // habit_title -> habitTitle
   private String categoryTitle;   // category_title -> categoryTitle
   private String nickname;
+  private String avatar;
 }

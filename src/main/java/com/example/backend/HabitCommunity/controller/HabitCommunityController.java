@@ -4,6 +4,9 @@ import com.example.backend.HabitCommunity.service.HabitCommunityService;
 import com.example.backend.HabitCommunity.service.HabitCommunityServiceImpl;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.HabitCommunity.vo.LikeRequestVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +22,7 @@ public class HabitCommunityController {
 
 
   public HabitCommunityController(HabitCommunityService habitCommunityServiceImpl) {
-    System.out.println("controlloer");
+    System.out.println("controller");
     this.habitCommunityServiceImpl = habitCommunityServiceImpl;
   }
 
@@ -40,14 +43,31 @@ public class HabitCommunityController {
 
   // 8. 습관검색기능
   @GetMapping("/search-or-sort")
-  public List<HabitCommunityVO> searchHabitCommunities(@RequestParam(required = false) String categoryName,
-                                                       String sortType,
-                                                       String keyword) {
+  public  Map<String, Object> searchHabitCommunities(@RequestParam(required = false) String categoryName,
+                                                        String sortType,
+                                                        String keyword,
+                                                        @RequestParam(required = false) Long userId,
+                                                        @RequestParam(defaultValue = "1") int page,  // 기본값은 1페이지
+                                                        @RequestParam(defaultValue = "10") int size) {
     System.out.println("Keyword: " + keyword);
     System.out.println("CategoryName: " + categoryName);
     System.out.println("SortType: " + sortType);
-    return habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword);
+    System.out.println("UserId: " + userId);  // userId 출력
+    List<HabitCommunityVO> communities = habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword,userId, page, size);
+    int totalRecords = habitCommunityServiceImpl.countHabitCommunities(categoryName, keyword);
+
+    // 총 페이지 수 계산
+    int totalPages = (int) Math.ceil((double) totalRecords / size);
+
+    // 데이터를 Map으로 포장하여 반환
+    Map<String, Object> result = new HashMap<>();
+    result.put("communities", communities);  // 루틴 데이터
+    result.put("totalPages", totalPages);  // 총 페이지 수
+    result.put("totalRecords", totalRecords);  // 총 데이터 수
+
+    return result;
   }
+
 
 
 
@@ -78,8 +98,6 @@ public class HabitCommunityController {
     habitCommunityServiceImpl.deleteHabitCommunity(id);
   }
 
-
-
   // 좋아요 추가
   @PostMapping("/like")
   public ResponseEntity<?> addLike(@RequestBody LikeRequestVO likeRequest) {
@@ -93,5 +111,9 @@ public class HabitCommunityController {
     habitCommunityServiceImpl.removeLike(likeRequest.getUserId(), likeRequest.getCommunityId());
     return ResponseEntity.ok().build();
   }
-
+  // habit_id에 맞는 post 데이터를 조회하는 API
+  @GetMapping("/posts/{habitId}")
+  public List<PostCommunityVO> getPostsByHabitId(@PathVariable Long habitId) {
+    return habitCommunityServiceImpl.getPostsByHabitId(habitId);
+  }
 }

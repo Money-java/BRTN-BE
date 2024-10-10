@@ -61,6 +61,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("/resources/");
 //        registry.addResourceHandler("/assets/**") // Vue 사용 경로
 //                .addResourceLocations(("/resources/assets/")); // 서버 경로
+        // 이미지 파일을 위한 핸들러 추가
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/static/images/"); // 이 경로는 src/main/resources/static/images/ 를 가리킴
     }
 
 

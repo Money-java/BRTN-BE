@@ -32,4 +32,6 @@ public interface PostCommunityMapper {
 
   // 게시글 삭제
   void deletePost(Long postId);
+
+
 }

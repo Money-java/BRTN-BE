@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
 
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,16 +47,21 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
   // 8. 습관검색기능
   // 루틴커뮤니티 페이지
   @Override
-  public List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType, String keyword) {
+  public List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType, String keyword, Long userId, int page, int size) {
     System.out.println("Keyword: " + keyword);
     System.out.println("CategoryName: " + categoryName);
     System.out.println("SortType: " + sortType);
+
+    int offset = (page - 1) * size;  // 페이지네이션에서 offset 계산
 
     // 파라미터를 Map에 담기
     Map<String, Object> params = new HashMap<>();
     params.put("categoryName", categoryName);
     params.put("sortType", sortType);
     params.put("keyword", keyword);
+    params.put("userId", userId);
+    params.put("size", size);
+    params.put("offset", offset);
 
     // Map을 매퍼에 전달
     return habitCommunityMapper.searchHabitCommunities(params);
@@ -122,6 +128,20 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
   @Override
   public void deleteHabitCommunity(Long communityId) {
     habitCommunityMapper.deleteHabitCommunity(communityId);
+  }
+
+  //SHOT PREVIEW
+  @Override
+  public List<PostCommunityVO> getPostsByHabitId(Long habitId) {
+    return habitCommunityMapper.selectPostsByHabitId(habitId);
+  }
+
+  @Override
+  public int countHabitCommunities(String categoryName, String keyword) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("categoryName", categoryName);
+    params.put("keyword", keyword);
+    return habitCommunityMapper.countHabitCommunities(params);
   }
 
 }
