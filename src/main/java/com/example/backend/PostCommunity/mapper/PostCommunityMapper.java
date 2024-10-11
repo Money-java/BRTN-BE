@@ -1,6 +1,7 @@
 package com.example.backend.PostCommunity.mapper;
 
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -33,5 +34,15 @@ public interface PostCommunityMapper {
   // 게시글 삭제
   void deletePost(Long postId);
 
+  // 진행 중인 루틴 가져오기
+  List<PostCommunityVO> selectActiveHabitByUserId(Long userId);
+
+  // 특정 달에 해당하는 이미지 가져오기
+  List<PostCommunityVO> selectHabitImagesByMonth(
+          @Param("userId") Long userId,
+          @Param("month") int month,
+          @Param("year") int year,
+          @Param("habitId") Long habitId
+  );
 
 }

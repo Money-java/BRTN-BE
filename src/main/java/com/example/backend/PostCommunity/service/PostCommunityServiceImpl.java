@@ -10,13 +10,14 @@ import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.mapper.PostCommunityMapper;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import com.example.backend.Users.mapper.UserMapper;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -187,4 +188,15 @@ public class PostCommunityServiceImpl implements PostCommunityService {
     // 7일 이상 연속으로 달성
     return 30;
   }
+  @Override
+  public List<PostCommunityVO> getActiveHabitByUserId(Long userId) {
+    return postCommunityMapper.selectActiveHabitByUserId(userId);
+  }
+
+  // habitId를 포함하는 이미지를 가져오는 서비스 메서드
+  @Override
+  public List<PostCommunityVO> getHabitImagesByMonth(Long userId, int month, int year, Long habitId) {
+    return postCommunityMapper.selectHabitImagesByMonth(userId, month, year, habitId);
+  }
+
 }
