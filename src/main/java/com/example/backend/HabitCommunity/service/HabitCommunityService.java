@@ -1,6 +1,7 @@
 package com.example.backend.HabitCommunity.service;
 
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import java.util.List;
 
 public interface HabitCommunityService {
@@ -13,7 +14,7 @@ public interface HabitCommunityService {
   void addHabitToMyHabit(Long userId, Long habitId);
 
   // 8. 습관검색기능
-  List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType,String keyword);
+  List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType,String keyword,Long userId, int page, int size);
 
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
@@ -34,6 +35,13 @@ public interface HabitCommunityService {
   void addLike(Long userId, Long communityId);
   // 좋아요 삭제
   void removeLike(Long userId, Long communityId);
+
+  // 이미 좋아요 눌렀는지 확인하는 메서드
+  boolean isAlreadyLiked(Long userId, Long communityId);
+
+  List<PostCommunityVO> getPostsByHabitId(Long habitId);
+
+  int countHabitCommunities(String categoryName, String keyword);
 
 
 }

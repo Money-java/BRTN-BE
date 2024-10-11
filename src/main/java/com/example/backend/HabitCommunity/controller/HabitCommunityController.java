@@ -4,6 +4,9 @@ import com.example.backend.HabitCommunity.service.HabitCommunityService;
 import com.example.backend.HabitCommunity.service.HabitCommunityServiceImpl;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.HabitCommunity.vo.LikeRequestVO;
+import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +22,7 @@ public class HabitCommunityController {
 
 
   public HabitCommunityController(HabitCommunityService habitCommunityServiceImpl) {
-    System.out.println("controlloer");
+    System.out.println("controller");
     this.habitCommunityServiceImpl = habitCommunityServiceImpl;
   }
 
@@ -40,14 +43,31 @@ public class HabitCommunityController {
 
   // 8. 습관검색기능
   @GetMapping("/search-or-sort")
-  public List<HabitCommunityVO> searchHabitCommunities(@RequestParam(required = false) String categoryName,
-                                                       String sortType,
-                                                       String keyword) {
+  public  Map<String, Object> searchHabitCommunities(@RequestParam(required = false) String categoryName,
+                                                        String sortType,
+                                                        String keyword,
+                                                        @RequestParam(required = false) Long userId,
+                                                        @RequestParam(defaultValue = "1") int page,  // 기본값은 1페이지
+                                                        @RequestParam(defaultValue = "10") int size) {
     System.out.println("Keyword: " + keyword);
     System.out.println("CategoryName: " + categoryName);
     System.out.println("SortType: " + sortType);
-    return habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword);
+    System.out.println("UserId: " + userId);  // userId 출력
+    List<HabitCommunityVO> communities = habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword,userId, page, size);
+    int totalRecords = habitCommunityServiceImpl.countHabitCommunities(categoryName, keyword);
+
+    // 총 페이지 수 계산
+    int totalPages = (int) Math.ceil((double) totalRecords / size);
+
+    // 데이터를 Map으로 포장하여 반환
+    Map<String, Object> result = new HashMap<>();
+    result.put("communities", communities);  // 루틴 데이터
+    result.put("totalPages", totalPages);  // 총 페이지 수
+    result.put("totalRecords", totalRecords);  // 총 데이터 수
+
+    return result;
   }
+
 
 
 
@@ -78,14 +98,36 @@ public class HabitCommunityController {
     habitCommunityServiceImpl.deleteHabitCommunity(id);
   }
 
-
-
   // 좋아요 추가
   @PostMapping("/like")
   public ResponseEntity<?> addLike(@RequestBody LikeRequestVO likeRequest) {
-    habitCommunityServiceImpl.addLike(likeRequest.getUserId(), likeRequest.getCommunityId());
+    Long userId = likeRequest.getUserId();
+    Long communityId = likeRequest.getCommunityId();
+
+    // 이미 좋아요가 눌렸는지 확인
+    if (habitCommunityServiceImpl.isAlreadyLiked(userId, communityId)) {
+      // 이미 좋아요 한 경우
+      return ResponseEntity.badRequest().body("이미 좋아요 한 루틴입니다.");
+    }
+
+    // 좋아요 추가 로직
+    habitCommunityServiceImpl.addLike(userId, communityId);
     return ResponseEntity.ok().build();
   }
+
+
+//  @PostMapping("/like")
+//  public ResponseEntity<?> addLike(@RequestBody LikeRequestVO likeRequest) {
+//    boolean isLiked = habitCommunityServiceImpl.isAlreadyLiked(likeRequest.getUserId(), likeRequest.getCommunityId());
+//
+//    if (isLiked) {
+//      return ResponseEntity.badRequest().body("이미 좋아요한 루틴입니다.");
+//    }
+//
+//    habitCommunityServiceImpl.addLike(likeRequest.getUserId(), likeRequest.getCommunityId());
+//    return ResponseEntity.ok().build();
+//  }
+
 
   // 좋아요 취소
   @DeleteMapping("/like")
@@ -93,5 +135,9 @@ public class HabitCommunityController {
     habitCommunityServiceImpl.removeLike(likeRequest.getUserId(), likeRequest.getCommunityId());
     return ResponseEntity.ok().build();
   }
-
+  // habit_id에 맞는 post 데이터를 조회하는 API
+  @GetMapping("/posts/{habitId}")
+  public List<PostCommunityVO> getPostsByHabitId(@PathVariable Long habitId) {
+    return habitCommunityServiceImpl.getPostsByHabitId(habitId);
+  }
 }

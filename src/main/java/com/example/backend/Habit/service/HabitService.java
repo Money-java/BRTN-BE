@@ -3,6 +3,7 @@ package com.example.backend.Habit.service;
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.dto.HabitCreateResponseDTO;
+import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
@@ -20,11 +21,15 @@ public interface HabitService {
   // 1. 나의 습관 조회
   List<MyHabitVO> getMyHabit(@Param("userId") long userId);
 
+  List<MyHabitInfoDTO> getMyTodayHabitInfo(@Param("userId") long userId);
+
   // 2. 습관 달성 체크
   void addHabitChecked(HabitCheckVO habitCheckVO);
 
   // 3. 달성한 습관 조회
   List<MyHabitVO> getCheckedHabit(long userId, String checkDate);
+
+  String checkDuplicateHabit(String habitTitle);
 
   // 4. 새로운 습관 작성
   void addMyHabit(MyHabitVO myHabitVO);               // step 1 : Habit 테이블에 습관 삽입

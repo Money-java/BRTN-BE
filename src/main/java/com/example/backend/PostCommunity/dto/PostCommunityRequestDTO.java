@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class PostCommunityRequestDTO {
     private Long userId;
+    private Long myHabitId;
     private Long habitId;
     private String content;
     private String hashtag;

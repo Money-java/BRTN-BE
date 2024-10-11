@@ -3,13 +3,13 @@ package com.example.backend.Habit.service;
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.dto.HabitCreateResponseDTO;
+import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
-import com.example.backend.exception.ConflictException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,11 @@ public class HabitServieImp implements HabitService {
         return myHabitMapper.getMyHabit(userId);
     }
 
+    @Override
+    public List<MyHabitInfoDTO> getMyTodayHabitInfo(long userId) {
+        return myHabitMapper.getMyTodayHabitInfo(userId);
+    }
+
     // 2. 습관 달성 체크
     @Override
     public void addHabitChecked(HabitCheckVO habitCheckVO) {
@@ -45,10 +50,22 @@ public class HabitServieImp implements HabitService {
     public List<MyHabitVO> getCheckedHabit(long userId, String checkDate) {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
+        if ("undefined".equals(checkDate)) {
+            checkDate = null;
+        }
         map.put("checkDate", checkDate);
         return habitCheckMapper.getCheckedHabit(map);
     }
+    //이미 있는 Habit인지 check
 
+    @Override
+    public String checkDuplicateHabit(String habitTitle){
+        MyHabitVO checkHabit = myHabitMapper.getHabitByTitle(habitTitle);
+        if(checkHabit != null){
+            return "duplicate";
+        }
+        else return "ok";
+    }
     // 4. 새로운 습관 작성
     // step 1 : Habit 테이블에 습관 삽입
     @Override
