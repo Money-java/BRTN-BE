@@ -3,6 +3,7 @@ package com.example.backend.Habit.service;
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.dto.HabitCreateResponseDTO;
+import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
@@ -30,6 +31,11 @@ public class HabitServieImp implements HabitService {
     @Override
     public List<MyHabitVO> getMyHabit(long userId) {
         return myHabitMapper.getMyHabit(userId);
+    }
+
+    @Override
+    public List<MyHabitInfoDTO> getMyTodayHabitInfo(long userId) {
+        return myHabitMapper.getMyTodayHabitInfo(userId);
     }
 
     // 2. 습관 달성 체크
