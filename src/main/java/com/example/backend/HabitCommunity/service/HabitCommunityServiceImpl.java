@@ -28,6 +28,7 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     this.habitCommunityMapper = habitCommunityMapper;
   }
 
+
   // 2. 습관리스트 조회2
   // 내가 좋아요한 루틴 조회
   @Override
@@ -82,6 +83,9 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
 //    habitCommunityMapper.removeLike(userId, communityId);
 //  }
 
+
+
+
   @Override
   @Transactional
   public void addLike(Long userId, Long communityId) {
@@ -97,6 +101,14 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     habitCommunityMapper.decrementHabitLikes(communityId); // 좋아요 감소
   }
 
+  @Override
+  public boolean isAlreadyLiked(Long userId, Long communityId) {
+//    Map<String, Object> params = new HashMap<>();
+//    params.put("userId", userId);
+//    params.put("communityId", communityId);
+    return habitCommunityMapper.countUserLike(userId, communityId) > 0;
+  }
+
   // HabitCommunity 삽입
   @Override
   public void insertHabitCommunity(HabitCommunityVO habitCommunity) {
@@ -104,7 +116,6 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
   }
 
   // 특정 ID로 HabitCommunity 조회
-
   @Override
   public HabitCommunityVO selectHabitCommunityById(Long communityId) {
     return habitCommunityMapper.selectHabitCommunityById(communityId);
