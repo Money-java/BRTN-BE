@@ -296,10 +296,10 @@ public class HabitController {
   }
 
   // 인증한 습관 개수 조회
-  @GetMapping("/money/checked")
-  public ResponseEntity<Integer> countCheckedMoney(@RequestParam long userId) {
+  @GetMapping("/money/checked/all")
+  public ResponseEntity<Integer> countCheckedMoneyAll(@RequestParam long userId) {
     try {
-      int amount = habitService.countCheckedMoney(userId);
+      int amount = habitService.countCheckedMoneyAll(userId);
       return ResponseEntity.ok(amount);
     } catch (BadRequestException e) {
       log.info("400 Bad request: {}", e.getMessage());
@@ -328,6 +328,36 @@ public class HabitController {
     } catch (InternalServerErrorException e) {
       log.info("500 Internal Server Error: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 인증한 습관 금액 조회
+  @GetMapping("/money/checked")
+  public ResponseEntity<Integer> countCheckedMoney(@RequestParam long userId, @RequestParam(required = false) String checkDate) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date dt;
+
+    try {
+      if (checkDate == null || "undefined".equals(checkDate)) {
+        checkDate = sdf.format(new Date());
+      }
+
+      dt = sdf.parse(checkDate);
+      log.info("Parsed date: " + dt);
+
+      int amount = habitService.countCheckedMoney(userId, checkDate);
+      return ResponseEntity.ok(amount);
+    } catch (UnauthorizedException e) {
+      log.info("401 Unauthorized: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
     }
   }
 }
