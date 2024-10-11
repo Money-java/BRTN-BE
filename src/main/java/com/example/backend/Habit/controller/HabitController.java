@@ -407,4 +407,33 @@ public class HabitController {
 
     return finalResult;
   }
+
+  @GetMapping("/money/checked")
+  public ResponseEntity<Integer> countCheckedMoneByDate(@RequestParam long userId, @RequestParam(required = false) String checkDate) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date dt;
+
+    try {
+      if (checkDate == null || "undefined".equals(checkDate)) {
+        checkDate = sdf.format(new Date());
+      }
+
+      dt = sdf.parse(checkDate);
+      log.info("Parsed date: " + dt);
+
+      int amount = habitService.countCheckedMoneByDate(userId, checkDate);
+      return ResponseEntity.ok(amount);
+    } catch (UnauthorizedException e) {
+      log.info("401 Unauthorized: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

@@ -71,4 +71,6 @@ public interface HabitService {
 
   // 달성한 습관 조회
   List<MyHabitVO> getCheckedHabitAll(long userId);
+
+  int countCheckedMoneByDate(long userId, String checkDate);
 }

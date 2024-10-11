@@ -36,4 +36,6 @@ public interface HabitCheckMapper {
     int countCheckedMoney(Long userId);
 
     List<MyHabitVO> getCheckedHabitAll(Long userId);
+
+    int countCheckedMoneByDate(Map<String, Object> map);
 }

@@ -64,7 +64,7 @@
         GROUP BY check_date
     </select>
 
-    <!-- 인증한 습관 금액 조회 -->
+    <!-- 인증한 습관 금액 금액 조회 -->
     <select id="countCheckedMoney" parameterType="Long" resultType="int">
         SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
         FROM HabitCheck hc
@@ -72,7 +72,7 @@
         WHERE hc.user_id = #{userId};
     </select>
 
-    <!-- 인증한 습관 조회 -->
+    <!-- 인증한 습관 내역 조회 -->
     <select id="getCheckedHabitAll" parameterType="long" resultType="MyHabitVO">
         SELECT hc.my_habit_id, hc.habit_id, hc.user_id, hc.check_date, h.habit_title, h.category_title, h.save_amount
         FROM `HabitCheck` hc
@@ -80,5 +80,18 @@
         WHERE hc.user_id = #{userId}
     </select>
 
-
+    <!-- 인증한 습관 금액 조회 -->
+    <select id="countCheckedMoneByDate" parameterType="map" resultType="int">
+        SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
+        FROM HabitCheck hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+          AND DATE(hc.check_date) = CURDATE()
+        <if test="checkDate != null">
+            AND DATE(hc.check_date) = DATE(#{checkDate})
+        </if>
+        <if test="checkDate == null">
+            AND DATE(hc.check_date) = CURDATE()
+        </if>
+    </select>
 </mapper>
