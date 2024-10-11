@@ -7,7 +7,9 @@ import com.example.backend.Habit.vo.MyHabitVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,9 @@ public interface HabitCheckMapper {
 
     // 인증한 습관 개수 조회
     int countCheckedHabit(Long userId);
+
+    // 인증한 습관 개수 -- 날짜 별로 조회
+    List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params);
 
     // 인증한 습관 금액 조회
     int countCheckedMoney(Long userId);

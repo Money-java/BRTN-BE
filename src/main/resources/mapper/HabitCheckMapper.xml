@@ -55,6 +55,15 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!--  날짜 별 체크한 습관 개수 조회  -->
+    <!--    check_date 별로 habit_id count 조회-->
+    <select id="countCheckedByDateRange" parameterType="Map" resultType="Map">
+        SELECT DATE_FORMAT(check_date, '%Y-%m-%d') AS check_date, COUNT(habit_id) AS habit_count
+        FROM HabitCheck
+        WHERE check_date BETWEEN #{startDate} AND #{endDate} AND user_id = #{userId}
+        GROUP BY check_date
+    </select>
+
     <!-- 인증한 습관 금액 조회 -->
     <select id="countCheckedMoney" parameterType="Long" resultType="int">
         SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
@@ -70,4 +79,6 @@
         JOIN `Habit` h ON hc.habit_id = h.habit_id
         WHERE hc.user_id = #{userId}
     </select>
+
+
 </mapper>

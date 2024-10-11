@@ -11,8 +11,11 @@ import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface HabitService {
   // 1. 나의 습관 조회
@@ -59,6 +62,9 @@ public interface HabitService {
 
   // 인증한 습관 개수 조회
   int countCheckedHabit(long userId);
+
+  // 인증한 습관 개수 -- 날짜 별 조회
+  List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params);
 
   // 인증한 습관 금액 조회
   int countCheckedMoney(long userId);

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,6 +186,13 @@ public class HabitServieImp implements HabitService {
     public int countCheckedHabit(long userId) {
         return habitCheckMapper.countCheckedHabit(userId);
     }
+
+    // 인증한 습관 개수 -- 날짜별
+    @Override
+    public List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params) {
+        return habitCheckMapper.countCheckedByDateRange(params);
+    }
+
 
     // 인증한 습관 금액 조회
     @Override
