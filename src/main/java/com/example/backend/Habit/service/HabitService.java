@@ -60,8 +60,11 @@ public interface HabitService {
   // 11. 인증 커뮤니티 업로드
   void addPostCommunity(PostCommunityVO postCommunityVO);
 
-  // 인증한 습관 개수 조회
+  // 인증한 모든 습관 개수 조회
   int countCheckedHabit(long userId);
+
+  // 인증한 모든 습관 금액 조회
+  int countCheckedMoneyAll(long userId);
 
   // 인증한 습관 개수 -- 날짜 별 조회
   List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params);
@@ -71,4 +74,7 @@ public interface HabitService {
 
   // 달성한 습관 조회
   List<MyHabitVO> getCheckedHabitAll(long userId);
+
+  // 인증한 습관 금액 조회
+  int countCheckedMoney(long userId, String checkDate);
 }
