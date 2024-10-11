@@ -327,7 +327,7 @@ public class HabitController {
   }
 
   // 인증한 습관 개수 조회
-  @GetMapping("/money/checked")
+  @GetMapping("/money/checked/all")
   public ResponseEntity<Integer> countCheckedMoney(@RequestParam long userId) {
     try {
       int amount = habitService.countCheckedMoney(userId);
