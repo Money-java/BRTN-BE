@@ -101,9 +101,33 @@ public class HabitCommunityController {
   // 좋아요 추가
   @PostMapping("/like")
   public ResponseEntity<?> addLike(@RequestBody LikeRequestVO likeRequest) {
-    habitCommunityServiceImpl.addLike(likeRequest.getUserId(), likeRequest.getCommunityId());
+    Long userId = likeRequest.getUserId();
+    Long communityId = likeRequest.getCommunityId();
+
+    // 이미 좋아요가 눌렸는지 확인
+    if (habitCommunityServiceImpl.isAlreadyLiked(userId, communityId)) {
+      // 이미 좋아요 한 경우
+      return ResponseEntity.badRequest().body("이미 좋아요 한 루틴입니다.");
+    }
+
+    // 좋아요 추가 로직
+    habitCommunityServiceImpl.addLike(userId, communityId);
     return ResponseEntity.ok().build();
   }
+
+
+//  @PostMapping("/like")
+//  public ResponseEntity<?> addLike(@RequestBody LikeRequestVO likeRequest) {
+//    boolean isLiked = habitCommunityServiceImpl.isAlreadyLiked(likeRequest.getUserId(), likeRequest.getCommunityId());
+//
+//    if (isLiked) {
+//      return ResponseEntity.badRequest().body("이미 좋아요한 루틴입니다.");
+//    }
+//
+//    habitCommunityServiceImpl.addLike(likeRequest.getUserId(), likeRequest.getCommunityId());
+//    return ResponseEntity.ok().build();
+//  }
+
 
   // 좋아요 취소
   @DeleteMapping("/like")
