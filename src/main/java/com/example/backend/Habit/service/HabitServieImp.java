@@ -211,7 +211,7 @@ public class HabitServieImp implements HabitService {
 
     // 인증한 습관 금액 조회
     @Override
-    public int countCheckedMoneyByDate(long userId, String checkDate) {
+    public int countCheckedMoney(long userId, String checkDate) {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         if ("undefined".equals(checkDate)) {

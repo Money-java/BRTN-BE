@@ -73,10 +73,10 @@
     </select>
 
     <!-- 인증한 습관 금액 조회 -->
-    <select id="countCheckedMoney" parameterType="map" resultType="int">
+    <select id="countCheckedMoneyByDate" parameterType="map" resultType="int">
         SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
         FROM HabitCheck hc
-        JOIN Habit h ON hc.habit_id = h.habit_id
+                 JOIN Habit h ON hc.habit_id = h.habit_id
         WHERE hc.user_id = #{userId}
         <if test="checkDate != null">
             AND DATE(hc.check_date) = DATE(#{checkDate})

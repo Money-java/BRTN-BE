@@ -76,5 +76,5 @@ public interface HabitService {
   List<MyHabitVO> getCheckedHabitAll(long userId);
 
   // 인증한 습관 금액 조회
-  int countCheckedMoneyByDate(long userId, String checkDate);
+  int countCheckedMoney(long userId, String checkDate);
 }
