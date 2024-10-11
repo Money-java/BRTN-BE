@@ -34,6 +34,8 @@ public interface HabitCommunityMapper {
   // habit_likes 감소
   void decrementHabitLikes(@Param("communityId") Long communityId);
 
+  // 사용자가 이미 좋아요를 눌렀는지 확인하는 메서드
+  int countUserLike(@Param("userId") Long userId, @Param("communityId") Long communityId);
 
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);

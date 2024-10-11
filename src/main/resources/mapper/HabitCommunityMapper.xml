@@ -127,14 +127,25 @@
 
 
     <!-- 내가 좋아요한 루틴 조회 -->
+<!--    <select id="selectLikedCommunities" parameterType="long" resultMap="HabitCommunityResultMap">-->
+<!--        SELECT hc.community_id, h.habit_title, h.category_title, u.nickname, hc.habit_likes, hc.participants, hc.complete, hc.upload_date-->
+<!--        FROM HabitCommunity hc-->
+<!--                 JOIN PostLikes pl ON hc.community_id = pl.post_id-->
+<!--                 JOIN Habit h ON hc.habit_id = h.habit_id-->
+<!--                 JOIN Users u ON h.user_id = u.user_id-->
+<!--        WHERE pl.user_id = #{userId}-->
+<!--    </select>-->
+
+    <!-- 내가 좋아요한 루틴 조회 -->
     <select id="selectLikedCommunities" parameterType="string" resultMap="HabitCommunityResultMap">
         SELECT hc.community_id, h.habit_title, h.category_title, u.nickname, hc.habit_likes, hc.participants, hc.complete, hc.upload_date
         FROM HabitCommunity hc
-                 JOIN PostLikes pl ON hc.community_id = pl.post_id
+                 JOIN PostLikes pl ON hc.community_id = pl.community_id  -- 이 부분의 컬럼명이 정확한지 확인하세요
                  JOIN Habit h ON hc.habit_id = h.habit_id
                  JOIN Users u ON h.user_id = u.user_id
         WHERE pl.user_id = #{userId}
     </select>
+
 
     <!-- 도전하기 기능 (습관을 나의 습관으로 추가) -->
     <insert id="addHabitToMyHabit">
@@ -170,6 +181,13 @@
         WHERE community_id = #{communityId}
     </update>
 
+
+    <!-- 사용자가 특정 커뮤니티에 이미 좋아요를 눌렀는지 확인하는 쿼리 -->
+    <select id="countUserLike" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM PostLikes
+        WHERE user_id = #{userId} AND community_id = #{communityId}
+    </select>
 
     <!-- HabitCommunity 데이터 삽입 -->
     <insert id="insertHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">

@@ -3,6 +3,7 @@ package com.example.backend.Habit.service;
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.dto.HabitCreateResponseDTO;
+import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
@@ -10,12 +11,17 @@ import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface HabitService {
   // 1. 나의 습관 조회
   List<MyHabitVO> getMyHabit(@Param("userId") long userId);
+
+  List<MyHabitInfoDTO> getMyTodayHabitInfo(@Param("userId") long userId);
 
   // 2. 습관 달성 체크
   void addHabitChecked(HabitCheckVO habitCheckVO);
@@ -59,6 +65,12 @@ public interface HabitService {
 
   // 인증한 모든 습관 금액 조회
   int countCheckedMoneyAll(long userId);
+
+  // 인증한 습관 개수 -- 날짜 별 조회
+  List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params);
+
+  // 인증한 습관 금액 조회
+  int countCheckedMoney(long userId);
 
   // 달성한 습관 조회
   List<MyHabitVO> getCheckedHabitAll(long userId);

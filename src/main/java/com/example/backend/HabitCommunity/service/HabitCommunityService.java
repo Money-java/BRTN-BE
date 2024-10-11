@@ -36,7 +36,12 @@ public interface HabitCommunityService {
   // 좋아요 삭제
   void removeLike(Long userId, Long communityId);
 
+  // 이미 좋아요 눌렀는지 확인하는 메서드
+  boolean isAlreadyLiked(Long userId, Long communityId);
+
   List<PostCommunityVO> getPostsByHabitId(Long habitId);
 
   int countHabitCommunities(String categoryName, String keyword);
+
+
 }

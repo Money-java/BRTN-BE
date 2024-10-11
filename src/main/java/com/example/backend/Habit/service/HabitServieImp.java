@@ -3,6 +3,7 @@ package com.example.backend.Habit.service;
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.dto.HabitCreateResponseDTO;
+import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,11 @@ public class HabitServieImp implements HabitService {
     @Override
     public List<MyHabitVO> getMyHabit(long userId) {
         return myHabitMapper.getMyHabit(userId);
+    }
+
+    @Override
+    public List<MyHabitInfoDTO> getMyTodayHabitInfo(long userId) {
+        return myHabitMapper.getMyTodayHabitInfo(userId);
     }
 
     // 2. 습관 달성 체크
@@ -181,6 +188,15 @@ public class HabitServieImp implements HabitService {
     }
 
     // 인증한 모든 습관 금액 조회
+
+    // 인증한 습관 개수 -- 날짜별
+    @Override
+    public List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params) {
+        return habitCheckMapper.countCheckedByDateRange(params);
+    }
+
+
+    // 인증한 습관 금액 조회
     @Override
     public int countCheckedMoneyAll(long userId) {
         return habitCheckMapper.countCheckedMoneyAll(userId);
