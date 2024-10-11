@@ -17,6 +17,7 @@ public interface HabitCommunityMapper {
   // 새로운 습관을 MyHabit 테이블에 추가하는 쿼리 (도전하기 기능)
   void addHabitToMyHabit(@Param("userId") Long userId, @Param("habitId") Long habitId);
 
+  Long findByHabitId(@Param("habitId") Long habitId);
   // 8. 습관검색기능 
   // 루틴커뮤니티 페이지
   List<HabitCommunityVO> searchHabitCommunities(Map<String, Object> params);

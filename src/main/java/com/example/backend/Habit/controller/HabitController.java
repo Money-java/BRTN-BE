@@ -65,6 +65,18 @@ public class HabitController {
   }
 
   @CrossOrigin(origins = "http://localhost:5173")
+  @GetMapping("/find")
+  public ResponseEntity<?> findHabitById(@RequestParam Long habitId) {
+    try {
+      MyHabitVO habit = habitService.getHabitById(habitId);
+      return ResponseEntity.status(HttpStatus.OK).body(habit);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  @CrossOrigin(origins = "http://localhost:5173")
   @PostMapping("/my-today-info")
   public ResponseEntity<List<MyHabitInfoDTO>> getMyHabitInfo(@RequestBody Map<String, Long> request) {
     log.info("(1) Successfully retrieved my habits. 습관불러오기요청");
@@ -422,7 +434,7 @@ public class HabitController {
       log.info("Parsed date: " + dt);
 
       int amount = habitService.countCheckedMoneByDate(userId, checkDate);
-      return ResponseEntity.ok(amount);
+      return ResponseEntity.status(HttpStatus.OK).body(amount);
     } catch (UnauthorizedException e) {
       log.info("401 Unauthorized: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

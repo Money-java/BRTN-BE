@@ -21,6 +21,8 @@ public interface HabitService {
   // 1. 나의 습관 조회
   List<MyHabitVO> getMyHabit(@Param("userId") long userId);
 
+  MyHabitVO getHabitById(long habitId);
+
   List<MyHabitInfoDTO> getMyTodayHabitInfo(@Param("userId") long userId);
 
   // 2. 습관 달성 체크

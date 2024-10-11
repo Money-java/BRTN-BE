@@ -2,12 +2,11 @@ package com.example.backend.HabitCommunity.service;
 
 import com.example.backend.HabitCommunity.mapper.HabitCommunityMapper;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
-import com.example.backend.Transaction.service.TransactionService;
+
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 
@@ -115,12 +114,21 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     habitCommunityMapper.insertHabitCommunity(habitCommunity);
   }
 
-  // 특정 ID로 HabitCommunity 조회
+  // 특정 CommunityID로 HabitCommunity 조회
   @Override
   public HabitCommunityVO selectHabitCommunityById(Long communityId) {
     return habitCommunityMapper.selectHabitCommunityById(communityId);
   }
 
+  //특정 HabitId로 HabitCommunity 조회
+  @Override
+  public Long findByHabitId(Long habitId){
+    Long findId = habitCommunityMapper.findByHabitId(habitId);
+    if(findId == null){
+      return 0L;
+    }
+    else return findId;
+  }
   // 모든 HabitCommunity 조회
   @Override
   public List<HabitCommunityVO> selectAllHabitCommunities() {

@@ -75,7 +75,7 @@ public class OauthController {
         }
         else {
             // 프론트엔드로 리다이렉트
-            response.sendRedirect("http://localhost:5173/myroutine");
+            response.sendRedirect("http://localhost:5173/loginHome");
         }
     }
 
@@ -109,7 +109,7 @@ public class OauthController {
         }
         else {
             // 프론트엔드로 리다이렉트
-            response.sendRedirect("http://localhost:5173/myroutine");
+            response.sendRedirect("http://localhost:5173/loginHome");
         }
     }
 
@@ -143,7 +143,7 @@ public class OauthController {
             response.sendRedirect("http://localhost:5173/register");
         } else {
             // 프론트엔드로 리다이렉트
-            response.sendRedirect("http://localhost:5173/myroutine");
+            response.sendRedirect("http://localhost:5173/loginHome");
         }
     }
 

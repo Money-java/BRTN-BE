@@ -33,6 +33,9 @@ public class HabitServieImp implements HabitService {
     public List<MyHabitVO> getMyHabit(long userId) {
         return myHabitMapper.getMyHabit(userId);
     }
+    //2. 습관 ID로 조회
+    @Override
+    public MyHabitVO getHabitById(long habitId) {return myHabitMapper.getHabitById(habitId);}
 
     @Override
     public List<MyHabitInfoDTO> getMyTodayHabitInfo(long userId) {
@@ -215,6 +218,5 @@ public class HabitServieImp implements HabitService {
         map.put("checkDate", checkDate);
         return habitCheckMapper.countCheckedMoneByDate(map);
     }
-
 
 }

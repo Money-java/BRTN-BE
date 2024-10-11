@@ -22,6 +22,9 @@ public interface HabitCommunityService {
   // 특정 ID로 HabitCommunity 조회
   HabitCommunityVO selectHabitCommunityById(Long communityId);
 
+  //특정 HabitId로 HabitCommunity 조회
+  Long findByHabitId(Long habitId);
+
   // 모든 HabitCommunity 조회
   List<HabitCommunityVO> selectAllHabitCommunities();
 

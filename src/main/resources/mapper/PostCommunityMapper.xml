@@ -42,7 +42,7 @@
     </select>
 
     <select id="selectAllPosts" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
-        SELECT * FROM PostCommunity
+        SELECT * FROM PostCommunity ORDER BY created_at DESC
     </select>
 
     <update id="updatePost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">

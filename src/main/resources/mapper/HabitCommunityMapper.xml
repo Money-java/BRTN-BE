@@ -193,19 +193,15 @@
     <insert id="insertHabitCommunity" parameterType="com.example.backend.HabitCommunity.vo.HabitCommunityVO">
         INSERT INTO HabitCommunity (
             habit_id,
-            community_id,
             habit_likes,
             participants,
-            complete,
-            upload_date
+            complete
         )
         VALUES (
                    #{habitId},
-                   #{communityId},
                    #{habitLikes},
                    #{participants},
-                   #{complete},
-                   #{uploadDate}
+                   #{complete}
                )
     </insert>
 
@@ -219,4 +215,10 @@
         WHERE habit_id = #{habitId}
     </select>
 
+    <select id="findByHabitId" resultType="long">
+        SELECT
+            community_id
+        FROM HabitCommunity
+        WHERE habit_id =#{habitId}
+    </select>
 </mapper>

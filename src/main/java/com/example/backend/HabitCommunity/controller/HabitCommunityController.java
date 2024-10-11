@@ -7,8 +7,11 @@ import com.example.backend.HabitCommunity.vo.LikeRequestVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.example.backend.exception.InternalServerErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -139,5 +142,21 @@ public class HabitCommunityController {
   @GetMapping("/posts/{habitId}")
   public List<PostCommunityVO> getPostsByHabitId(@PathVariable Long habitId) {
     return habitCommunityServiceImpl.getPostsByHabitId(habitId);
+  }
+
+  @GetMapping("/find/{habitId}")
+  public ResponseEntity<?> findByHabitId(@PathVariable Long habitId) {
+    Long findId = habitCommunityServiceImpl.findByHabitId(habitId);
+    return ResponseEntity.status(HttpStatus.OK).body(findId);
+  }
+
+  @PostMapping("/add")
+  public ResponseEntity<?> addHabitToCommunity(@RequestBody HabitCommunityVO habitCommunityVO) {
+    try{
+      habitCommunityServiceImpl.insertHabitCommunity(habitCommunityVO);
+      return ResponseEntity.status(HttpStatus.OK).body("insert successful");
+    } catch (InternalServerErrorException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
   }
 }
