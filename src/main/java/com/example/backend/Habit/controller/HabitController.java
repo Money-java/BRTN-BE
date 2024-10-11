@@ -389,6 +389,7 @@ public class HabitController {
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
+  }
 
   // 달성, 인증한 습관 개수 조회 -- 날짜 별로 !!!!
   @GetMapping("/habit-checks/{year}/{month}")
