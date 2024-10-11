@@ -3,7 +3,6 @@ package com.example.backend.Habit.controller;
 import com.example.backend.Habit.dto.HabitCheckCountDTO;
 import com.example.backend.Habit.dto.HabitCheckRequestDTO;
 import com.example.backend.Habit.dto.HabitCreateResponseDTO;
-import com.example.backend.Habit.dto.MyHabitInfoDTO;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.service.HabitService;
 import com.example.backend.Habit.service.HabitServieImp;
@@ -20,19 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-
 @Slf4j
 @RestController
 @RequestMapping("/habits")
+@CrossOrigin(origins = "http://localhost:5173")
 public class HabitController {
 
   private final HabitService habitService;
@@ -49,28 +41,6 @@ public class HabitController {
   public ResponseEntity<List<MyHabitVO>> getMyHabit(@RequestParam("userId") long userId) {
     try {
       List<MyHabitVO> habits = habitService.getMyHabit(userId);
-      log.info("(1) Successfully retrieved my habits.");
-      return ResponseEntity.ok(habits);
-    } catch (UnauthorizedException e) {
-      log.info("401 Unauthorized: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-    } catch (NotFoundException e) {
-      log.info("404 Not Found: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    } catch (InternalServerErrorException e) {
-      log.info("500 Internal Server Error: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
-  }
-
-  @CrossOrigin(origins = "http://localhost:5173")
-  @PostMapping("/my-today-info")
-  public ResponseEntity<List<MyHabitInfoDTO>> getMyHabitInfo(@RequestBody Map<String, Long> request) {
-    log.info("(1) Successfully retrieved my habits. 습관불러오기요청");
-    try {
-      long userId = request.get("userId");
-      List<MyHabitInfoDTO> habits = habitService.getMyTodayHabitInfo(userId);
-      log.info("habits: {}", habits);
       log.info("(1) Successfully retrieved my habits.");
       return ResponseEntity.ok(habits);
     } catch (UnauthorizedException e) {
@@ -358,6 +328,36 @@ public class HabitController {
     } catch (InternalServerErrorException e) {
       log.info("500 Internal Server Error: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  // 인증한 습관 금액 조회
+  @GetMapping("/money/checked")
+  public ResponseEntity<Integer> countCheckedMoney(@RequestParam long userId, @RequestParam(required = false) String checkDate) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date dt;
+
+    try {
+      if (checkDate == null || "undefined".equals(checkDate)) {
+        checkDate = sdf.format(new Date());
+      }
+
+      dt = sdf.parse(checkDate);
+      log.info("Parsed date: " + dt);
+
+      int amount = habitService.countCheckedMoney(userId, checkDate);
+      return ResponseEntity.ok(amount);
+    } catch (UnauthorizedException e) {
+      log.info("401 Unauthorized: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    } catch (NotFoundException e) {
+      log.info("404 Not Found: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
     }
   }
 
