@@ -181,11 +181,12 @@ public class HabitServieImp implements HabitService {
         return habitCheckMapper.getHabitCheckCounts(habitCheckRequestDTO);
     }
 
-    // 인증한 모든 습관 개수 조회
+    // 인증한 습관 개수 조회
     @Override
     public int countCheckedHabit(long userId) {
         return habitCheckMapper.countCheckedHabit(userId);
     }
+  
     // 인증한 습관 개수 -- 날짜별
     @Override
     public List<Map<String, Object>> countCheckedByDateRange(HashMap<String, Object> params) {
@@ -200,8 +201,8 @@ public class HabitServieImp implements HabitService {
 
     // 인증한 습관 금액 조회
     @Override
-    public int countCheckedMoneyAll(long userId) {
-        return habitCheckMapper.countCheckedMoneyAll(userId);
+    public int countCheckedMoney(long userId) {
+        return habitCheckMapper.countCheckedMoney(userId);
     }
 
     @Override
@@ -220,4 +221,5 @@ public class HabitServieImp implements HabitService {
         map.put("checkDate", checkDate);
         return habitCheckMapper.countCheckedMoneyByDate(map);
     }
+
 }

@@ -296,10 +296,10 @@ public class HabitController {
   }
 
   // 인증한 습관 개수 조회
-  @GetMapping("/money/checked/all")
-  public ResponseEntity<Integer> countCheckedMoneyAll(@RequestParam long userId) {
+  @GetMapping("/money/checked")
+  public ResponseEntity<Integer> countCheckedMoney(@RequestParam long userId) {
     try {
-      int amount = habitService.countCheckedMoneyAll(userId);
+      int amount = habitService.countCheckedMoney(userId);
       return ResponseEntity.ok(amount);
     } catch (BadRequestException e) {
       log.info("400 Bad request: {}", e.getMessage());
@@ -359,5 +359,51 @@ public class HabitController {
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  // 달성, 인증한 습관 개수 조회 -- 날짜 별로 !!!!
+  @GetMapping("/habit-checks/{year}/{month}")
+  public List<Map<String, Object>> countCheckedByDateRange(
+          @PathVariable int year,
+          @PathVariable int month,
+          @RequestParam("userId") String userId) {
+
+    LocalDate startOfMonth = LocalDate.of(year, month, 1);
+    LocalDate today = LocalDate.now();
+
+    // 이번 달이면 오늘 날짜까지만 조회
+    LocalDate endOfMonth = (month == today.getMonthValue() && year == today.getYear())
+            ? today
+            : startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+    HashMap<String, Object> params = new HashMap<>();
+    params.put("startDate", startOfMonth);
+    params.put("endDate", endOfMonth);
+    params.put("userId", userId);
+
+    // habitService에서 조회된 데이터 가져오기
+    // 0 제외한 check된 날짜에 대해서는 다 뜸
+    List<Map<String, Object>> resultList = habitService.countCheckedByDateRange(params);
+
+    // 결과 데이터를 LocalDate와 매핑, list를 map으로
+    Map<LocalDate, Long> resultMap = resultList.stream()
+            .collect(Collectors.toMap(
+                    result -> LocalDate.parse(result.get("check_date").toString()), // 조회된 날짜
+                    result -> (Long) result.get("habit_count") // 해당 날짜의 카운트
+            ));
+
+    // 모든 날짜에 대해 0으로 초기화한 리스트 만들기
+    List<Map<String, Object>> finalResult = new ArrayList<>();
+    LocalDate currentDate = startOfMonth;
+
+    while (!currentDate.isAfter(endOfMonth)) {
+      Map<String, Object> dailyResult = new HashMap<>();
+      dailyResult.put("check_date", currentDate.toString());
+      dailyResult.put("habit_count", resultMap.getOrDefault(currentDate, 0L)); // 조회된 데이터가 없으면 0
+      finalResult.add(dailyResult); //
+      currentDate = currentDate.plusDays(1); // 1일부터 하루씩 증가하게
+    }
+
+    return finalResult;
   }
 }
