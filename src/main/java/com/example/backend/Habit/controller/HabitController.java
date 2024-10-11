@@ -33,6 +33,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/habits")
+@CrossOrigin(origins = "http://localhost:5173")
 public class HabitController {
 
   private final HabitService habitService;
