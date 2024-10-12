@@ -14,4 +14,8 @@ public class PostCommunityVO {
   private String content;
   private String hashtag;
   private Date createdAt;
+  private Long myHabitId;
+  private String state;
+  private String habitTitle;
+  private String  categoryTitle;
 }

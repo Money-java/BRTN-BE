@@ -21,4 +21,13 @@ public interface PostCommunityService {
   void updatePost(PostCommunityVO postCommunityVO);
   void deletePost(Long postId);
 
+  // 진행 중인 루틴 가져오기
+  List<PostCommunityVO> getActiveHabitByUserId(Long userId);
+
+
+
+  // 특정 달에 맞는 이미지 가져오기
+  List<PostCommunityVO> getHabitImagesByMonth(Long userId, int month, int year, Long habitId);
+
+
 }

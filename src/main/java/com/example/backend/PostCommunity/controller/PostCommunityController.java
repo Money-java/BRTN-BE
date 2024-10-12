@@ -81,4 +81,26 @@ public class PostCommunityController {
     postCommunityService.deletePost(postId);
   }
 
+  // 진행 중인 루틴을 가져오는 API
+  @GetMapping("/myhabit/active")
+  public ResponseEntity<?> getActiveHabit(@RequestParam Long userId) {
+    List<PostCommunityVO> activeHabits = postCommunityService.getActiveHabitByUserId(userId);
+    return ResponseEntity.ok(activeHabits);
+  }
+
+
+  @GetMapping("/images")
+  public ResponseEntity<List<PostCommunityVO>> getImagesByMonth(
+          @RequestParam Long userId,
+          @RequestParam int month,
+          @RequestParam int year,
+          @RequestParam Long habitId) {
+
+    // 파라미터 순서: userId, month, year, habitId
+    List<PostCommunityVO> images = postCommunityService.getHabitImagesByMonth(userId, month, year, habitId);
+    return ResponseEntity.ok(images);
+  }
+
+
 }
+
