@@ -86,7 +86,6 @@
         FROM HabitCheck hc
                  JOIN Habit h ON hc.habit_id = h.habit_id
         WHERE hc.user_id = #{userId}
-          AND DATE(hc.check_date) = CURDATE()
         <if test="checkDate != null">
             AND DATE(hc.check_date) = DATE(#{checkDate})
         </if>
