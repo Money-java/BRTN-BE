@@ -46,5 +46,5 @@ public interface HabitCommunityService {
 
   int countHabitCommunities(String categoryName, String keyword);
 
-
+  List<HabitCommunityVO> getTopLikedHabits();
 }

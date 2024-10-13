@@ -1,5 +1,6 @@
 package com.example.backend.HabitCommunity.controller;
 
+import com.amazonaws.Response;
 import com.example.backend.HabitCommunity.service.HabitCommunityService;
 import com.example.backend.HabitCommunity.service.HabitCommunityServiceImpl;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
@@ -158,5 +159,11 @@ public class HabitCommunityController {
     } catch (InternalServerErrorException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+  }
+
+  @GetMapping("/top-liked")
+  public ResponseEntity<?> getTopLikedHabits() {
+    List<HabitCommunityVO> habitList = habitCommunityServiceImpl.getTopLikedHabits();
+    return ResponseEntity.status(HttpStatus.OK).body(habitList);
   }
 }

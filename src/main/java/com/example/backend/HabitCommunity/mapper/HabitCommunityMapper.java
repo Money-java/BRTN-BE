@@ -57,4 +57,6 @@ public interface HabitCommunityMapper {
 
   // 총 HabitCommunity의 루틴 개수를 구하는 메서드
   int countHabitCommunities(Map<String, Object> params);
+
+  List<HabitCommunityVO> getTopLikedHabits();
 }

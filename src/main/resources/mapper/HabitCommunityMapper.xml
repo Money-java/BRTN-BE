@@ -221,4 +221,23 @@
         FROM HabitCommunity
         WHERE habit_id =#{habitId}
     </select>
+
+    <select id="getTopLikedHabits" resultMap="HabitCommunityResultMap">
+        SELECT
+            hc.community_id,
+            hc.habit_id,
+            hc.habit_likes,
+            hc.participants,
+            hc.complete,
+            hc.upload_date,
+            h.habit_title,
+            h.category_title,
+            u.nickname,
+            u.avatar
+        FROM habitcommunity hc
+                 JOIN habit h ON hc.habit_id = h.habit_id
+                 JOIN users u ON h.user_id = u.user_id
+        ORDER BY hc.habit_likes DESC
+            LIMIT 3
+    </select>
 </mapper>

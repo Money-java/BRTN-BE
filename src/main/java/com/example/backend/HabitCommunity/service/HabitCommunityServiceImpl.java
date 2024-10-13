@@ -163,4 +163,8 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     return habitCommunityMapper.countHabitCommunities(params);
   }
 
+  @Override
+  public List<HabitCommunityVO> getTopLikedHabits(){
+    return habitCommunityMapper.getTopLikedHabits();
+  }
 }
