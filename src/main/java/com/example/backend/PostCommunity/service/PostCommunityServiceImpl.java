@@ -78,6 +78,7 @@ public class PostCommunityServiceImpl implements PostCommunityService {
       HabitCheckVO habitCheckVO = convertToAddHabitCheckRequestVO(requestDTO);
       habitCheckMapper.addHabitChecked(habitCheckVO);
 
+
     } catch (Exception e) {
       log.error("Error occurred while inserting post: {}", e.getMessage());
       throw e; // 예외를 다시 던져 트랜잭션을 롤백합니다.

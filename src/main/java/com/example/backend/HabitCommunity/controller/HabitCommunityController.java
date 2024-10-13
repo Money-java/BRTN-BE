@@ -40,9 +40,9 @@ public class HabitCommunityController {
 
   // 7. 도전하기 기능: 특정 습관을 MyHabit 테이블에 추가
   @PostMapping("/challenge")
-  public void addHabitToMyHabit(@RequestParam Long userId, @RequestParam Long habitId) {
+  public void addHabitToMyHabit(@RequestParam Long userId, @RequestParam Long habitId, @RequestParam Long communityId) {
     habitCommunityServiceImpl.addHabitToMyHabit(userId, habitId);
-
+    habitCommunityServiceImpl.updateHabitParticipants(communityId);
   }
 
   // 8. 습관검색기능
@@ -57,6 +57,7 @@ public class HabitCommunityController {
     System.out.println("CategoryName: " + categoryName);
     System.out.println("SortType: " + sortType);
     System.out.println("UserId: " + userId);  // userId 출력
+    habitCommunityServiceImpl.updateComplete();
     List<HabitCommunityVO> communities = habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword,userId, page, size);
     int totalRecords = habitCommunityServiceImpl.countHabitCommunities(categoryName, keyword);
 

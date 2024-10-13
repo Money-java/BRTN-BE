@@ -92,6 +92,16 @@
         SELECT * FROM HabitCommunity WHERE community_id = #{communityId}
     </select>
 
+    <update id="updateComplete">
+        UPDATE habitcommunity hc
+            JOIN (
+            SELECT habit_id, COUNT(*) AS completed_count
+            FROM habitcheck
+            WHERE DATE(check_date) = CURDATE()  -- 오늘 날짜의 habit 데이터를 가져옴
+            GROUP BY habit_id
+            ) hc_check ON hc.habit_id = hc_check.habit_id
+            SET hc.complete = hc_check.completed_count;
+    </update>
     <!-- 모든 HabitCommunity 조회 -->
     <select id="selectAllHabitCommunities" resultMap="HabitCommunityResultMap">
         SELECT * FROM HabitCommunity
@@ -152,8 +162,22 @@
         INSERT INTO MyHabit (user_id, habit_id, state)
         VALUES (#{userId}, #{habitId}, '대기');
     </insert>
+    <!--참여자 추가-->
+    <update id="incrementHabitParticipants">
+        UPDATE habitcommunity
+        SET participants = participants + 1
+        WHERE community_id = #{communityId};
+    </update>
 
-
+    <!--참여자 감소-->
+    <update id="decrementHabitParticipants">
+        UPDATE habitcommunity
+        SET participants = CASE
+                               WHEN participants > 0 THEN participants - 1
+                               ELSE 0
+            END
+        WHERE community_id = #{communityId};
+    </update>
 
     <!-- 좋아요 추가 -->
     <insert id="addLike">
@@ -204,6 +228,7 @@
                    #{complete}
                )
     </insert>
+
 
     <!-- habit_id에 따른 postcommunity 데이터를 조회 -->
     <select id="selectPostsByHabitId" resultMap="PostCommunityResultMap">

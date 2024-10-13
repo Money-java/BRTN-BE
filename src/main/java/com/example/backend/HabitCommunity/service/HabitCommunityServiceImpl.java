@@ -44,8 +44,17 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     habitCommunityMapper.addHabitToMyHabit(userId, habitId);
   }
 
+  @Override
+  public void updateHabitParticipants(Long communityId){
+    habitCommunityMapper.incrementHabitParticipants(communityId);
+  }
+
   // 8. 습관검색기능
   // 루틴커뮤니티 페이지
+  @Override
+  public void updateComplete(){
+    habitCommunityMapper.updateComplete();
+  }
   @Override
   public List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType, String keyword, Long userId, int page, int size) {
     System.out.println("Keyword: " + keyword);

@@ -198,9 +198,11 @@ public class HabitController {
   // 6. 습관 삭제
   @DeleteMapping("/delete")
   public ResponseEntity<String> deleteMyHabit(
-          @RequestParam Long myHabitId) {
+          @RequestParam Long myHabitId,
+          @RequestParam Long habitId) {
     try {
       habitService.deleteMyHabit(myHabitId);
+      habitService.deleteHabitParticipant(habitId);
       log.info("(6) Successfully deleted habit");
       return ResponseEntity.ok("(6) Successfully deleted habit");
     } catch (BadRequestException e) {

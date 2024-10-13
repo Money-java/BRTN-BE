@@ -12,8 +12,11 @@ public interface HabitCommunityService {
 
   // 7. 도전하기 기능(스크랩)
   void addHabitToMyHabit(Long userId, Long habitId);
+  // 참여하는 인원 증가
+  void updateHabitParticipants(Long communityId);
 
   // 8. 습관검색기능
+  void updateComplete();
   List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType,String keyword,Long userId, int page, int size);
 
   // HabitCommunity 삽입

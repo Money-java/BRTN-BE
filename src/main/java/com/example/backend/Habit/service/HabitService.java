@@ -43,6 +43,7 @@ public interface HabitService {
 
   // 6. 습관 삭제
   void deleteMyHabit(Long myHabitId);
+  void deleteHabitParticipant(Long habitId);
 
   // 7. 습관 상태 변경
   void modifyMyHabitState(List<MyHabitVO> habitList, long userId);
