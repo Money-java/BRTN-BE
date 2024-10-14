@@ -29,5 +29,7 @@ public interface PostCommunityService {
   // 특정 달에 맞는 이미지 가져오기
   List<PostCommunityVO> getHabitImagesByMonth(Long userId, int month, int year, Long habitId);
 
+  // 날짜별로 좋아요가 가장 많은 이미지를 가져오는 서비스 메서드
+  List<PostCommunityVO> getMostLikedImagesByDate(Long userId, int month, int year);
 
 }

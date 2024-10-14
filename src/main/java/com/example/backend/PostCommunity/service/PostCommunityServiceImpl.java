@@ -199,4 +199,8 @@ public class PostCommunityServiceImpl implements PostCommunityService {
     return postCommunityMapper.selectHabitImagesByMonth(userId, month, year, habitId);
   }
 
+  @Override
+  public List<PostCommunityVO> getMostLikedImagesByDate(Long userId, int month, int year) {
+    return postCommunityMapper.getMostLikedImagesByDate(userId, month, year);
+  }
 }

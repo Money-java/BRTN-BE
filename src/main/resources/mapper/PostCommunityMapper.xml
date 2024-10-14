@@ -95,6 +95,21 @@
           AND mh.habit_id = #{habitId}
     </select>
 
+    <!-- 날짜별로 좋아요가 가장 많은 이미지 가져오기 -->
+    <select id="getMostLikedImagesByDate" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT p.created_at, p.image_url, p.post_likes, p.content
+        FROM postcommunity p
+                 JOIN (
+            SELECT DATE(created_at) AS created_date, MAX(post_likes) AS max_likes
+            FROM postcommunity
+        WHERE user_id = #{userId}
+          AND MONTH(created_at) = #{month}
+          AND YEAR(created_at) = #{year}
+        GROUP BY DATE(created_at)
+            ) max_likes_per_day
+        ON DATE(p.created_at) = max_likes_per_day.created_date
+            AND p.post_likes = max_likes_per_day.max_likes
+    </select>
 
 
 </mapper>

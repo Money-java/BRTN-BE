@@ -100,7 +100,16 @@ public class PostCommunityController {
     List<PostCommunityVO> images = postCommunityService.getHabitImagesByMonth(userId, month, year, habitId);
     return ResponseEntity.ok(images);
   }
-
+  // 날짜별로 좋아요가 가장 많은 이미지를 가져오는 API
+  @GetMapping("/images/most-liked")
+  public ResponseEntity<List<PostCommunityVO>> getMostLikedImagesByDate(
+          @RequestParam("userId") Long userId,
+          @RequestParam("month") int month,
+          @RequestParam("year") int year
+  ) {
+    List<PostCommunityVO> mostLikedImages = postCommunityService.getMostLikedImagesByDate(userId, month, year);
+    return ResponseEntity.ok(mostLikedImages);
+  }
 
 }
 
