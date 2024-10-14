@@ -38,4 +38,7 @@ public interface HabitCheckMapper {
     List<MyHabitVO> getCheckedHabitAll(Long userId);
 
     int countCheckedMoneByDate(Map<String, Object> map);
+
+    // 인증한 특정 습관 개수 조회
+    int countCheckedHabit2(Map<String, Object> map);
 }

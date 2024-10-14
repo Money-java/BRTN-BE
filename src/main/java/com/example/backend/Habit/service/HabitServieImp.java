@@ -219,4 +219,11 @@ public class HabitServieImp implements HabitService {
         return habitCheckMapper.countCheckedMoneByDate(map);
     }
 
+    @Override
+    public int countCheckedHabit2(long userId, long habitId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("habitId", habitId);
+        return habitCheckMapper.countCheckedHabit2(map);
+    }
 }
