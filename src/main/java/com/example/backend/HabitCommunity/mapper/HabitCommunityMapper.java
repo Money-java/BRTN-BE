@@ -46,7 +46,7 @@ public interface HabitCommunityMapper {
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
 
   // communityId로 HabitCommunity 조회
-  HabitCommunityVO selectHabitCommunityById(Long communityId);
+  HabitCommunityVO selectHabitCommunityByHabitId(Long habitId);
 
 
   // 모든 HabitCommunity 조회

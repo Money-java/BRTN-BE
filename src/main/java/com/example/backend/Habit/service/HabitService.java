@@ -78,5 +78,5 @@ public interface HabitService {
   int countCheckedMoneByDate(long userId, String checkDate);
 
   // 인증한 특정 습관 개수 조회
-  int countCheckedHabit2(long userId, long habitId);
+  int countCheckedHabit2(long habitId);
 }

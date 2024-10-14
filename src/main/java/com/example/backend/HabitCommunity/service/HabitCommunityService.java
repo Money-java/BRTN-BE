@@ -22,8 +22,8 @@ public interface HabitCommunityService {
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
 
-  // 특정 ID로 HabitCommunity 조회
-  HabitCommunityVO selectHabitCommunityById(Long communityId);
+  // 특정 habitID로 HabitCommunity 조회
+  HabitCommunityVO selectHabitCommunityByHabitId(Long habitId);
 
   //특정 HabitId로 HabitCommunity 조회
   Long findByHabitId(Long habitId);

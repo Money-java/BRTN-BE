@@ -79,10 +79,10 @@ public class HabitCommunityController {
 
 
 
-  // 특정 ID로 HabitCommunity 조회
-  @GetMapping("/{id}")
-  public HabitCommunityVO selectHabitCommunityById(@PathVariable Long id) {
-    return habitCommunityServiceImpl.selectHabitCommunityById(id);
+  // 특정 habitID로 HabitCommunity 조회
+  @GetMapping("/{habitId}")
+  public HabitCommunityVO selectHabitCommunityById(@PathVariable Long habitId) {
+    return habitCommunityServiceImpl.selectHabitCommunityByHabitId(habitId);
   }
 
   // 모든 HabitCommunity 조회

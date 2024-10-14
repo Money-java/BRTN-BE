@@ -453,8 +453,8 @@ public class HabitController {
 
   // 인증한 특정 습관 개수 조회
   @GetMapping("/checked/count")
-  public ResponseEntity<Integer> countCheckedHabit2(@RequestParam long userId, @RequestParam long habitId) {
-    int amount = habitService.countCheckedHabit2(userId, habitId);
+  public ResponseEntity<Integer> countCheckedHabit2(@RequestParam long habitId) {
+    int amount = habitService.countCheckedHabit2(habitId);
     return ResponseEntity.status(HttpStatus.OK).body(amount);
   }
 }

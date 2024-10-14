@@ -231,10 +231,7 @@ public class HabitServieImp implements HabitService {
     }
 
     @Override
-    public int countCheckedHabit2(long userId, long habitId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userId", userId);
-        map.put("habitId", habitId);
-        return habitCheckMapper.countCheckedHabit2(map);
+    public int countCheckedHabit2(long habitId) {
+        return habitCheckMapper.countCheckedHabit2(habitId);
     }
 }

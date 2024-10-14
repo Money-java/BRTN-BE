@@ -125,8 +125,8 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
 
   // 특정 CommunityID로 HabitCommunity 조회
   @Override
-  public HabitCommunityVO selectHabitCommunityById(Long communityId) {
-    return habitCommunityMapper.selectHabitCommunityById(communityId);
+  public HabitCommunityVO selectHabitCommunityByHabitId(Long habitId) {
+    return habitCommunityMapper.selectHabitCommunityByHabitId(habitId);
   }
 
   //특정 HabitId로 HabitCommunity 조회

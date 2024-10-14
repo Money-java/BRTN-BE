@@ -95,9 +95,9 @@
     </select>
 
     <!-- 인증한 특정 습관 개수 조회 -->
-    <select id="countCheckedHabit2" parameterType="map" resultType="int">
+    <select id="countCheckedHabit2" parameterType="long" resultType="int">
         SELECT COUNT(*)
         FROM HabitCheck
-        WHERE user_id = #{userId} AND habit_id = #{habitId}
+        WHERE habit_id = #{habitId}
     </select>
 </mapper>

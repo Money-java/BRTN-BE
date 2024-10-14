@@ -88,8 +88,8 @@
 
 
     <!-- HabitCommunity를 communityId로 조회 -->
-    <select id="selectHabitCommunityById" parameterType="long" resultMap="HabitCommunityResultMap">
-        SELECT * FROM HabitCommunity WHERE community_id = #{communityId}
+    <select id="selectHabitCommunityByHabitId" parameterType="long" resultMap="HabitCommunityResultMap">
+        SELECT * FROM HabitCommunity WHERE habit_id = #{habitId}
     </select>
 
     <update id="updateComplete">

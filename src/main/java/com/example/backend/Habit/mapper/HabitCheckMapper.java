@@ -40,5 +40,5 @@ public interface HabitCheckMapper {
     int countCheckedMoneByDate(Map<String, Object> map);
 
     // 인증한 특정 습관 개수 조회
-    int countCheckedHabit2(Map<String, Object> map);
+    int countCheckedHabit2(Long habitId);
 }
