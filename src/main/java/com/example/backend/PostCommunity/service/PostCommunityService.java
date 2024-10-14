@@ -15,7 +15,7 @@ public interface PostCommunityService {
   // 인증커뮤니티 페이지 (레벨)
   int countUserCertifications(Long userId);
 
-  void insertPost(PostCommunityRequestDTO requestDTO);
+  int insertPost(PostCommunityRequestDTO requestDTO);
   PostCommunityVO selectPostById(Long postId);
   List<PostCommunityVO> selectAllPosts();
   void updatePost(PostCommunityVO postCommunityVO);

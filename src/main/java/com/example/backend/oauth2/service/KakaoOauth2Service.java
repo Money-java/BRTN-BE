@@ -72,7 +72,6 @@ public class KakaoOauth2Service implements CustomOauth2Service{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        // 바디 설정
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", KAKAO_CLIENT_ID);
@@ -80,7 +79,7 @@ public class KakaoOauth2Service implements CustomOauth2Service{
         params.add("code", code);
         params.add("client_secret", KAKAO_CLIENT_SECRET);
 
-        // 요청 엔티티 생성
+
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
 
         // 요청 전송
@@ -88,7 +87,7 @@ public class KakaoOauth2Service implements CustomOauth2Service{
 
         if(response.getStatusCode() == HttpStatus.OK){
             try {
-                // Jackson ObjectMapper를 이용해 JSON 파싱
+
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode rootNode = objectMapper.readTree(response.getBody());
 
