@@ -44,8 +44,17 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     habitCommunityMapper.addHabitToMyHabit(userId, habitId);
   }
 
+  @Override
+  public void updateHabitParticipants(Long communityId){
+    habitCommunityMapper.incrementHabitParticipants(communityId);
+  }
+
   // 8. 습관검색기능
   // 루틴커뮤니티 페이지
+  @Override
+  public void updateComplete(){
+    habitCommunityMapper.updateComplete();
+  }
   @Override
   public List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType, String keyword, Long userId, int page, int size) {
     System.out.println("Keyword: " + keyword);
@@ -116,8 +125,8 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
 
   // 특정 CommunityID로 HabitCommunity 조회
   @Override
-  public HabitCommunityVO selectHabitCommunityById(Long communityId) {
-    return habitCommunityMapper.selectHabitCommunityById(communityId);
+  public HabitCommunityVO selectHabitCommunityByHabitId(Long habitId) {
+    return habitCommunityMapper.selectHabitCommunityByHabitId(habitId);
   }
 
   //특정 HabitId로 HabitCommunity 조회
@@ -163,4 +172,8 @@ public class HabitCommunityServiceImpl implements HabitCommunityService {
     return habitCommunityMapper.countHabitCommunities(params);
   }
 
+  @Override
+  public List<HabitCommunityVO> getTopLikedHabits(){
+    return habitCommunityMapper.getTopLikedHabits();
+  }
 }

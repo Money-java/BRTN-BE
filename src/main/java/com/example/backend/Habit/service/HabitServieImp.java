@@ -8,6 +8,7 @@ import com.example.backend.Habit.mapper.HabitCheckMapper;
 import com.example.backend.Habit.mapper.MyHabitMapper;
 import com.example.backend.Habit.vo.HabitCheckVO;
 import com.example.backend.Habit.vo.MyHabitVO;
+import com.example.backend.HabitCommunity.mapper.HabitCommunityMapper;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,8 @@ public class HabitServieImp implements HabitService {
 
     @Autowired
     private HabitCheckMapper habitCheckMapper;
+    @Autowired
+    private HabitCommunityMapper habitCommunityMapper;
 
     // 1. 나의 습관 조회
     @Override
@@ -121,6 +124,14 @@ public class HabitServieImp implements HabitService {
     public void deleteMyHabit(Long myHabitId) {
         myHabitMapper.deleteMyHabit(myHabitId);
     }
+    @Override
+    public void deleteHabitParticipant(Long habitId){
+        Long communityId = habitCommunityMapper.findByHabitId(habitId);
+        if(communityId != null){
+            habitCommunityMapper.decrementHabitParticipants(communityId);
+        }
+    }
+
 
     // 7. 습관 상태 변경
     @Override
@@ -219,4 +230,8 @@ public class HabitServieImp implements HabitService {
         return habitCheckMapper.countCheckedMoneByDate(map);
     }
 
+    @Override
+    public int countCheckedHabit2(long habitId) {
+        return habitCheckMapper.countCheckedHabit2(habitId);
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.backend.HabitCommunity.controller;
 
+import com.amazonaws.Response;
 import com.example.backend.HabitCommunity.service.HabitCommunityService;
 import com.example.backend.HabitCommunity.service.HabitCommunityServiceImpl;
 import com.example.backend.HabitCommunity.vo.HabitCommunityVO;
@@ -39,9 +40,9 @@ public class HabitCommunityController {
 
   // 7. 도전하기 기능: 특정 습관을 MyHabit 테이블에 추가
   @PostMapping("/challenge")
-  public void addHabitToMyHabit(@RequestParam Long userId, @RequestParam Long habitId) {
+  public void addHabitToMyHabit(@RequestParam Long userId, @RequestParam Long habitId, @RequestParam Long communityId) {
     habitCommunityServiceImpl.addHabitToMyHabit(userId, habitId);
-
+    habitCommunityServiceImpl.updateHabitParticipants(communityId);
   }
 
   // 8. 습관검색기능
@@ -56,6 +57,7 @@ public class HabitCommunityController {
     System.out.println("CategoryName: " + categoryName);
     System.out.println("SortType: " + sortType);
     System.out.println("UserId: " + userId);  // userId 출력
+    habitCommunityServiceImpl.updateComplete();
     List<HabitCommunityVO> communities = habitCommunityServiceImpl.searchHabitCommunities(categoryName, sortType, keyword,userId, page, size);
     int totalRecords = habitCommunityServiceImpl.countHabitCommunities(categoryName, keyword);
 
@@ -77,10 +79,10 @@ public class HabitCommunityController {
 
 
 
-  // 특정 ID로 HabitCommunity 조회
-  @GetMapping("/{id}")
-  public HabitCommunityVO selectHabitCommunityById(@PathVariable Long id) {
-    return habitCommunityServiceImpl.selectHabitCommunityById(id);
+  // 특정 habitID로 HabitCommunity 조회
+  @GetMapping("/{habitId}")
+  public HabitCommunityVO selectHabitCommunityById(@PathVariable Long habitId) {
+    return habitCommunityServiceImpl.selectHabitCommunityByHabitId(habitId);
   }
 
   // 모든 HabitCommunity 조회
@@ -158,5 +160,11 @@ public class HabitCommunityController {
     } catch (InternalServerErrorException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+  }
+
+  @GetMapping("/top-liked")
+  public ResponseEntity<?> getTopLikedHabits() {
+    List<HabitCommunityVO> habitList = habitCommunityServiceImpl.getTopLikedHabits();
+    return ResponseEntity.status(HttpStatus.OK).body(habitList);
   }
 }

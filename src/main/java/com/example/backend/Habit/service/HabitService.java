@@ -43,6 +43,7 @@ public interface HabitService {
 
   // 6. 습관 삭제
   void deleteMyHabit(Long myHabitId);
+  void deleteHabitParticipant(Long habitId);
 
   // 7. 습관 상태 변경
   void modifyMyHabitState(List<MyHabitVO> habitList, long userId);
@@ -75,4 +76,7 @@ public interface HabitService {
   List<MyHabitVO> getCheckedHabitAll(long userId);
 
   int countCheckedMoneByDate(long userId, String checkDate);
+
+  // 인증한 특정 습관 개수 조회
+  int countCheckedHabit2(long habitId);
 }

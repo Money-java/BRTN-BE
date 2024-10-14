@@ -198,9 +198,11 @@ public class HabitController {
   // 6. 습관 삭제
   @DeleteMapping("/delete")
   public ResponseEntity<String> deleteMyHabit(
-          @RequestParam Long myHabitId) {
+          @RequestParam Long myHabitId,
+          @RequestParam Long habitId) {
     try {
       habitService.deleteMyHabit(myHabitId);
+      habitService.deleteHabitParticipant(habitId);
       log.info("(6) Successfully deleted habit");
       return ResponseEntity.ok("(6) Successfully deleted habit");
     } catch (BadRequestException e) {
@@ -447,5 +449,12 @@ public class HabitController {
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  // 인증한 특정 습관 개수 조회
+  @GetMapping("/checked/count")
+  public ResponseEntity<Integer> countCheckedHabit2(@RequestParam long habitId) {
+    int amount = habitService.countCheckedHabit2(habitId);
+    return ResponseEntity.status(HttpStatus.OK).body(amount);
   }
 }

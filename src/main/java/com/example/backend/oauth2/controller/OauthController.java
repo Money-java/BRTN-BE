@@ -68,7 +68,7 @@ public class OauthController {
             newUser.setEmail(userInfo.getEmail());
             newUser.setName(userInfo.getNickname());
             newUser.setProvider(userInfo.getProvider());
-            newUser.setRole("ROLE_USER");  // 기본 역할 설정
+            newUser.setRole("ROLE_USER");
             userService.insertUser(newUser);
 
             response.sendRedirect("http://localhost:5173/register");

@@ -12,15 +12,18 @@ public interface HabitCommunityService {
 
   // 7. 도전하기 기능(스크랩)
   void addHabitToMyHabit(Long userId, Long habitId);
+  // 참여하는 인원 증가
+  void updateHabitParticipants(Long communityId);
 
   // 8. 습관검색기능
+  void updateComplete();
   List<HabitCommunityVO> searchHabitCommunities(String categoryName, String sortType,String keyword,Long userId, int page, int size);
 
   // HabitCommunity 삽입
   void insertHabitCommunity(HabitCommunityVO habitCommunity);
 
-  // 특정 ID로 HabitCommunity 조회
-  HabitCommunityVO selectHabitCommunityById(Long communityId);
+  // 특정 habitID로 HabitCommunity 조회
+  HabitCommunityVO selectHabitCommunityByHabitId(Long habitId);
 
   //특정 HabitId로 HabitCommunity 조회
   Long findByHabitId(Long habitId);
@@ -46,5 +49,5 @@ public interface HabitCommunityService {
 
   int countHabitCommunities(String categoryName, String keyword);
 
-
+  List<HabitCommunityVO> getTopLikedHabits();
 }

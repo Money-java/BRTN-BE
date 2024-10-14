@@ -45,11 +45,11 @@ public class PostCommunityController {
 
 
   @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Void> insertPost(@ModelAttribute PostCommunityRequestDTO requestDTO) {
+  public ResponseEntity<?> insertPost(@ModelAttribute PostCommunityRequestDTO requestDTO) {
     log.info("asdfasdfasdf");
     try {
-      postCommunityService.insertPost(requestDTO);
-      return ResponseEntity.ok().build();
+      int reward = postCommunityService.insertPost(requestDTO);
+      return ResponseEntity.ok().body(reward);
     } catch (Exception e) {
       // 예외 처리 및 로깅
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
