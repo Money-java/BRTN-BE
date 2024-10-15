@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.Transaction.mapper.TransactionMapper">
+
+    <resultMap id="TransactionResultMap" type="com.example.backend.Transaction.vo.TransactionVO">
+        <id property="transactionId" column="transaction_id" />
+        <result property="categoryTitle" column="category_title" />
+        <result property="transactionAmount" column="transaction_amount" />
+        <result property="createdAt" column="created_at" />
+        <result property="totalSpent" column="total_spent" /> <!-- 카테고리별 합산 지출 -->
+    </resultMap>
+
+    <!-- 오늘 전체 지출 금액 -->
+    <select id="selectTotalSpentToday" resultType="Long">
+        SELECT SUM(transaction_amount)
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE();
+    </select>
+
+    <!-- 오늘 전체 지출 내역 (카테고리 별) -->
+    <select id="selectExpensesByCategoryToday" resultMap="TransactionResultMap">
+        SELECT category_title, SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE()
+        GROUP BY category_title;
+    </select>
+
+    <!-- 오늘 지출 TOP 5 (카테고리 별) -->
+    <select id="selectExpensesTop" resultMap="TransactionResultMap">
+        SELECT category_title, SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE()
+        GROUP BY category_title
+        ORDER BY total_spent DESC
+            LIMIT 5;
+    </select>
+
+    <!-- 오늘 시간 별 지출 (3시간 단위) -->
+    <select id="selectExpensesTime" resultMap="TransactionResultMap">
+    <![CDATA[
+        SELECT category_title,
+               CASE
+                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                   WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                   WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                   WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                   WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                   WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                   WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                   ELSE '21:00-24:00'
+        END AS time_slot,
+               SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE()
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 선택한 습관 카테고리에 해당하는 지출 금액 -->
+    <select id="selectTotalSpentByHabitCategory" resultMap="TransactionResultMap">
+        SELECT t.category_title, SUM(t.transaction_amount) AS total_spent
+        FROM MyHabit mh JOIN HABIT h ON mh.habit_id = h.habit_id JOIN TRANSACTION t ON h.category_title = t.category_title
+        WHERE mh.user_id = #{userId} AND mh.state = '진행' AND t.transaction_type = '지출' AND DATE(t.created_at) = CURDATE()
+        GROUP BY t.category_title;
+    </select>
+
+    <!-- 선택한 습관 카테고리에 해당하는 지출 내역 -->
+    <select id="selectExpensesByHabitCategory" resultMap="TransactionResultMap">
+        SELECT t.transaction_id, t.transaction_amount, t.created_at, t.category_title
+        FROM MyHabit mh JOIN HABIT h ON mh.habit_id = h.habit_id JOIN TRANSACTION t ON h.category_title = t.category_title
+        WHERE mh.user_id = #{userId} AND mh.state = '진행' AND t.category_title = #{categoryTitle} AND DATE(t.created_at) = CURDATE();
+    </select>
+
+    <!-- 과거 전체 지출 금액 (특정 날짜) -->
+    <select id="selectPastSpentDate" parameterType="date" resultType="long">
+        SELECT COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = #{createdAt} AND transaction_type = '지출';
+    </select>
+
+    <!-- 과거 전체 지출 금액 (1일 전) -->
+    <select id="selectPastSpentDay" resultType="long">
+        SELECT COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 DAY AND transaction_type = '지출';
+    </select>
+
+    <!-- 과거 전체 지출 금액 (1주 전) -->
+    <select id="selectPastSpentWeek" resultType="long">
+        SELECT COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 WEEK AND transaction_type = '지출';
+    </select>
+
+    <!-- 과거 전체 지출 금액 (1달 전) -->
+    <select id="selectPastSpentMonth" resultType="long">
+        SELECT COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 MONTH AND transaction_type = '지출';
+    </select>
+
+    <!-- 과거 전체 지출 금액 (1년 전) -->
+    <select id="selectPastSpentYear" resultType="long">
+        SELECT COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 YEAR AND transaction_type = '지출';
+    </select>
+
+    <!-- 오늘 지출 TOP 5 (특정 날짜) -->
+    <select id="selectTop5Date" parameterType="date" resultMap="TransactionResultMap">
+        SELECT category_title, COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = ? AND transaction_type = '지출'
+        GROUP BY category_title
+        ORDER BY total_amount_past DESC
+            LIMIT 5;
+    </select>
+
+    <!-- 오늘 지출 TOP 5 (1일 전) -->
+    <select id="selectTop5Day" resultMap="TransactionResultMap">
+        SELECT category_title, COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 DAY AND transaction_type = '지출'
+        GROUP BY category_title
+        ORDER BY total_amount_past DESC
+            LIMIT 5;
+    </select>
+
+    <!-- 오늘 지출 TOP 5 (1주 전) -->
+    <select id="selectTop5Week" resultMap="TransactionResultMap">
+        SELECT category_title, COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 WEEK AND transaction_type = '지출'
+        GROUP BY category_title
+        ORDER BY total_amount_past DESC
+            LIMIT 5;
+    </select>
+
+    <!-- 오늘 지출 TOP 5 (1달 전) -->
+    <select id="selectTop5Month" resultMap="TransactionResultMap">
+        SELECT category_title, COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 MONTH AND transaction_type = '지출'
+        GROUP BY category_title
+        ORDER BY total_amount_past DESC
+            LIMIT 5;
+    </select>
+
+    <!-- 오늘 지출 TOP 5 (1년 전) -->
+    <select id="selectTop5Year" resultMap="TransactionResultMap">
+        SELECT category_title, COALESCE(SUM(transaction_amount), 0) AS total_amount_past
+        FROM `Transaction`
+        WHERE DATE(created_at) = CURDATE() - INTERVAL 1 YEAR AND transaction_type = '지출'
+        GROUP BY category_title
+        ORDER BY total_amount_past DESC
+            LIMIT 5;
+    </select>
+
+
+    <!-- 과거의 시간대 별 지출 금액 (특정 날짜) -->
+    <select id="selectTimeDate" parameterType="date" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = #{createdAt}
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1일 전) -->
+    <select id="selectTimeDay" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE() - INTERVAL 1 DAY
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1주 전) -->
+    <select id="selectTimeWeek" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE() - INTERVAL 1 WEEK
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1달 전) -->
+    <select id="selectTimeMonth" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = CURDATE() - INTERVAL 1 MONTH
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+
+    <!-- 과거의 시간대 별 지출 금액 (1년 전) -->
+    <select id="selectTimeYear" resultMap="TransactionResultMap">
+        <![CDATA[
+        SELECT category_title, CASE
+                                   WHEN HOUR(created_at) < 3 THEN '00:00-03:00'
+                                WHEN HOUR(created_at) < 6 THEN '03:00-06:00'
+                                WHEN HOUR(created_at) < 9 THEN '06:00-09:00'
+                                WHEN HOUR(created_at) < 12 THEN '09:00-12:00'
+                                WHEN HOUR(created_at) < 15 THEN '12:00-15:00'
+                                WHEN HOUR(created_at) < 18 THEN '15:00-18:00'
+                                WHEN HOUR(created_at) < 21 THEN '18:00-21:00'
+                                ELSE '21:00-24:00'
+        END AS time_slot,
+                              SUM(transaction_amount) AS total_spent
+        FROM `Transaction`
+        WHERE transaction_type = '지출' AND DATE(created_at) = #{createdAt}
+        GROUP BY category_title, time_slot
+        ORDER BY MIN(created_at);
+        ]]>
+    </select>
+</mapper>

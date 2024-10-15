@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.Habit.mapper.MyHabitMapper">
+
+    <!-- 1. 나의 습관 조회 -->
+    <select id="getMyHabit" parameterType="long" resultType="MyHabitVO">
+        SELECT mh.my_habit_id, mh.user_id, h.habit_id, h.habit_title, h.category_title, mh.state, h.save_amount, h.certification
+        FROM MyHabit mh
+                 JOIN HABIT h ON mh.habit_id = h.habit_id
+        WHERE mh.user_id = #{userId};
+    </select>
+
+    <!-- 기존에 작성된 습관인지 조회-->
+    <select id = "getHabitByTitle" parameterType="string" resultType="MyHabitVO">
+        SELECT habit_id, user_id, category_title, habit_title, save_amount, certification
+        FROM Habit
+        WHERE habit_title = #{habitTitle};
+    </select>
+
+    <!-- 유저 전체 습관 목록과 오늘 습관 달성 체크 여부 -->
+    <select id="getMyTodayHabitInfo" parameterType="long" resultType="com.example.backend.Habit.dto.MyHabitInfoDTO">
+        SELECT mh.my_habit_id, h.user_id AS writer_id, mh.state, h.save_amount, h.certification, h.habit_id, h.habit_title, h.category_title,
+               CASE
+                   WHEN hc.my_habit_id IS NOT NULL
+                       THEN 'true' ELSE 'false'
+                   END AS is_checked_today
+        FROM MyHabit mh
+                 JOIN HABIT h ON mh.habit_id = h.habit_id
+                 left join HabitCheck hc ON mh.my_habit_id = hc.my_habit_id
+            AND hc.check_date = CURDATE()
+        WHERE mh.user_id = #{userId};
+    </select>
+
+    <!-- 4. 새로운 습관 작성 -->
+    <!-- step 1 : Habit 테이블에 습관 삽입 -->
+    <insert id="insertHabit" parameterType="MyHabitVO">
+        INSERT INTO Habit (user_id, habit_title, category_title, save_amount, certification)
+        VALUES (#{userId}, #{habitTitle}, #{categoryTitle}, #{saveAmount}, #{certification})
+    </insert>
+    <!-- step 2 : 방금 추가한 habitId 조회 -->
+    <select id="selectLastInsertedHabitId" resultType="long">
+        SELECT LAST_INSERT_ID();
+    </select>
+    <!-- step 3 : MyHabit 테이블에 습관 삽입 -->
+    <insert id="insertMyHabit" parameterType="MyHabitVO">
+        INSERT INTO MyHabit (user_id, habit_id, state)
+        VALUES (#{userId}, #{habitId}, '대기')
+    </insert>
+    <!-- step 4 : 방금 추가한 MyHabitId 조회 -->
+    <select id="selectLastInsertedMyHabitId" resultType="long">
+        SELECT LAST_INSERT_ID();
+    </select>
+
+    <!-- 5. 습관 수정하기 -->
+    <!-- step 1 : 습관 작성자 아이디 가져오기 -->
+    <select id="getHabitById" parameterType="long" resultType="MyHabitVO">
+        SELECT habit_id, user_id, habit_title, category_title
+        FROM Habit
+        WHERE habit_id = #{habitId}
+    </select>
+    <!-- step 2 : 습관 공유 커뮤니티에 내가 작성한 습관을 공유했는지 확인하기 -->
+    <select id="getHabitCommunityById" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCommunity
+        WHERE habit_id = #{habitId}
+    </select>
+    <!-- step 3 : 내가 직접 작성한 습관이고 습관 공유 커뮤니티에 올라가지 않은 경우에만 습관 수정 가능 -->
+    <update id="updateMyHabit" parameterType="MyHabitVO">
+        UPDATE Habit
+        <set>
+            <if test="habitTitle != null">
+                habit_title = #{habitTitle},
+            </if>
+            <if test="categoryTitle != null">
+                category_title = #{categoryTitle},
+            </if>
+            <if test="saveAmount != null">
+                save_amount = #{saveAmount},
+            </if>
+            <if test="certification != null">
+                certification = #{certification}
+            </if>
+        </set>
+        WHERE habit_id = #{habitId} AND user_id = #{userId};
+    </update>
+
+    <!-- 6. 습관 삭제하기 -->
+    <delete id="deleteMyHabit" parameterType="long">
+        DELETE
+        FROM MyHabit
+        WHERE my_habit_id = #{myHabitId};
+    </delete>
+
+    <!-- 7. 습관 상태 변경하기 -->
+    <update id="updateMyHabitState" parameterType="map">
+        UPDATE MyHabit
+        SET state = CASE my_habit_id
+        <foreach collection="habitList" item="habit" separator="">
+            WHEN #{habit.myHabitId} THEN #{habit.state}
+        </foreach>
+        END
+        WHERE my_habit_id IN
+        <foreach collection="habitList" item="habit" open="(" separator="," close=")">
+            #{habit.myHabitId}
+        </foreach>
+        AND user_id = #{userId}
+    </update>
+
+    <!-- 8. 절약 예상 금액 -->
+    <select id="totalSaveAmount" resultType="int">
+        SELECT IFNULL(SUM(h.save_amount), 0) as total_save_amount
+        FROM Habit h
+                 JOIN Myhabit mh ON h.habit_id = mh.habit_id
+        WHERE mh.state = "진행";
+    </select>
+
+    <!-- 9. 실제 절약 금액 -->
+    <select id="realSaveAmount" parameterType="long" resultType="int">
+        SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
+        FROM HabitCheck hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+          AND DATE(hc.check_date) = CURDATE();
+    </select>
+
+    <!-- 10. 습관 커뮤니티 업로드 -->
+    <!-- step 1 : HabitCommunity에 습관의 존재 여부 확인 -->
+    <select id="checkHabitCommunityExists" parameterType="HabitCommunityVO" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCommunity
+        WHERE habit_id = #{habitId}
+    </select>
+    <!-- step 2 : 업로드 되어있지 않다면 habitId 삽입 -->
+    <insert id="insertHabitCommunity" parameterType="HabitCommunityVO">
+        INSERT INTO HabitCommunity (habit_id)
+        VALUES (#{habitId});
+    </insert>
+
+    <!-- 11. 인증 커뮤니티 업로드 -->
+    <!-- step 1 : PostCommunity 테이블에 정보 삽입 -->
+    <insert id="insertPostCommunity" parameterType="PostCommunityVO">
+        INSERT INTO PostCommunity (user_id, habit_id
+        <if test="imageURL != null">
+            , imageURL
+        </if>
+        , content, hashtag)
+        VALUES (#{userId}, #{habitId}
+        <if test="imageURL != null">
+            , #{imageURL}
+        </if>
+        , #{content}, #{hashtag})
+    </insert>
+    <!-- step 2 : HabitCheck 테이블의 정보 조회 -->
+    <select id="checkHabitExists" parameterType="PostCommunityVO" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCheck
+        WHERE my_habit_id = (SELECT my_habit_id FROM MyHabit WHERE habit_id = #{habitId})
+          AND user_id = #{userId}
+          AND habit_id = #{habitId}
+    </select>
+    <select id="getMyHabitByHabitId" resultType="com.example.backend.Habit.vo.MyHabitVO">
+        SELECT
+            mh.my_habit_id,
+            h.habit_id,
+            h.user_id,
+            h.category_title,
+            h.habit_title,
+            h.save_amount,
+            h.certification
+            FROM MyHabit as mh
+        JOIN Habit as h
+        ON mh.habit_id = h.habit_id
+        WHERE
+            h.habit_id = #{habitId}
+    </select>
+    <!-- step 3 : HabitCheck 테이블에 입력하려는 정보가 없다면 삽입 -->
+    <insert id="addHabitCheck" parameterType="PostCommunityVO">
+        INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
+        SELECT CURRENT_DATE,
+               (SELECT my_habit_id FROM MyHabit WHERE habit_id = #{habitId}),
+               #{userId},
+               #{habitId}
+    </insert>
+    <!-- step 4 : MyHabit 테이블에서 해당 습관 상태 완료로 변경 -->
+    <update id="updateMyHabitStateClear" parameterType="PostCommunityVO">
+        UPDATE MyHabit
+        SET state = '완료'
+        WHERE habit_id = #{habitId} AND user_id = #{userId}
+    </update>
+</mapper>

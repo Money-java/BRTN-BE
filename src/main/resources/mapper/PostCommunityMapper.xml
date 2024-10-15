@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.PostCommunity.mapper.PostCommunityMapper">
+
+    <!-- ResultMap for PostCommunityVO -->
+    <resultMap id="PostCommunityResultMap" type="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        <id property="postId" column="post_id" />
+        <result property="userId" column="user_id" />
+        <result property="habitId" column="habit_id" />
+        <result property="postLikes" column="post_likes" />
+        <result property="imageURL" column="image_url" />
+        <result property="content" column="content" />
+        <result property="hashtag" column="hashtag" />
+        <result property="createdAt" column="created_at" />
+        <result property="myHabitId" column="my_habit_id" />
+        <result property="state" column="state" />
+        <result property="habitTitle" column="habit_title" />
+        <result property="categoryTitle" column="category_title" />
+    </resultMap>
+
+    <!-- 4. 인증커뮤니티 인증한 습관리스트 조회 -->
+    <!-- 인증커뮤니티 페이지의 My Shots탭,Explore탭에서 사용 -->
+    <select id="selectPostsByCategory" parameterType="map" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT pc.*
+        FROM PostCommunity pc
+        JOIN Habit h ON pc.habit_id = h.habit_id
+        WHERE 1=1
+        <!-- 사용자 ID로 필터링 (My Shots) -->
+        <if test="userId != null">
+            AND pc.user_id = #{userId}
+        </if>
+        <!-- 카테고리 필터링 -->
+        <if test="categoryTitle != null and categoryTitle != ''">
+            AND h.category_title = #{categoryTitle}
+        </if>
+        ORDER BY pc.created_at DESC  <!-- 최신순 정렬 -->
+    </select>
+
+   <!-- 9. 인증개수 조회 -->
+    <!-- 특정 사용자가 인증한 게시글의 총 개수를 구하는 메서드 -->
+    <!-- 인증커뮤니티 페이지 (레벨) -->
+    <select id="countUserCertifications" resultType="int">
+        SELECT COUNT(*)
+        FROM PostCommunity
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertPost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        INSERT INTO PostCommunity (user_id, habit_id, image_url, content, hashtag)
+        VALUES (#{userId}, #{habitId}, #{imageURL}, #{content}, #{hashtag})
+    </insert>
+
+    <select id="selectPostById" parameterType="long" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT * FROM PostCommunity WHERE post_id = #{postId}
+    </select>
+
+    <select id="selectAllPosts" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT * FROM PostCommunity ORDER BY created_at DESC
+    </select>
+
+    <!-- 날짜별 post-->
+<!--    <select id="selectPostsByDate" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">-->
+<!--        SELECT * FROM PostCommunity WHERE created_at = #{date} -->
+<!--    </select>-->
+    <update id="updatePost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        UPDATE PostCommunity
+        SET user_id = #{userId}, habit_id = #{habitId}, post_likes = #{postLikes},
+            image_url = #{imageURL}, content = #{content}, hashtag = #{hashtag}, created_at = #{createdAt}
+        WHERE post_id = #{postId}
+    </update>
+
+    <delete id="deletePost" parameterType="long">
+        DELETE FROM PostCommunity WHERE post_id = #{postId}
+    </delete>
+
+    <!-- PostCommunity My shots -->
+    <!-- 진행 중인 루틴을 가져오는 쿼리 (category_title 포함) -->
+    <select id="selectActiveHabitByUserId" parameterType="Long" resultMap="PostCommunityResultMap">
+        SELECT mh.*, h.habit_title, h.category_title
+        FROM MyHabit mh
+                 JOIN Habit h ON mh.habit_id = h.habit_id
+        WHERE mh.user_id = #{userId}
+          AND mh.state = '진행'
+    </select>
+
+
+
+    <!-- 특정 달에 맞는 이미지 URL들을 가져오는 쿼리 -->
+    <select id="selectHabitImagesByMonth" parameterType="map" resultMap="PostCommunityResultMap">
+        SELECT pc.image_url, pc.created_at
+        FROM postcommunity pc
+                 JOIN myhabit mh ON pc.habit_id = mh.habit_id
+        WHERE mh.user_id = #{userId}
+            AND MONTH(pc.created_at) = #{month}
+          AND YEAR(pc.created_at) = #{year}
+          AND mh.habit_id = #{habitId}
+    </select>
+
+    <!-- 날짜별로 좋아요가 가장 많은 이미지 가져오기 -->
+    <select id="getMostLikedImagesByDate" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT p.post_id, p.created_at, p.image_url, p.post_likes, p.content
+        FROM postcommunity p
+                 JOIN (
+            SELECT DATE(created_at) AS created_date, MAX(post_likes) AS max_likes
+            FROM postcommunity
+        WHERE user_id = #{userId}
+          AND MONTH(created_at) = #{month}
+          AND YEAR(created_at) = #{year}
+        GROUP BY DATE(created_at)
+            ) max_likes_per_day
+        ON DATE(p.created_at) = max_likes_per_day.created_date
+            AND p.post_likes = max_likes_per_day.max_likes
+    </select>
+
+    <select id="getMostLikedImagesByDate2" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT p.post_id, p.created_at, p.image_url, p.post_likes, p.content
+        FROM postcommunity p
+                 JOIN (
+            SELECT DATE(created_at) AS created_date, MAX(post_likes) AS max_likes
+            FROM postcommunity
+        WHERE user_id = #{userId}
+          AND YEAR(created_at) = #{year}
+          AND MONTH(created_at) = #{month}
+          AND DAY(created_at) = #{dt}
+        GROUP BY DATE(created_at)
+            ) max_likes_per_day
+        ON DATE(p.created_at) = max_likes_per_day.created_date
+            AND p.post_likes = max_likes_per_day.max_likes
+    </select>
+</mapper>

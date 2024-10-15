@@ -1,14 +1,21 @@
 package com.example.backend.config;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
@@ -16,12 +23,28 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-//@ComponentScan(basePackages = "com.multi")
-//@ComponentScan(basePackages = {"com.multi.spring2.board.dao",
-//        "com.multi.spring2.board.service"
-//})
+@MapperScan(basePackages = {"com.example.backend.Account.mapper",
+        "com.example.backend.Users.mapper",
+        "com.example.backend.Habit.mapper",
+        "com.example.backend.HabitCommunity.mapper",
+        "com.example.backend.PostComment.mapper",
+        "com.example.backend.PostCommunity.mapper",
+        "com.example.backend.PostLikes.mapper",
+        "com.example.backend.Transaction.mapper"})
 @EnableTransactionManagement
 @PropertySource({"classpath:/application.properties"})
+@ComponentScan(basePackages = {"com.example.backend.Account.service",
+        "com.example.backend.Users.service",
+        "com.example.backend.Habit.service",
+        "com.example.backend.HabitCommunity.service",
+        "com.example.backend.PostComment.service",
+        "com.example.backend.PostCommunity.service",
+        "com.example.backend.PostLikes.service",
+        "com.example.backend.Transaction.service",
+        "com.example.backend.oauth2.service",
+        "com.example.backend.security",
+        "com.example.backend.ImageUpload"
+})
 public class AppConfig {
     public AppConfig() {
         System.out.println("AppConfig created");
@@ -35,6 +58,15 @@ public class AppConfig {
 
     @Value("${spring.datasource.password}")
     private String password;
+
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String awsAccessKey;
+
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String awsSecretKey;
+
+    @Value("${cloud.aws.region.static}")
+    private String awsRegion;
 
     @Bean
     public DataSource dataSource() {
@@ -61,16 +93,24 @@ public class AppConfig {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-//        sessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
-        org.apache.ibatis.session.Configuration configuration =
-                getConfiguration();
-        sessionFactory.setConfiguration(configuration);
+        sessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+//        org.apache.ibatis.session.Configuration configuration =
+//                getConfiguration();
+//        sessionFactory.setConfiguration(configuration);
 
 //        mapper용 xml에서 <insert>, <select>태그를 사용하려면 설정하세요
-//        Resource[] mapperLocations = new Resource[] {
-//                new ClassPathResource("mapper/BoardMapper.xml")
-//        };
-//        sessionFactory.setMapperLocations(mapperLocations);
+        Resource[] mapperLocations = new Resource[] {
+                new ClassPathResource("mapper/AccountMapper.xml"),
+                new ClassPathResource("mapper/HabitCheckMapper.xml"),
+                new ClassPathResource("mapper/HabitCommunityMapper.xml"),
+                new ClassPathResource("mapper/MyHabitMapper.xml"),
+                new ClassPathResource("mapper/PostCommentMapper.xml"),
+                new ClassPathResource("mapper/PostLikesMapper.xml"),
+                new ClassPathResource("mapper/PostCommunityMapper.xml"),
+                new ClassPathResource("mapper/TransactionMapper.xml"),
+                new ClassPathResource("mapper/UserMapper.xml")
+        };
+        sessionFactory.setMapperLocations(mapperLocations);
 
         return sessionFactory.getObject();
     }
@@ -103,4 +143,13 @@ public class AppConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    @Bean
+    public AmazonS3Client s3Client() {
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+
+        return (AmazonS3Client) AmazonS3Client.builder()
+                .withRegion(awsRegion)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .build();
+    }
 }

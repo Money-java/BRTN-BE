@@ -12,6 +12,7 @@ repositories {
 
 ext {
     junitVersion = '5.9.2'
+    springSecurityVersion = '5.7.3'
 }
 
 sourceCompatibility = '17'
@@ -50,11 +51,11 @@ dependencies {
 
     // JSP, SERVLET, JSTL
     implementation('javax.servlet:javax.servlet-api:4.0.1')
-    compileOnly 'javax.servlet.jsp:jsp-api:2.1'
-    implementation 'javax.servlet:jstl:1.2'
 
     // Logging
     implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
 
     //  SLF4J와 Log4J를 Bind
     runtimeOnly 'org.slf4j:slf4j-log4j12:2.0.9'
@@ -78,8 +79,32 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
 
-    // Jasypt 라이브러리 설정
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    // 추가 부분
+
+    // JWT
+//    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+//    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+//    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // jjwt
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // 보안
+    implementation("org.springframework.security:spring-security-web:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-config:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-core:${springSecurityVersion}")
+    implementation("org.springframework.security:spring-security-taglibs:${springSecurityVersion}")
+
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+
+
+    // AWS S3
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.2'
 }
 
 test {

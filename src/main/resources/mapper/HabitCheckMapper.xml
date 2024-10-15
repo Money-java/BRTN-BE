@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.Habit.mapper.HabitCheckMapper">
+
+    <!-- 2. 인증한 습관 삽입 -->
+    <insert id="addHabitChecked" parameterType="com.example.backend.Habit.vo.HabitCheckVO">
+        INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)
+        VALUES (CURRENT_DATE, #{myHabitId}, #{userId}, #{habitId})
+    </insert>
+
+    <!-- 3. 인증한 습관 조회 -->
+    <select id="getCheckedHabit" parameterType="map" resultType="com.example.backend.Habit.vo.MyHabitVO">
+        SELECT hc.my_habit_id, hc.habit_id, hc.user_id, hc.check_date, h.habit_title, h.category_title
+        FROM `HabitCheck` hc
+        JOIN `Habit` h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+        <if test="checkDate != null">
+            AND DATE(hc.check_date) = DATE(#{checkDate})
+        </if>
+        <if test="checkDate == null">
+            AND DATE(hc.check_date) = CURDATE()
+        </if>
+    </select>
+
+    <!-- 루틴 연속 달성일 계산 -->
+    <!--인증 커뮤니티에서 루틴 성공 인증시 각 루틴에 대한 연속 달성일 계산 -->
+    <select id="getHabitCheckCounts"
+            parameterType="com.example.backend.Habit.dto.HabitCheckRequestDTO"
+            resultType="com.example.backend.Habit.dto.HabitCheckCountDTO">
+        SELECT grp AS timeDiff, COUNT(*) AS continuousDateCount
+        FROM (
+                 SELECT
+                     check_date,
+                     DATEDIFF(CURDATE(), check_date) -
+                     (ROW_NUMBER() OVER (ORDER BY check_date DESC) - 1) AS grp
+                 FROM (
+                          SELECT DISTINCT DATE(check_date) AS check_date
+                     FROM HabitCheck
+                 WHERE user_id = #{userId}
+                   AND habit_id = #{habitId}
+                   AND DATE(check_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 32 DAY) AND CURDATE()
+             ) sub
+            ) t
+        GROUP BY grp
+        ORDER BY grp;
+    </select>
+
+    <!-- 인증한 습관 개수 조회 -->
+    <select id="countCheckedHabit" parameterType="Long" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCheck
+        WHERE user_id = #{userId}
+    </select>
+
+    <!--  날짜 별 체크한 습관 개수 조회  -->
+    <!--    check_date 별로 habit_id count 조회-->
+    <select id="countCheckedByDateRange" parameterType="Map" resultType="Map">
+        SELECT DATE_FORMAT(check_date, '%Y-%m-%d') AS check_date, COUNT(habit_id) AS habit_count
+        FROM HabitCheck
+        WHERE check_date BETWEEN #{startDate} AND #{endDate} AND user_id = #{userId}
+        GROUP BY check_date
+    </select>
+
+    <!-- 인증한 습관 금액 금액 조회 -->
+    <select id="countCheckedMoney" parameterType="Long" resultType="int">
+        SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
+        FROM HabitCheck hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId};
+    </select>
+
+    <!-- 인증한 습관 내역 조회 -->
+    <select id="getCheckedHabitAll" parameterType="long" resultType="MyHabitVO">
+        SELECT hc.my_habit_id, hc.habit_id, hc.user_id, hc.check_date, h.habit_title, h.category_title, h.save_amount
+        FROM `HabitCheck` hc
+        JOIN `Habit` h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+    </select>
+
+    <!-- 인증한 습관 금액 조회 -->
+    <select id="countCheckedMoneByDate" parameterType="map" resultType="int">
+        SELECT IFNULL(SUM(h.save_amount), 0) AS total_save_amount
+        FROM HabitCheck hc
+                 JOIN Habit h ON hc.habit_id = h.habit_id
+        WHERE hc.user_id = #{userId}
+        <if test="checkDate != null">
+            AND DATE(hc.check_date) = DATE(#{checkDate})
+        </if>
+        <if test="checkDate == null">
+            AND DATE(hc.check_date) = CURDATE()
+        </if>
+    </select>
+
+    <!-- 인증한 특정 습관 개수 조회 -->
+    <select id="countCheckedHabit2" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM HabitCheck
+        WHERE habit_id = #{habitId}
+    </select>
+</mapper>

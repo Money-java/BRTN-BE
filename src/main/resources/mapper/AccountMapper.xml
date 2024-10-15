@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.Account.mapper.AccountMapper">
+
+    <!-- 계좌 관련 mapper 파일은 필요 업을 것 같으나, 혹시나 해서 일단 올려둡니다 -->
+
+    <!-- 계좌 정보 삽입 -->
+    <insert id="insertAccount" parameterType="com.example.backend.Account.vo.AccountVO">
+        INSERT INTO Account (user_id, account_num, account_name)
+        VALUES (#{userId}, #{accountNum}, #{accountName})
+    </insert>
+
+    <!-- 특정 계좌 정보 출력 -->
+    <select id="selectAccountById" parameterType="long" resultType="com.example.backend.Account.vo.AccountVO">
+        SELECT * FROM Account WHERE account_id = #{accountId}
+    </select>
+
+    <!-- 모든 계좌 정보 출력 -->
+    <select id="selectAllAccounts" resultType="com.example.backend.Account.vo.AccountVO">
+        SELECT * FROM Account
+    </select>
+
+    <update id="updateAccount" parameterType="com.example.backend.Account.vo.AccountVO">
+        UPDATE Account
+        SET user_id = #{userId}, account_num = #{accountNum}, account_name = #{accountName}
+        WHERE account_id = #{accountId}
+    </update>
+
+    <delete id="deleteAccount" parameterType="long">
+        DELETE FROM Account WHERE account_id = #{accountId}
+    </delete>
+
+</mapper>
