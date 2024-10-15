@@ -32,4 +32,7 @@ public interface PostCommunityService {
   // 날짜별로 좋아요가 가장 많은 이미지를 가져오는 서비스 메서드
   List<PostCommunityVO> getMostLikedImagesByDate(Long userId, int month, int year);
 
+  // 날짜별로 좋아요가 가장 많은 이미지를 가져오는 서비스 메서드
+  PostCommunityVO getMostLikedImagesByDate2(Long userId, int year, int month, int dt);
+
 }

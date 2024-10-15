@@ -4,6 +4,7 @@ import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.service.PostCommunityService;
 import com.example.backend.PostCommunity.service.PostCommunityServiceImpl;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import java.text.SimpleDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/post-community")
+@CrossOrigin(origins="http://localhost:5173")
 public class PostCommunityController {
 
   private static final Logger log = LoggerFactory.getLogger(PostCommunityController.class);
@@ -111,5 +113,18 @@ public class PostCommunityController {
     return ResponseEntity.ok(mostLikedImages);
   }
 
+  @GetMapping("/date")
+  public PostCommunityVO test(
+          @RequestParam Long userId,
+          @RequestParam int selectedYear,
+                              @RequestParam int selectedMonth,
+                              @RequestParam int selectedDt
+                              ) {
+log.info("date=" + selectedYear + " , " + selectedMonth + ", " + selectedDt);
+//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    Date dt = sdf.parse(selectedYear +"-" + selectedMonth + "-" + selectedDt);
+    return postCommunityService.getMostLikedImagesByDate2(userId, selectedYear, selectedMonth, selectedDt);
+
+  }
 }
 

@@ -61,6 +61,10 @@
         SELECT * FROM PostCommunity ORDER BY created_at DESC
     </select>
 
+    <!-- 날짜별 post-->
+<!--    <select id="selectPostsByDate" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">-->
+<!--        SELECT * FROM PostCommunity WHERE created_at = #{date} -->
+<!--    </select>-->
     <update id="updatePost" parameterType="com.example.backend.PostCommunity.vo.PostCommunityVO">
         UPDATE PostCommunity
         SET user_id = #{userId}, habit_id = #{habitId}, post_likes = #{postLikes},
@@ -97,7 +101,7 @@
 
     <!-- 날짜별로 좋아요가 가장 많은 이미지 가져오기 -->
     <select id="getMostLikedImagesByDate" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
-        SELECT p.created_at, p.image_url, p.post_likes, p.content
+        SELECT p.post_id, p.created_at, p.image_url, p.post_likes, p.content
         FROM postcommunity p
                  JOIN (
             SELECT DATE(created_at) AS created_date, MAX(post_likes) AS max_likes
@@ -111,5 +115,19 @@
             AND p.post_likes = max_likes_per_day.max_likes
     </select>
 
-
+    <select id="getMostLikedImagesByDate2" resultType="com.example.backend.PostCommunity.vo.PostCommunityVO">
+        SELECT p.post_id, p.created_at, p.image_url, p.post_likes, p.content
+        FROM postcommunity p
+                 JOIN (
+            SELECT DATE(created_at) AS created_date, MAX(post_likes) AS max_likes
+            FROM postcommunity
+        WHERE user_id = #{userId}
+          AND YEAR(created_at) = #{year}
+          AND MONTH(created_at) = #{month}
+          AND DAY(created_at) = #{dt}
+        GROUP BY DATE(created_at)
+            ) max_likes_per_day
+        ON DATE(p.created_at) = max_likes_per_day.created_date
+            AND p.post_likes = max_likes_per_day.max_likes
+    </select>
 </mapper>
