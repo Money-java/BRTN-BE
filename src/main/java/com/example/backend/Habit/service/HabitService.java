@@ -79,4 +79,6 @@ public interface HabitService {
 
   // 인증한 특정 습관 개수 조회
   int countCheckedHabit2(long habitId);
+
+  MyHabitVO getMyHabitByHabitId(Long habitId);
 }

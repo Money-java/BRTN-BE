@@ -77,6 +77,18 @@ public class HabitController {
   }
 
   @CrossOrigin(origins = "http://localhost:5173")
+  @GetMapping("/find-my-habit")
+  public ResponseEntity<?> findMyHabitById(@RequestParam Long habitId) {
+    try {
+      MyHabitVO habit = habitService.getMyHabitByHabitId(habitId);
+      return ResponseEntity.status(HttpStatus.OK).body(habit);
+    } catch (InternalServerErrorException e) {
+      log.info("500 Internal Server Error: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
+
+  @CrossOrigin(origins = "http://localhost:5173")
   @PostMapping("/my-today-info")
   public ResponseEntity<List<MyHabitInfoDTO>> getMyHabitInfo(@RequestBody Map<String, Long> request) {
     log.info("(1) Successfully retrieved my habits. 습관불러오기요청");

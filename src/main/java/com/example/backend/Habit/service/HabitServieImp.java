@@ -39,7 +39,8 @@ public class HabitServieImp implements HabitService {
     //2. 습관 ID로 조회
     @Override
     public MyHabitVO getHabitById(long habitId) {return myHabitMapper.getHabitById(habitId);}
-
+    @Override
+    public MyHabitVO getMyHabitByHabitId(Long habitId){return myHabitMapper.getMyHabitByHabitId(habitId);};
     @Override
     public List<MyHabitInfoDTO> getMyTodayHabitInfo(long userId) {
         return myHabitMapper.getMyTodayHabitInfo(userId);

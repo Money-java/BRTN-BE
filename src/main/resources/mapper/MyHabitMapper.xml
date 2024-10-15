@@ -160,6 +160,21 @@
           AND user_id = #{userId}
           AND habit_id = #{habitId}
     </select>
+    <select id="getMyHabitByHabitId" resultType="com.example.backend.Habit.vo.MyHabitVO">
+        SELECT
+            mh.my_habit_id,
+            h.habit_id,
+            h.user_id,
+            h.category_title,
+            h.habit_title,
+            h.save_amount,
+            h.certification
+            FROM MyHabit as mh
+        JOIN Habit as h
+        ON mh.habit_id = h.habit_id
+        WHERE
+            h.habit_id = #{habitId}
+    </select>
     <!-- step 3 : HabitCheck 테이블에 입력하려는 정보가 없다면 삽입 -->
     <insert id="addHabitCheck" parameterType="PostCommunityVO">
         INSERT INTO HabitCheck (check_date, my_habit_id, user_id, habit_id)

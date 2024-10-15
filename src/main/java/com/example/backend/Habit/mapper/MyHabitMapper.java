@@ -54,4 +54,6 @@ public interface MyHabitMapper {
   int checkHabitExists(PostCommunityVO postCommunityVO);                 // step 2 : HabitCheck 테이블의 정보 조회
   void addHabitCheck(PostCommunityVO postCommunityVO);                   // step 3 : HabitCheck 테이블에 입력하려는 정보가 없다면 삽입
   void updateMyHabitStateClear(PostCommunityVO postCommunityVO);         // step 4 : MyHabit 테이블에서 해당 습관 상태 완료로 변경
+
+  MyHabitVO getMyHabitByHabitId(Long habitId);
 }
