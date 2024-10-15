@@ -1,6 +1,7 @@
 package com.example.backend.PostCommunity.mapper;
 
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import com.example.backend.Users.vo.UserVO;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -73,4 +74,6 @@ public interface PostCommunityMapper {
           @Param("month") int month,
           @Param("dt") int dt
   );
+
+  UserVO getUserInfoByPostId(@Param("postId")Long postId );
 }

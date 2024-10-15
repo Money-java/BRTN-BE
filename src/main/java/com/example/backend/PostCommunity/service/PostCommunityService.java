@@ -3,6 +3,7 @@ package com.example.backend.PostCommunity.service;
 import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 
+import com.example.backend.Users.vo.UserVO;
 import java.util.List;
 
 public interface PostCommunityService {
@@ -35,4 +36,5 @@ public interface PostCommunityService {
   // 날짜별로 좋아요가 가장 많은 이미지를 가져오는 서비스 메서드
   PostCommunityVO getMostLikedImagesByDate2(Long userId, int year, int month, int dt);
 
+  UserVO getUserInfoByPostId(Long postId);
 }

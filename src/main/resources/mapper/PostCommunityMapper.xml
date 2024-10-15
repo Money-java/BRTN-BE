@@ -130,4 +130,12 @@
         ON DATE(p.created_at) = max_likes_per_day.created_date
             AND p.post_likes = max_likes_per_day.max_likes
     </select>
+
+    <select id="getUserInfoByPostId" resultType="UserVO">
+        SELECT u.name, u.avatar
+        FROM postcommunity p
+                 JOIN Users u ON p.user_id = u.user_id
+        WHERE p.post_id = #{postId}
+    </select>
+
 </mapper>

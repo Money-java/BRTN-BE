@@ -10,6 +10,7 @@ import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.mapper.PostCommunityMapper;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
 import com.example.backend.Users.mapper.UserMapper;
+import com.example.backend.Users.vo.UserVO;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -208,5 +209,10 @@ public class PostCommunityServiceImpl implements PostCommunityService {
   public PostCommunityVO getMostLikedImagesByDate2(Long userId, int year, int month, int dt){
     log.info("service getMostLikedImagesByDate2");
     return postCommunityMapper.getMostLikedImagesByDate2(userId, year, month, dt);
+  }
+
+  @Override
+  public UserVO getUserInfoByPostId(Long postId) {
+    return postCommunityMapper.getUserInfoByPostId(postId);
   }
 }

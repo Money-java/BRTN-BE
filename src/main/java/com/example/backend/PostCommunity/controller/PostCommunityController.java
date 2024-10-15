@@ -4,6 +4,7 @@ import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.service.PostCommunityService;
 import com.example.backend.PostCommunity.service.PostCommunityServiceImpl;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import com.example.backend.Users.vo.UserVO;
 import java.text.SimpleDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,5 +127,16 @@ log.info("date=" + selectedYear + " , " + selectedMonth + ", " + selectedDt);
     return postCommunityService.getMostLikedImagesByDate2(userId, selectedYear, selectedMonth, selectedDt);
 
   }
+
+  @GetMapping("/getUserInfoByPostId")
+  public ResponseEntity<UserVO> getUserInfoByPostId(@RequestParam Long postId) {
+    UserVO userInfo = postCommunityService.getUserInfoByPostId(postId);
+    if (userInfo != null) {
+      return ResponseEntity.ok(userInfo);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+  }
+
 }
 
