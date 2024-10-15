@@ -45,4 +45,32 @@ public interface PostCommunityMapper {
           @Param("habitId") Long habitId
   );
 
+  /**
+   * 월에 해당하는 좋아요가 가장 많은 이미지를 가져오는 메서드
+   * @param userId
+   * @param month
+   * @param year
+   * @return
+   */
+  List<PostCommunityVO> getMostLikedImagesByDate(
+          @Param("userId") Long userId,
+          @Param("month") int month,
+          @Param("year") int year
+  );
+
+  /**
+   * 날짜에 해당하는 가장 종아요 많이 받은 포스트
+   * @param userId
+   * @param dt
+   * @param month
+   * @param year
+   * @return
+   */
+  PostCommunityVO getMostLikedImagesByDate2(
+          @Param("userId") Long userId,
+
+          @Param("year") int year,
+          @Param("month") int month,
+          @Param("dt") int dt
+  );
 }

@@ -4,6 +4,7 @@ import com.example.backend.PostCommunity.dto.PostCommunityRequestDTO;
 import com.example.backend.PostCommunity.service.PostCommunityService;
 import com.example.backend.PostCommunity.service.PostCommunityServiceImpl;
 import com.example.backend.PostCommunity.vo.PostCommunityVO;
+import java.text.SimpleDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/post-community")
+@CrossOrigin(origins="http://localhost:5173")
 public class PostCommunityController {
 
   private static final Logger log = LoggerFactory.getLogger(PostCommunityController.class);
@@ -100,7 +102,29 @@ public class PostCommunityController {
     List<PostCommunityVO> images = postCommunityService.getHabitImagesByMonth(userId, month, year, habitId);
     return ResponseEntity.ok(images);
   }
+  // 날짜별로 좋아요가 가장 많은 이미지를 가져오는 API
+  @GetMapping("/images/most-liked")
+  public ResponseEntity<List<PostCommunityVO>> getMostLikedImagesByDate(
+          @RequestParam("userId") Long userId,
+          @RequestParam("month") int month,
+          @RequestParam("year") int year
+  ) {
+    List<PostCommunityVO> mostLikedImages = postCommunityService.getMostLikedImagesByDate(userId, month, year);
+    return ResponseEntity.ok(mostLikedImages);
+  }
 
+  @GetMapping("/date")
+  public PostCommunityVO test(
+          @RequestParam Long userId,
+          @RequestParam int selectedYear,
+                              @RequestParam int selectedMonth,
+                              @RequestParam int selectedDt
+                              ) {
+log.info("date=" + selectedYear + " , " + selectedMonth + ", " + selectedDt);
+//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    Date dt = sdf.parse(selectedYear +"-" + selectedMonth + "-" + selectedDt);
+    return postCommunityService.getMostLikedImagesByDate2(userId, selectedYear, selectedMonth, selectedDt);
 
+  }
 }
 
